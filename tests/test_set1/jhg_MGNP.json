@@ -1,0 +1,341 @@
+{
+  "status": "finished",
+  "lobby": {
+    "code": "MGNP",
+    "numPlayers": 4,
+    "numObservers": 0,
+    "creatorName": null,
+    "admins": [],
+    "playerNames": [],
+    "gameStarted": true
+  },
+  "gameParams": {
+    "lengthOfRound": 150000000,
+    "gameEndCriteria": {
+      "low": 10,
+      "high": 30,
+      "runtimeType": "time"
+    },
+    "popularityFunctionParams": {
+      "alpha": 0.2,
+      "beta": 0.5,
+      "cGive": 1.3,
+      "cKeep": 0.95,
+      "cSteal": 1.6,
+      "povertyLine": 0,
+      "shouldUseNewUpdate": true
+    },
+    "governmentParams": {
+      "initialPopularity": 60,
+      "initialPopularityType": "ratio",
+      "randomPopularities": true,
+      "randomPopHigh": 200,
+      "randomPopLow": 50,
+      "playersThatWillBeGovernment": null,
+      "sendVotesImmediately": true
+    },
+    "nameSet": "radio",
+    "chatType": "none",
+    "messageType": "freeForm",
+    "colorGroups": [],
+    "labels": {
+      "enabled": false,
+      "labelPools": []
+    },
+    "customParams": {},
+    "show": {
+      "roundLength": true,
+      "gameLength": true,
+      "chatType": true,
+      "messageType": true,
+      "nameSet": true,
+      "initialSetup": true,
+      "grouping": true,
+      "labels": true,
+      "advancedParams": true,
+      "government": true,
+      "visibilities": true,
+      "colorGrouping": true,
+      "pregame": true,
+      "agents": true
+    },
+    "advancedGameSetup": null,
+    "preGame": null,
+    "allowEdit": {
+      "roundLength": true,
+      "gameLength": true,
+      "chatType": true,
+      "messageType": true,
+      "nameSet": true,
+      "initialSetup": true,
+      "grouping": true,
+      "labels": true,
+      "advancedParams": true,
+      "government": true,
+      "visibilities": true,
+      "colorGrouping": true,
+      "pregame": true,
+      "agents": true
+    }
+  },
+  "creatorId": "186eb0b0-927a-142f-bb5a-ef89b730d82c",
+  "endCondition": {
+    "duration": 1747326432946000,
+    "runtimeType": "time"
+  },
+  "players": [
+    {
+      "name": "John Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Sierra",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "Jane Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Romeo",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "James Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Uniform",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "Jessica Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Tango",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    }
+  ],
+  "observers": [],
+  "transactions": {
+    "round_1": {
+      "Romeo": {
+        "Romeo": 8,
+        "Sierra": 0,
+        "Tango": 0,
+        "Uniform": 0
+      },
+      "Sierra": {
+        "Romeo": 0,
+        "Sierra": 8,
+        "Tango": 0,
+        "Uniform": 0
+      },
+      "Tango": {
+        "Romeo": 0,
+        "Sierra": 0,
+        "Tango": 8,
+        "Uniform": 0
+      },
+      "Uniform": {
+        "Romeo": 0,
+        "Sierra": 0,
+        "Tango": 0,
+        "Uniform": 8
+      }
+    }
+  },
+  "voteData": null,
+  "playerRoundInfo": {
+    "round_1": {
+      "Romeo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Sierra": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Tango": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Uniform": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    },
+    "round_2": {
+      "Romeo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Sierra": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Tango": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Uniform": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    }
+  },
+  "influences": {
+    "round_1": {
+      "Romeo": {
+        "Romeo": 0,
+        "Sierra": 0,
+        "Tango": 0,
+        "Uniform": 0,
+        "__intrinsic__": 100
+      },
+      "Sierra": {
+        "Romeo": 0,
+        "Sierra": 0,
+        "Tango": 0,
+        "Uniform": 0,
+        "__intrinsic__": 100
+      },
+      "Tango": {
+        "Romeo": 0,
+        "Sierra": 0,
+        "Tango": 0,
+        "Uniform": 0,
+        "__intrinsic__": 100
+      },
+      "Uniform": {
+        "Romeo": 0,
+        "Sierra": 0,
+        "Tango": 0,
+        "Uniform": 0,
+        "__intrinsic__": 100
+      }
+    },
+    "round_2": {
+      "Romeo": {
+        "Romeo": 19,
+        "Sierra": 0,
+        "Tango": 0,
+        "Uniform": 0,
+        "__intrinsic__": 80
+      },
+      "Sierra": {
+        "Romeo": 0,
+        "Sierra": 19,
+        "Tango": 0,
+        "Uniform": 0,
+        "__intrinsic__": 80
+      },
+      "Tango": {
+        "Romeo": 0,
+        "Sierra": 0,
+        "Tango": 19,
+        "Uniform": 0,
+        "__intrinsic__": 80
+      },
+      "Uniform": {
+        "Romeo": 0,
+        "Sierra": 0,
+        "Tango": 0,
+        "Uniform": 19,
+        "__intrinsic__": 80
+      }
+    }
+  },
+  "popularities": {
+    "round_1": {
+      "Romeo": 100,
+      "Sierra": 100,
+      "Tango": 100,
+      "Uniform": 100
+    },
+    "round_2": {
+      "Romeo": 99,
+      "Sierra": 99,
+      "Tango": 99,
+      "Uniform": 99
+    }
+  },
+  "groups": {
+    "round_1": {
+      "Everyone": {
+        "gameNames": [
+          "Sierra",
+          "Romeo",
+          "Uniform",
+          "Tango"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    },
+    "round_2": {
+      "Everyone": {
+        "gameNames": [
+          "Sierra",
+          "Romeo",
+          "Uniform",
+          "Tango"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    }
+  },
+  "startDateTime": "2025-05-15T16:04:12.697677Z",
+  "chatInfo": {
+    "global": {
+      "conversationId": "global",
+      "name": "Global Chat",
+      "messages": {
+        "-OQJg6jSFuq_q76kyZv9": {
+          "body": "Round 2",
+          "time": "2025-05-15T16:04:18.016017Z",
+          "targets": null,
+          "runtimeType": "gameNotification"
+        }
+      },
+      "participants": []
+    }
+  },
+  "governmentRoundInfo": {
+    "governmentPlayerNames": null,
+    "round": 0,
+    "playerVoteBallots": null,
+    "customRoundInfo": {}
+  },
+  "colorGroups": []
+}

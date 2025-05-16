@@ -1,0 +1,3 @@
+# This file allows the intentionally empty folder to be tracked by git
+*
+!.gitignore
