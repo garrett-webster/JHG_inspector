@@ -1,0 +1,1 @@
+The Junior High Game (JHG) inspector allows for in depth data analysis of sets of JHG game sets. It provides a framework to build up tools around the data sturctures that will allow for more in depth analysis.
