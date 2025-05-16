@@ -109,7 +109,7 @@ class Game:
         self.cursor.execute("""
         CREATE TABLE IF NOT EXISTS players (
             id INTEGER PRIMARY KEY,
-            gameName TEXT,
+            name TEXT,
             experience TEXT,
             permissionLevel TEXT,
             color TEXT,
@@ -162,9 +162,31 @@ class Game:
         self.connection.commit()
 
 
+    # TODO: Add error handling to account for the possibility that a game file may have been corrupted (it will error with a keyerror potentially)
     def load_data_to_database(self):
         # Load game data
         with open(self.path, "r") as game_file:
             data = json.load(game_file)
 
-        # for player in data["players"]:
+        # Insert each player's record into the database
+        for player in data["players"]:
+            try:
+                self.cursor.execute(
+                    '''
+                    INSERT INTO players (
+                        name, experience, permissionLevel, color, hue, avatar, icon
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ''',
+                    (
+                        player["name"],
+                        player["experience"],
+                        player["permissionLevel"],
+                        player["color"],
+                        player["hue"],
+                        player["avatar"],
+                        player["icon"]
+                    )
+                )
+            except sqlite3.Error as e:
+                print(f"Error inserting player {player['name']}: {e}")
+        self.connection.commit()
