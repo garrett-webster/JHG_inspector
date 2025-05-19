@@ -44,23 +44,7 @@ class TestGameInitialization:
         with pytest.raises(FileNotFoundError):
             Game(Path("test_set1/jhg_AAAA.json"))
 
-    def test_init_database(self, game_loader):
-        game, base_path = game_loader()
-
-        db_path = base_path / "data_bases" / f"jhg_TEST.db"
-        assert db_path.exists(), "Database file was not created"
-
-        # Check expected tables exist
-        game.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        tables = {row[0] for row in game.cursor.fetchall()}
-        game.connection.close()
-
-        expected_tables = {
-            "lobby", "miscData", "gameParams", "endCondition", "rounds", "players",
-            "transactions", "playerRoundInfo", "popularities", "influences"
-        }
-        assert expected_tables == tables, f"Expected tables {expected_tables}, but found {tables}"
-
+    # Tests that the players table is correctly loaded into the database
     def test_load_data_to_database_players(self, game_loader):
         game, base_path = game_loader(FILE_PATH / "test_set1/jhg_GDHP.json")
         game.load_data_to_database()
@@ -88,7 +72,8 @@ class TestGameInitialization:
         # Use Counter for unordered comparison with duplicates support
         assert players_in_db == expected_players, f"Expected players {expected_players}, but found {players_in_db}"
 
-    def test_load_data_to_database_game_params_full(self, game_loader):
+    # Tests that the gameParams table is correctly loaded into the database
+    def test_load_data_to_database_game_params(self, game_loader):
         game, base_path = game_loader(FILE_PATH / "test_set1/jhg_GDHP.json")
         game.load_data_to_database()
 

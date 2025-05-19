@@ -1,92 +1,92 @@
 SIMPLE_JSON_STRUCTURE = {
     # "miscData": {
-    #     "status": "scalar",
-    #     "creatorId": "scalar",
+    #     "status": "TEXT",
+    #     "creatorId": "TEXT",
     # },
     "lobby": {
-        "code": "scalar",
-        "numPlayers": "scalar",
-        "numObservers": "scalar",
-        "creatorName": "scalar",
+        "code": "TEXT",
+        "numPlayers": "INTEGER",
+        "numObservers": "INTEGER",
+        "creatorName": "TEXT",
         # "admins": [],
         # "playerNames": [],
-        "gameStarted": "scalar"
+        "gameStarted": "BOOLEAN"
     },
     "gameParams": {
-        "lengthOfRound": "scalar",
-        "nameSet": "scalar",
-        "chatType": "scalar",
-        "messageType": "scalar",
+        "lengthOfRound": "INTEGER",
+        "nameSet": "TEXT",
+        "chatType": "TEXT",
+        "messageType": "TEXT",
 
         "gameEndCriteria": {
-            "low": "scalar",
-            "high": "scalar",
-            "runtimeType": "scalar"
+            "low": "INTEGER",
+            "high": "INTEGER",
+            "runtimeType": "TEXT"
         },
 
         "popularityFunctionParams": {
-            "alpha": "scalar",
-            "beta": "scalar",
-            "cGive": "scalar",
-            "cKeep": "scalar",
-            "cSteal": "scalar",
-            "povertyLine": "scalar",
-            "shouldUseNewUpdate": "scalar"
+            "alpha": "REAL",
+            "beta": "REAL",
+            "cGive": "REAL",
+            "cKeep": "REAL",
+            "cSteal": "REAL",
+            "povertyLine": "REAL",
+            "shouldUseNewUpdate": "BOOLEAN"
         },
 
         "governmentParams": {
-            "initialPopularity": "scalar",
-            "initialPopularityType": "scalar",
-            "randomPopularities": "scalar",
-            "randomPopHigh": "scalar",
-            "randomPopLow": "scalar",
-            "playersThatWillBeGovernment": "scalar",
-            "sendVotesImmediately": "scalar"
+            "initialPopularity": "REAL",
+            "initialPopularityType": "TEXT",
+            "randomPopularities": "BOOLEAN",
+            "randomPopHigh": "REAL",
+            "randomPopLow": "REAL",
+            "playersThatWillBeGovernment": "TEXT",
+            "sendVotesImmediately": "BOOLEAN"
         },
 
         # "colorGroups": [],
         # "customParams": {},
         "labels": {
-            "enabled": "scalar",
+            "enabled": "BOOLEAN",
             # "labelPools": []
         },
 
         "show": {
-            "roundLength": "scalar",
-            "gameLength": "scalar",
-            "chatType": "scalar",
-            "messageType": "scalar",
-            "nameSet": "scalar",
-            "initialSetup": "scalar",
-            "grouping": "scalar",
-            "labels": "scalar",
-            "advancedParams": "scalar",
-            "government": "scalar",
-            "visibilities": "scalar",
-            "colorGrouping": "scalar",
-            "pregame": "scalar",
-            "agents": "scalar"
+            "roundLength": "BOOLEAN",
+            "gameLength": "BOOLEAN",
+            "chatType": "BOOLEAN",
+            "messageType": "BOOLEAN",
+            "nameSet": "BOOLEAN",
+            "initialSetup": "BOOLEAN",
+            "grouping": "BOOLEAN",
+            "labels": "BOOLEAN",
+            "advancedParams": "BOOLEAN",
+            "government": "BOOLEAN",
+            "visibilities": "BOOLEAN",
+            "colorGrouping": "BOOLEAN",
+            "pregame": "BOOLEAN",
+            "agents": "BOOLEAN"
         },
 
         "allowEdit": {
-            "roundLength": "scalar",
-            "gameLength": "scalar",
-            "chatType": "scalar",
-            "messageType": "scalar",
-            "nameSet": "scalar",
-            "initialSetup": "scalar",
-            "grouping": "scalar",
-            "labels": "scalar",
-            "advancedParams": "scalar",
-            "government": "scalar",
-            "visibilities": "scalar",
-            "colorGrouping": "scalar",
-            "pregame": "scalar",
-            "agents": "scalar"
+            "roundLength": "BOOLEAN",
+            "gameLength": "BOOLEAN",
+            "chatType": "BOOLEAN",
+            "messageType": "BOOLEAN",
+            "nameSet": "BOOLEAN",
+            "initialSetup": "BOOLEAN",
+            "grouping": "BOOLEAN",
+            "labels": "BOOLEAN",
+            "advancedParams": "BOOLEAN",
+            "government": "BOOLEAN",
+            "visibilities": "BOOLEAN",
+            "colorGrouping": "BOOLEAN",
+            "pregame": "BOOLEAN",
+            "agents": "BOOLEAN"
         }
     },
     "endCondition": {
-        "duration": "scalar",
-        "runtimeType": "scalar"
+        "duration": "INTEGER",
+        "runtimeType": "TEXT"
     }
 }
