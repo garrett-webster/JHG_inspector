@@ -3,6 +3,9 @@ import re
 import sqlite3
 from pathlib import Path
 
+from src.JHG_inspector.JSON_STRUCTURE import SIMPLE_JSON_STRUCTURE
+from src.JHG_inspector.schema_definitions import GAME_SCHEMA_QUERIES
+
 FILE_PATH = Path(__file__).resolve().parent
 
 
@@ -11,17 +14,13 @@ class Game:
     def __init__(self, game_path, base_path=FILE_PATH):
         self.path = game_path
 
-        # Ensure that the game file actually exists and set the game code. If it does not exist, raise FileNotFoundError
         if not game_path.is_file():
             raise FileNotFoundError
+
         self.code = re.match(r"jhg_(.+)\.json", game_path.name).group(1)
-
-        # Allow override of FILE_PATH
         self.db_path = base_path / "data_bases" / f"jhg_{self.code}.db"
-
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Connect to the database. If it does not exist, create it.
         self.connection = None
         self.cursor = None
 
@@ -56,137 +55,49 @@ class Game:
         self.cursor = self.connection.cursor()
 
     def init_database(self):
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS miscSettings(
-            status TEXT,
-            nameSet TEXT,
-            chatType TEXT,
-            messageType TEXT,
-            creatorId TEXT
-        )""")
-
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS gameParams (
-            lengthOfRound INTEGER,
-            low INTEGER,
-            high INTEGER,
-            runtimeType TEXT
-        )""")
-
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS popularityFunctionParams (
-            alpha REAL,
-            beta REAL,
-            cGive REAL,
-            cKeep REAL,
-            cSteal REAL,
-            povertyLine REAL,
-            shouldUseNewUpdate BOOL
-        )""")
-
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS governmentParams (
-            initialPopularity REAL,
-            initialPopularityType TEXT,
-            randomPopularities TEXT,
-            randomPopHigh REAL,
-            randomPopLow REAL,
-            playersThatWillBeGovernment TEXT,
-            sendVotesImmediately BOOL
-        )""")
-
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS endCondition (
-            duration INTEGER,
-            runtimeType TEXT
-        )""")
-
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS rounds (
-            id INTEGER PRIMARY KEY
-        )""")
-
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS players (
-            id INTEGER PRIMARY KEY,
-            name TEXT,
-            experience TEXT,
-            permissionLevel TEXT,
-            color TEXT,
-            hue TEXT,
-            avatar TEXT,
-            icon TEXT
-        )""")
-
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS transactions (
-            round_id INTEGER,
-            player_from_id INTEGER,
-            player_to_id INTEGER,
-            FOREIGN KEY(player_from_id) REFERENCES players(id),
-            FOREIGN KEY(player_to_id) REFERENCES players(id),
-            FOREIGN KEY(round_id) REFERENCES rounds(id)
-        )""")
-
-        # NOTE: If a player is in multiple groups, there will need to be multiple of these per round for that player
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS playerRoundInfo(
-            player_id INTEGER,
-            round_id INTEGER,
-            numTokens INTEGER,
-            group_name TEXT,
-            FOREIGN KEY(player_id) REFERENCES players(id),
-            FOREIGN KEY(round_id) REFERENCES rounds(id)
-        )""")
-
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS popularities (
-            player_id INTEGER,
-            round_id INTEGER,
-            popularity REAL,
-            FOREIGN KEY(player_id) REFERENCES players(id),
-            FOREIGN KEY(round_id) REFERENCES rounds(id)
-        )""")
-
-        self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS influences (
-            player_from_id INTEGER,
-            player_to_id INTEGER,
-            round_id INTEGER,
-            influence REAL,
-            FOREIGN KEY(player_from_id) REFERENCES players(id),
-            FOREIGN KEY(player_to_id) REFERENCES players(id),
-            FOREIGN KEY(round_id) REFERENCES rounds(id)
-        )""")
+        for query in GAME_SCHEMA_QUERIES.values():
+            self.cursor.execute(query)
+        self.connection.commit()
 
         self.connection.commit()
 
-
-    # TODO: Add error handling to account for the possibility that a game file may have been corrupted (it will error with a keyerror potentially)
     def load_data_to_database(self):
-        # Load game data
         with open(self.path, "r") as game_file:
             data = json.load(game_file)
 
-        # Insert each player's record into the database
-        for player in data["players"]:
-            try:
-                self.cursor.execute(
-                    '''
-                    INSERT INTO players (
-                        name, experience, permissionLevel, color, hue, avatar, icon
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
-                    ''',
-                    (
-                        player["name"],
-                        player["experience"],
-                        player["permissionLevel"],
-                        player["color"],
-                        player["hue"],
-                        player["avatar"],
-                        player["icon"]
-                    )
-                )
-            except sqlite3.Error as e:
-                print(f"Error inserting player {player['name']}: {e}")
+        # Loads the player data in from the "players" dictionary
+        player_columns = ["name", "experience", "permissionLevel", "color", "hue", "avatar", "icon"]
+        for entry in data["players"]:
+            values = tuple(entry[column] for column in player_columns)
+            columns_str = ", ".join(player_columns)
+            placeholders_str = ", ".join(["?"] * len(player_columns))
+            self.cursor.execute(
+                f"INSERT INTO players ({columns_str}) VALUES ({placeholders_str})",
+                values
+            )
+
+        # Flattens a nested dictionary that ends up just being key-value pairs (no lists or anything other than dicts)
+        def _flatten_dictionary(to_flatten, data, parent_key=""):
+            values = []
+            keys = []
+            for key, value in to_flatten.items():
+                full_key = f"{parent_key}_{key}" if parent_key else key
+                if isinstance(value, dict):
+                    sub_values, sub_keys = _flatten_dictionary(value, data[key], full_key)
+                    values += sub_values
+                    keys += sub_keys
+                else:
+                    values.append(data[key])
+                    keys.append(full_key)
+            return values, keys
+
+        # Loads most of the game meta-data. See JSON_STRUCTURE.py to see exactly which once
+        for table, columns in SIMPLE_JSON_STRUCTURE.items():
+            values, columns = _flatten_dictionary(SIMPLE_JSON_STRUCTURE[table], data[table])
+            columns_str = ", ".join(columns)
+            placeholders_str = ", ".join(["?"] * len(columns))
+            self.cursor.execute(
+                f"INSERT INTO {table} ({columns_str}) VALUES ({placeholders_str})",
+                values
+            )
         self.connection.commit()

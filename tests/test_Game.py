@@ -56,8 +56,7 @@ class TestGameInitialization:
         game.connection.close()
 
         expected_tables = {
-            "miscSettings", "gameParams", "popularityFunctionParams",
-            "governmentParams", "endCondition", "rounds", "players",
+            "lobby", "miscData", "gameParams", "endCondition", "rounds", "players",
             "transactions", "playerRoundInfo", "popularities", "influences"
         }
         assert expected_tables == tables, f"Expected tables {expected_tables}, but found {tables}"
@@ -89,5 +88,32 @@ class TestGameInitialization:
         # Use Counter for unordered comparison with duplicates support
         assert players_in_db == expected_players, f"Expected players {expected_players}, but found {players_in_db}"
 
+    def test_load_data_to_database_game_params_full(self, game_loader):
+        game, base_path = game_loader(FILE_PATH / "test_set1/jhg_GDHP.json")
+        game.load_data_to_database()
 
+        game.cursor.execute("SELECT * FROM gameParams")
+        result = game.cursor.fetchone()
 
+        expected = (
+            150000000,  # lengthOfRound
+            "radio",  # nameSet
+            "none",  #chatType
+            "freeForm",  #messageType
+
+            10, 30, "time",  # gameEndCriteria
+
+            0.2, 0.5, 1.3, 0.95, 1.6, 0.0, 1,  # popularityFunctionParams
+
+            60.0, "ratio", 1, 200.0, 50.0, None, 1,  # governmentParams
+
+            0,  # labels.enabled
+
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1,  # show.*
+
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1  # allowEdit.*
+        )
+
+        assert result == expected, f"Expected {expected}, but got {result}"
