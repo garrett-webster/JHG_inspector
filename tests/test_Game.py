@@ -102,3 +102,25 @@ class TestGameInitialization:
         )
 
         assert result == expected, f"Expected {expected}, but got {result}"
+
+    def test_load_data_to_database_lobby(self, game_loader):
+        game, base_path = game_loader(FILE_PATH / "test_set1/jhg_GDHP.json")
+        game.load_data_to_database()
+
+        game.cursor.execute("SELECT * FROM lobby")
+        result = game.cursor.fetchone()
+
+        expected = ("GDHP", 4, 0, None, 1)
+
+        assert result == expected, f"Expected {expected}, but got {result}"
+
+    def test_load_data_to_database_endCondition(self, game_loader):
+        game, base_path = game_loader(FILE_PATH / "test_set1/jhg_GDHP.json")
+        game.load_data_to_database()
+
+        game.cursor.execute("SELECT * FROM endCondition")
+        result = game.cursor.fetchone()
+
+        expected = (1747325756118000, "time")
+
+        assert result == expected, f"Expected {expected}, but got {result}"
