@@ -51,17 +51,17 @@ class TestGameInitialization:
 
         # Fetch all players data from the database
         game.cursor.execute("""
-            SELECT name, experience, permissionLevel, color, hue, avatar, icon
+            SELECT id, name, experience, permissionLevel, color, hue, avatar, icon
             FROM players
         """)
         players_in_db = game.cursor.fetchall()
 
         # Expected data
         expected_players = [
-            ("Jane Doe", "beginner", "regular", None, None, None, None),
-            ("James Doe", "beginner", "regular", None, None, None, None),
-            ("John Doe", "beginner", "regular", None, None, None, None),
-            ("Jessica Doe", "beginner", "regular", None, None, None, None),
+            (1, "Jane Doe", "beginner", "regular", None, None, None, None),
+            (2, "James Doe", "beginner", "regular", None, None, None, None),
+            (3, "John Doe", "beginner", "regular", None, None, None, None),
+            (4, "Jessica Doe", "beginner", "regular", None, None, None, None),
         ]
 
         # Assert the count matches
