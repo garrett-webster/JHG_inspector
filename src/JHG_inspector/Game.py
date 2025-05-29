@@ -1,6 +1,5 @@
 import json
 import re
-import sqlite3
 from pathlib import Path
 
 from src.JHG_inspector.JSON_STRUCTURE import SIMPLE_JSON_STRUCTURE
@@ -20,22 +19,18 @@ PLAYER_COLUMN_TYPES = {
 
 
 class Game:
-    def __init__(self, game_path, base_path=FILE_PATH):
+    def __init__(self, game_path, connection, base_path=FILE_PATH):
         self.path = game_path
         self.id_to_name_dict = {}
         self.initialized = False
+        self.connection = connection
+        self.cursor = connection.cursor()
 
         if not game_path.is_file():
             raise FileNotFoundError
 
         self.code = re.match(r"jhg_(.+)\.json", game_path.name).group(1)
-        self.db_path = base_path / "data_bases" / f"jhg_{self.code}.db"
-        self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Connect to the database
-        self.connection = sqlite3.connect(str(self.db_path))
-        self.connection.execute("PRAGMA foreign_keys = ON")
-        self.cursor = self.connection.cursor()
 
         # If the database has already been initialized, reconstruct the id_to_name_dict
         self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='players';")
@@ -66,8 +61,9 @@ class Game:
         with open(self.path, "r") as game_file:
             data = json.load(game_file)
 
-        self._load_player_data(data)
-        self._load_metadata_and_config(data)
+        # self._load_player_data(data)
+        # self._load_metadata_and_config(data)
+        # self._load_playerRoundInfo_data(data)
         self.connection.commit()
 
     def _flatten_dictionary(self, structure, data, parent_key=""):
@@ -118,6 +114,6 @@ class Game:
         all_rounds = data["playerRoundInfo"]
         insert_queries = []
         for round_num, round_data in enumerate(all_rounds): # Loop through each round
-            for player_name, player_round_data in round_data.items(): # Loop through each player
+            for player_name, player_round_data in all_rounds[round_data].items(): # Loop through each player
                 # Add relevant data
                 insert_queries.append((round_num, player_name, ))
