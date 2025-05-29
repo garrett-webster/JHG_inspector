@@ -1,0 +1,53 @@
+{
+  "games": {
+    "id": "INTEGER PRIMARY KEY",
+    "gamesetId": "INTEGER",
+    "status": "TEXT",
+    "creatorId": "TEXT",
+    "startDateTime": "TIMESTAMP",
+    "code": "TEXT",
+    "numPlayers": "INTEGER",
+    "name": "TEXT",
+
+    "lengthOfRound": "INTEGER",
+    "nameSet": "TEXT",
+    "chatType": "TEXT",
+    "messageType": "TEXT",
+    "advancedGameSetup": "TEXT",
+
+    "gameEndLow": "INTEGER",
+    "gameEndHigh": "INTEGER",
+    "gameEndType": "TEXT",
+
+    "alpha": "REAL",
+    "beta": "REAL",
+    "cGive": "REAL",
+    "cKeep": "REAL",
+    "cSteal": "REAL",
+    "povertyLine": "REAL",
+
+    "govInitialPopularity": "INTEGER",
+    "govInitialPopularityType": "TEXT",
+    "govRandomPopularities": "BOOLEAN",
+    "govRandomPopHigh": "INTEGER",
+    "govRandomPopLow": "INTEGER",
+    "govSendVotesImmediately": "BOOLEAN",
+
+    "labelsEnabled": "BOOLEAN",
+
+    "duration": "INTEGER",
+    "runtimeType": "TEXT"
+  },
+
+  "players": {
+    "id": "INTEGER PRIMARY KEY",
+    "gamesetId": "INTEGER",
+    "name": "TEXT",
+    "experience": "TEXT",
+    "permissionLevel": "TEXT",
+    "color": "TEXT",
+    "hue": "TEXT",
+    "avatar": "TEXT",
+    "icon": "TEXT"
+  }
+}

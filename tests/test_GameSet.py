@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from src.JHG_inspector.GameSet import GameSet
 import shutil
@@ -5,8 +7,8 @@ from pathlib import Path
 
 
 @pytest.fixture
-def game_set():
-    return GameSet("test set")
+def game_set(temp_folder):
+    return GameSet("test_set", base_path=temp_folder)
 
 
 @pytest.fixture
@@ -18,7 +20,16 @@ def temp_folder(tmp_path):
 
 class TestGameSetInitialization:
     def test_init(self, game_set):
-        assert game_set.name == "test set"
+        assert game_set.name == "test_set"
+
+        cursor = game_set.connection.cursor()
+
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        expected_tables = ["games", "players"]
+        actual_tables = [row[0] for row in cursor.fetchall()]
+
+        assert actual_tables == expected_tables
+
 
     @pytest.mark.parametrize(
         "folder_name, expected_codes",
@@ -31,6 +42,7 @@ class TestGameSetInitialization:
         # Clear previous games from game_set to isolate runs
         game_set.games.clear()
 
+        # Create a copy of the sample data to test on
         source_dir = Path(__file__).parent / folder_name
         if source_dir.exists():
             for item in source_dir.iterdir():
@@ -47,11 +59,25 @@ class TestGameSetInitialization:
 
         # Assert database files were created for each expected game code
         db_dir = temp_folder / "data_bases"
-        for code in expected_codes:
-            db_file = db_dir / f"jhg_{code}.db"
-            assert db_file.exists(), f"DB file missing for {code}"
+        db_file = db_dir / f"gameset_test_set.db"
+        assert db_file.exists(), f"DB file missing"
 
-        # Check no unexpected DB files remain
-        db_files = set(p.name for p in db_dir.glob("*.db")) if db_dir.exists() else set()
-        expected_db_files = {f"jhg_{code}.db" for code in expected_codes}
-        assert db_files == expected_db_files
+    def test_schema_columns_match_json(self, game_set):
+        # Load schema from JSON
+        schema_path = Path(__file__).parent.parent / "src" / "JHG_inspector" / "DB_commands" / "schema.json"
+        with open(schema_path, "r") as f:
+            expected_schema = json.load(f)
+
+        cursor = game_set.connection.cursor()
+
+        for table, expected_columns in expected_schema.items():
+            cursor.execute(f"PRAGMA table_info({table})")
+            actual_columns = [row[1] for row in cursor.fetchall()]  # row[1] = column name
+
+            expected_column_names = list(expected_columns.keys())
+
+            assert actual_columns == expected_column_names, (
+                f"Mismatch in columns for table '{table}':\n"
+                f"Expected: {expected_column_names}\n"
+                f"Actual:   {actual_columns}"
+            )
