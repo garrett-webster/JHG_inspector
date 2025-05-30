@@ -1,7 +1,5 @@
-import sqlite3
-from pathlib import Path
+from pathlib import Path, PosixPath
 
-from src.JHG_inspector.DB_commands.DB_init import initialize_DB
 from src.JHG_inspector.Game import Game
 
 
@@ -9,45 +7,33 @@ FILE_PATH = Path(__file__).resolve().parent
 
 
 class GameSet:
-    def __init__(self, name, base_path=FILE_PATH):
+    def __init__(self, name, connection, gameset_id, base_path=FILE_PATH):
         self.games = {}
         self.name = name
-        self.connection = None
+        self.connection = connection
+        self.cursor = connection.cursor()
+        self.id = gameset_id
 
-        self.connect(name, base_path)
+        # Create the gameset record in the DB (essential to track ids correctly)
+        self.cursor.execute(
+            "INSERT INTO gamesets (name) VALUES (?)",
+            (name, )
+        )
 
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
-
-    def __del__(self):
-        self.close()
-
-    def close(self):
-        if self.connection:
-            self.connection.close()
-            self.connection = None
-
-    def connect(self, name, base_path):
-        # Probably should be handled at the GUI level, but if the db file already exists, we probably want to confirm the name (so as to not overwrite data)
-        # Connect to the database
-        db_path = base_path / "data_bases" / f"gameset_{name}.db"
-        db_path.parent.mkdir(parents=True, exist_ok=True)
-
-        self.connection = sqlite3.connect(str(db_path))
-        self.connection.execute("PRAGMA foreign_keys = ON")
-
-        initialize_DB(self.connection)
+    def get_next_game_id(self):
+        if self.cursor:
+            self.cursor.execute("SELECT seq FROM sqlite_sequence WHERE name = 'games';")
+            row = self.cursor.fetchone()
+            if row is None or row[0] is None:
+                return 1
+            return row[0] + 1
 
     def load_games(self, folder_path, base_path=None):
         game_paths = [f for f in Path(folder_path).iterdir() if f.is_file()]
 
         for game_path in game_paths:
             # TODO: Add a try catch here to catch if the file is not found.
-            self.add_game(Game(game_path, self.connection, base_path))
+            self.add_game(game_path, base_path=base_path)
 
-    def add_game(self, game: Game):
-        self.games[game.code] = game
+    def add_game(self, game_path: PosixPath, base_path=None):
+        self.games[len(self.games)] = Game(game_path, self.connection, self.get_next_game_id(), self.id, base_path)

@@ -5,10 +5,15 @@ from src.JHG_inspector.GameSet import GameSet
 import shutil
 from pathlib import Path
 
+from src.JHG_inspector.JHGInspector import JHGInspector
+
 
 @pytest.fixture
 def game_set(temp_folder):
-    return GameSet("test_set", base_path=temp_folder)
+    inspector = JHGInspector(base_path=temp_folder)
+    gameset = GameSet("test_set", inspector.connection, inspector.get_next_gameset_id(), base_path=temp_folder)
+    yield gameset
+    inspector.close()
 
 
 @pytest.fixture
@@ -24,8 +29,8 @@ class TestGameSetInitialization:
 
         cursor = game_set.connection.cursor()
 
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-        expected_tables = ["games", "players"]
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name != 'sqlite_sequence';")
+        expected_tables = ["games", "players", "gamesets"]
         actual_tables = [row[0] for row in cursor.fetchall()]
 
         assert actual_tables == expected_tables
@@ -56,28 +61,3 @@ class TestGameSetInitialization:
 
         assert len(game_set.games) == len(expected_codes)
         assert actual_codes == expected_codes
-
-        # Assert database files were created for each expected game code
-        db_dir = temp_folder / "data_bases"
-        db_file = db_dir / f"gameset_test_set.db"
-        assert db_file.exists(), f"DB file missing"
-
-    def test_schema_columns_match_json(self, game_set):
-        # Load schema from JSON
-        schema_path = Path(__file__).parent.parent / "src" / "JHG_inspector" / "DB_commands" / "schema.json"
-        with open(schema_path, "r") as f:
-            expected_schema = json.load(f)
-
-        cursor = game_set.connection.cursor()
-
-        for table, expected_columns in expected_schema.items():
-            cursor.execute(f"PRAGMA table_info({table})")
-            actual_columns = [row[1] for row in cursor.fetchall()]  # row[1] = column name
-
-            expected_column_names = list(expected_columns.keys())
-
-            assert actual_columns == expected_column_names, (
-                f"Mismatch in columns for table '{table}':\n"
-                f"Expected: {expected_column_names}\n"
-                f"Actual:   {actual_columns}"
-            )

@@ -1,12 +1,13 @@
 {
   "games": {
-    "id": "INTEGER PRIMARY KEY",
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
     "gamesetId": "INTEGER",
+    "code": "TEXT",
+    "numPlayers": "INTEGER",
+    "numObservers": "INTEGER",
     "status": "TEXT",
     "creatorId": "TEXT",
     "startDateTime": "TIMESTAMP",
-    "code": "TEXT",
-    "numPlayers": "INTEGER",
     "name": "TEXT",
 
     "lengthOfRound": "INTEGER",
@@ -36,18 +37,43 @@
     "labelsEnabled": "BOOLEAN",
 
     "duration": "INTEGER",
-    "runtimeType": "TEXT"
+    "runtimeType": "TEXT",
+
+    "FOREIGN_KEYS": [
+      {
+        "column": "gamesetId",
+        "references": {
+          "table": "gamesets",
+          "column": "id"
+        }
+      }
+    ]
+  },
+
+  "gamesets": {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "name": "TEXT"
   },
 
   "players": {
-    "id": "INTEGER PRIMARY KEY",
-    "gamesetId": "INTEGER",
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "gameId": "INTEGER",
     "name": "TEXT",
     "experience": "TEXT",
     "permissionLevel": "TEXT",
     "color": "TEXT",
     "hue": "TEXT",
     "avatar": "TEXT",
-    "icon": "TEXT"
+    "icon": "TEXT",
+
+    "FOREIGN_KEYS": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
   }
 }

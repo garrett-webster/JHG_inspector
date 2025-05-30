@@ -2,6 +2,7 @@ import json
 import re
 from pathlib import Path
 
+from src.JHG_inspector.DB_commands.DB_init import get_schema, TableData
 from src.JHG_inspector.JSON_STRUCTURE import SIMPLE_JSON_STRUCTURE
 
 FILE_PATH = Path(__file__).resolve().parent
@@ -19,12 +20,15 @@ PLAYER_COLUMN_TYPES = {
 
 
 class Game:
-    def __init__(self, game_path, connection, base_path=FILE_PATH):
+    def __init__(self, game_path, connection, game_id, gameset_id, base_path=FILE_PATH):
         self.path = game_path
         self.id_to_name_dict = {}
         self.initialized = False
         self.connection = connection
         self.cursor = connection.cursor()
+        self.schema = get_schema(self.cursor)
+        self.id = game_id
+        self.gameset_id = gameset_id
 
         if not game_path.is_file():
             raise FileNotFoundError
@@ -32,37 +36,24 @@ class Game:
         self.code = re.match(r"jhg_(.+)\.json", game_path.name).group(1)
 
 
-        # If the database has already been initialized, reconstruct the id_to_name_dict
-        self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='players';")
-        if self.cursor.fetchone():
-            self.initialized = True
-            self.cursor.execute("SELECT id, name FROM players")
-            results = self.cursor.fetchall()
+        # # If the database has already been initialized, reconstruct the id_to_name_dict
+        # self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='players';")
+        # if self.cursor.fetchone():
+        #     self.initialized = True
+        #     self.cursor.execute("SELECT id, name FROM players")
+        #     results = self.cursor.fetchall()
+        #
+        #     for result in results:
+        #         self.id_to_name_dict[result[0]] = result[1]
 
-            for result in results:
-                self.id_to_name_dict[result[0]] = result[1]
-
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
-
-    def __del__(self):
-        self.close()
-
-    def close(self):
-        if self.connection:
-            self.connection.close()
-            self.connection = None
+        self.load_data_to_database()
 
     def load_data_to_database(self):
         with open(self.path, "r") as game_file:
             data = json.load(game_file)
 
-        # self._load_player_data(data)
-        # self._load_metadata_and_config(data)
+        self._load_metadata_and_config(data)
+        self._load_player_data(data)
         # self._load_playerRoundInfo_data(data)
         self.connection.commit()
 
@@ -84,31 +75,34 @@ class Game:
         return values, keys, types
 
     def _load_player_data(self, data):
-        columns_def = "id INTEGER PRIMARY KEY, " + ", ".join(f"{col} {PLAYER_COLUMN_TYPES[col]}" for col in PLAYER_COLUMNS)
-        columns_sql = ", ".join(PLAYER_COLUMNS)
-        placeholders = ", ".join(["?"] * (len(PLAYER_COLUMNS)))
-
-        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS players ({columns_def})")
-
+        table_data = TableData(self.schema["players"])
+        player_columns = table_data.non_key_columns
         player_values = []
+
+
+        column_names = ", ".join(["gameId"] + [column[0] for column in player_columns])
+        placeholders = ", ".join(["?"] + ["?" for _ in player_columns])
         for i, entry in enumerate(data["players"]):
-            player_values.append(tuple(entry[col] for col in PLAYER_COLUMNS))
+            player_values.append((self.id, ) + tuple(entry[col[0]] for col in player_columns))
             self.id_to_name_dict[i + 1] = entry["name"]
 
         self.cursor.executemany(
-            f"INSERT INTO players ({columns_sql}) VALUES ({placeholders})",
+            f"INSERT INTO players ({column_names}) VALUES ({placeholders})",
             player_values
         )
 
     def _load_metadata_and_config(self, data):
-        for table_name, structure in SIMPLE_JSON_STRUCTURE.items():
-            values, keys, types = self._flatten_dictionary(structure, data[table_name])
-            columns_sql = ", ".join(keys)
-            columns_def = ", ".join(f"{k} {t}" for k, t in zip(keys, types))
-            placeholders = ", ".join(["?"] * len(keys))
+        # table_data = TableData(self.schema["games"])
+        # columns = table_data.non_key_columns
 
-            self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {table_name} ({columns_def})")
-            self.cursor.execute(f"INSERT INTO {table_name} ({columns_sql}) VALUES ({placeholders})", values)
+
+        # Minimum insert to get the ids tracking correctly
+        code = data["lobby"]["code"]
+        self.cursor.execute(
+            "INSERT INTO games (gamesetId, code) VALUES (?, ?)",
+            (self.gameset_id, code)
+        )
+
 
     def _load_playerRoundInfo_data(self, data):
         all_rounds = data["playerRoundInfo"]
