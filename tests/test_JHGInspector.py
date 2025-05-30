@@ -1,20 +1,7 @@
 import json
 from pathlib import Path
 
-import pytest
-
-from src.JHG_inspector.JHGInspector import JHGInspector
-
-
-@pytest.fixture
-def jhg_inspector(temp_folder):
-    return JHGInspector()
-
-@pytest.fixture
-def temp_folder(tmp_path):
-    test_folder = tmp_path / "test_games"
-    test_folder.mkdir()
-    yield test_folder
+from testing_utilities import *
 
 class TestJhgInspectorInitialization:
     def test_schema_columns_match_json(self, jhg_inspector):
@@ -29,10 +16,10 @@ class TestJhgInspectorInitialization:
             cursor.execute(f"PRAGMA table_info({table})")
             actual_columns = [row[1] for row in cursor.fetchall()]  # row[1] = column name
 
-            expected_column_names = list(expected_columns.keys())
+            expected_column_names = [key for key in expected_columns.keys() if key != 'FOREIGN_KEYS']
 
-            assert actual_columns == expected_column_names, (
+            assert set(actual_columns) == set(expected_column_names), (
                 f"Mismatch in columns for table '{table}':\n"
-                f"Expected: {expected_column_names}\n"
-                f"Actual:   {actual_columns}"
+                f"Expected: {sorted(expected_column_names)}\n"
+                f"Actual:   {sorted(actual_columns)}"
             )

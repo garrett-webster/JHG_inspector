@@ -33,7 +33,12 @@ class GameSet:
 
         for game_path in game_paths:
             # TODO: Add a try catch here to catch if the file is not found.
-            self.add_game(game_path, base_path=base_path)
+            try:
+                self.add_game(game_path, base_path=base_path)
+            except FileNotFoundError as e:
+                print(f"Could not find game {game_path}")
+                raise e
+
 
     def add_game(self, game_path: PosixPath, base_path=None):
         self.games[len(self.games)] = Game(game_path, self.connection, self.get_next_game_id(), self.id, base_path)

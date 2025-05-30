@@ -3,7 +3,6 @@ import re
 from pathlib import Path
 
 from src.JHG_inspector.DB_commands.DB_init import get_schema, TableData
-from src.JHG_inspector.JSON_STRUCTURE import SIMPLE_JSON_STRUCTURE
 
 FILE_PATH = Path(__file__).resolve().parent
 

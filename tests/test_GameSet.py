@@ -1,26 +1,6 @@
-import json
-
-import pytest
-from src.JHG_inspector.GameSet import GameSet
 import shutil
 from pathlib import Path
-
-from src.JHG_inspector.JHGInspector import JHGInspector
-
-
-@pytest.fixture
-def game_set(temp_folder):
-    inspector = JHGInspector(base_path=temp_folder)
-    gameset = GameSet("test_set", inspector.connection, inspector.get_next_gameset_id(), base_path=temp_folder)
-    yield gameset
-    inspector.close()
-
-
-@pytest.fixture
-def temp_folder(tmp_path):
-    test_folder = tmp_path / "test_games"
-    test_folder.mkdir()
-    yield test_folder
+from testing_utilities import *
 
 
 class TestGameSetInitialization:
@@ -30,7 +10,10 @@ class TestGameSetInitialization:
         cursor = game_set.connection.cursor()
 
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name != 'sqlite_sequence';")
-        expected_tables = ["games", "players", "gamesets"]
+        expected_tables = ["searchTags", "gamesets", "games", "admins", "playersThatWillBeGovernment", "colorGroups",
+            "labelPools", "customParams", "governmentRoundInfo", "players", "customRoundInfo", "transactions", "playerRoundInfo",
+            "influences", "popularities", "groups", "groups_players", "chatInfo", "chatParticipants",
+            "messages", "messageTargets", "gameset_games", "games_searchTags"]
         actual_tables = [row[0] for row in cursor.fetchall()]
 
         assert actual_tables == expected_tables
