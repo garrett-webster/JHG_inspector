@@ -29,6 +29,15 @@ class Game:
        self.gameset_id = gameset_id
        self.code = None
 
+       self._set_id_to_name_dict()
+
+   def _set_id_to_name_dict(self):
+       self.cursor.execute("SELECT id, name FROM players WHERE gameId = ?", (self.id,))
+       results = self.cursor.fetchall()
+
+       for result in results:
+           self.id_to_name_dict[result[0]] = result[1]
+
    def load_data_from_file(self, game_path):
        if not game_path.is_file():
            raise FileNotFoundError
@@ -40,6 +49,7 @@ class Game:
 
        self._load_metadata_and_config(data)
        self._load_player_data(data)
+       self._set_id_to_name_dict()
        self.connection.commit()
 
 
