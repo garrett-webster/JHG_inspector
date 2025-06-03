@@ -56,6 +56,7 @@ class Game:
         self.set_id_to_name_dicts()
 
         self._load_transactions_data(data)
+        self._load_popularities_data(data)
         self.connection.commit()
 
     def _load_metadata_and_config(self, data):
@@ -97,6 +98,19 @@ class Game:
             transaction_values
         )
 
+    def _load_popularities_data(self, data):
+        columns, column_names, placeholders = self._prepare_sql_strings("popularities")
+        popularities_values = []
+
+        for round_num, (round_name, round_data) in enumerate(data["popularities"].items()):
+            for player, popularity in round_data.items():
+                player_id = self.name_to_id[player]
+                popularities_values.append((self.id, round_num + 1, player_id, popularity))
+
+        self.cursor.executemany(
+            f"INSERT INTO popularities ({column_names}) VALUES ({placeholders})",
+            popularities_values
+        )
 
     def _prepare_sql_strings(self, table_name: str):
         table_data = TableData(self.schema[table_name])

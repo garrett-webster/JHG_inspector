@@ -65,6 +65,31 @@ class TestGameInitialization:
 
         assert expected_transactions.issubset(set(actual_transactions))
 
+    def test_load_data_to_database_popularities(self, game):
+        def extract_expected_popularities(json_data, name_to_id, game_id):
+            results = set()
+            for round_index, (round_name, round_data) in enumerate(json_data["popularities"].items()):
+                round_num = round_index + 1
+                for name, score in round_data.items():
+                    results.add((game_id, round_num, name_to_id[name], score))
+            return results
+
+        test_game = game(FILE_PATH / "test_set2/jhg_GDSR.json")
+        with open(FILE_PATH / "test_set2/jhg_GDSR.json") as f:
+            json_data = json.load(f)
+
+        expected = extract_expected_popularities(json_data, test_game.name_to_id, game_id=1)
+
+        test_game.cursor.execute("SELECT * FROM popularities")
+        actual = set(test_game.cursor.fetchall())
+
+        # For floats, compare with tolerance
+        for ex in expected:
+            assert any(
+                ex[:3] == ac[:3] and abs(ex[3] - ac[3]) < 1e-6
+                for ac in actual
+            ), f"Expected popularity {ex} not found"
+
     def test_set_id_to_name_dicts(self, game):
         test_game1 = game(FILE_PATH / "test_set1/jhg_GDHP.json")
         test_game2 = game(FILE_PATH / "test_set1/jhg_MGNP.json")
