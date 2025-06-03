@@ -40,19 +40,4 @@ class GameSet:
 
 
     def add_game(self, game_path: PosixPath, base_path=None):
-        code = re.match(r"jhg_(.+)\.json", game_path.name).group(1)
-
-        # Checks if the game has already been loaded into the database so it knows whether to load the game or if it
-        # first needs to load the game data into the DB
-        self.cursor.execute(f"SELECT id FROM games WHERE code = ('{code}');")
-        result = self.cursor.fetchone()
-        if result is not None:
-            print(f"Loading game {code} from the database...")
-            game_id = result[0]
-            game = Game(self.connection, game_id, self.id, base_path)
-        else:
-            print(f"Adding game {code} to the database...")
-            game = Game(self.connection, self.get_next_game_id(), self.id, base_path)
-            game.load_data_from_file(game_path)
-
-        self.games[len(self.games)] = game
+        self.games[len(self.games)] = Game(self.connection, game_path, base_path)

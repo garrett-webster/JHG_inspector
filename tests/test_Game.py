@@ -12,7 +12,7 @@ class TestGameInitialization:
 
     def test_init_invalid_path(self, game_set, temp_folder):
         with pytest.raises(FileNotFoundError):
-            Game(game_set.connection, game_set.get_next_game_id(), game_set.id, temp_folder).load_data_from_file(Path("test_set1/jhg_AAAA.json"))
+            Game(game_set.connection, Path("test_set1/jhg_AAAA.json") , temp_folder)
 
     # Tests that the players table is correctly loaded into the database
     def test_load_data_to_database_players(self, game, temp_folder):
@@ -40,3 +40,7 @@ class TestGameInitialization:
 
         # Use Counter for unordered comparison with duplicates support
         assert players_in_db == expected_players, f"Expected players {expected_players}, but found {players_in_db}"
+
+    def test_set_id_to_name_dictionary(self, game):
+        test_game1 = game(FILE_PATH / "test_set1/jhg_GDHP.json")
+        test_game3 = game(FILE_PATH / "test_set1/jhg_GDHP.json")
