@@ -9,7 +9,6 @@
   },
   "games": {
     "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
-    "gamesetId": "INTEGER",
     "code": "TEXT",
     "numPlayers": "INTEGER",
     "numObservers": "INTEGER",
@@ -39,16 +38,7 @@
     "govSendVotesImmediately": "BOOLEAN",
     "labelsEnabled": "BOOLEAN",
     "duration": "INTEGER",
-    "runtimeType": "TEXT",
-    "FOREIGN_KEYS": [
-      {
-        "column": "gamesetId",
-        "references": {
-          "table": "gamesets",
-          "column": "id"
-        }
-      }
-    ]
+    "runtimeType": "TEXT"
   },
   "admins": {
     "gameId": "INTEGER",
