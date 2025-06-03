@@ -43,4 +43,13 @@ class TestGameInitialization:
 
     def test_set_id_to_name_dictionary(self, game):
         test_game1 = game(FILE_PATH / "test_set1/jhg_GDHP.json")
+        test_game2 = game(FILE_PATH / "test_set1/jhg_MGNP.json")
         test_game3 = game(FILE_PATH / "test_set1/jhg_GDHP.json")
+
+        expected_game_1 = {1: "Jane Doe", 2: "James Doe", 3: "John Doe", 4 : "Jessica Doe"}
+        expected_game_2 = {5: "John Doe", 6: "Jane Doe", 7: "James Doe", 8: "Jessica Doe"}
+
+        assert test_game1.id_to_name_dict == test_game3.id_to_name_dict
+        assert test_game1.id_to_name_dict == expected_game_1
+        assert test_game3.id_to_name_dict == expected_game_1
+        assert test_game2.id_to_name_dict == expected_game_2
