@@ -1,3 +1,4 @@
+import re
 from pathlib import Path, PosixPath
 
 from src.JHG_inspector.Game import Game
@@ -32,13 +33,26 @@ class GameSet:
         game_paths = [f for f in Path(folder_path).iterdir() if f.is_file()]
 
         for game_path in game_paths:
-            # TODO: Add a try catch here to catch if the file is not found.
             try:
                 self.add_game(game_path, base_path=base_path)
-            except FileNotFoundError as e:
+            except FileNotFoundError:
                 print(f"Could not find game {game_path}")
-                raise e
 
 
     def add_game(self, game_path: PosixPath, base_path=None):
-        self.games[len(self.games)] = Game(game_path, self.connection, self.get_next_game_id(), self.id, base_path)
+        code = re.match(r"jhg_(.+)\.json", game_path.name).group(1)
+
+        # Checks if the game has already been loaded into the database so it knows whether to load the game or if it
+        # first needs to load the game data into the DB
+        self.cursor.execute(f"SELECT id FROM games WHERE code = ('{code}');")
+        result = self.cursor.fetchone()
+        if result is not None:
+            print(f"Loading game {code} from the database...")
+            game_id = result[0]
+            game = Game(self.connection, game_id, self.id, base_path)
+        else:
+            print(f"Adding game {code} to the database...")
+            game = Game(self.connection, self.get_next_game_id(), self.id, base_path)
+            game.load_data_from_file(game_path)
+
+        self.games[len(self.games)] = game

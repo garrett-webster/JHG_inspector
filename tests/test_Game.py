@@ -12,7 +12,7 @@ class TestGameInitialization:
 
     def test_init_invalid_path(self, game_set, temp_folder):
         with pytest.raises(FileNotFoundError):
-            Game(Path("test_set1/jhg_AAAA.json"), game_set.connection, game_set.get_next_game_id(), game_set.id, temp_folder)
+            Game(game_set.connection, game_set.get_next_game_id(), game_set.id, temp_folder).load_data_from_file(Path("test_set1/jhg_AAAA.json"))
 
     # Tests that the players table is correctly loaded into the database
     def test_load_data_to_database_players(self, game, temp_folder):
