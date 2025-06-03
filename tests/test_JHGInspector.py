@@ -16,7 +16,7 @@ class TestJhgInspectorInitialization:
             cursor.execute(f"PRAGMA table_info({table})")
             actual_columns = [row[1] for row in cursor.fetchall()]  # row[1] = column name
 
-            expected_column_names = [key for key in expected_columns.keys() if key != 'FOREIGN_KEYS']
+            expected_column_names = [key for key in expected_columns.keys() if key not in ('FOREIGN_KEYS', 'FOREIGN_KEYS_EXCLUDE')]
 
             assert set(actual_columns) == set(expected_column_names), (
                 f"Mismatch in columns for table '{table}':\n"

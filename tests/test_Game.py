@@ -8,7 +8,8 @@ FILE_PATH = Path(__file__).resolve().parent
 
 class TestGameInitialization:
     def test_init_valid_path(self, game):
-        assert game().code == "TEST"
+        test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")
+        assert test_game.code == "GDHP"
 
     def test_init_invalid_path(self, game_set, temp_folder):
         with pytest.raises(FileNotFoundError):
@@ -41,15 +42,38 @@ class TestGameInitialization:
         # Use Counter for unordered comparison with duplicates support
         assert players_in_db == expected_players, f"Expected players {expected_players}, but found {players_in_db}"
 
-    def test_set_id_to_name_dictionary(self, game):
+    def test_load_data_to_database_transactions(self, game, temp_folder):
+        def extract_expected_transactions(json_data, name_to_id, game_id):
+            results = set()
+            for round_name, round_data in json_data["transactions"].items():
+                round_num = int(round_name.split("_")[1])
+                for sender, receivers in round_data.items():
+                    sender_id = name_to_id[sender]
+                    for receiver, amount in receivers.items():
+                        receiver_id = name_to_id[receiver]
+                        results.add((game_id, round_num, sender_id, receiver_id, amount))
+            return results
+
+        test_game = game(FILE_PATH / "test_set2/jhg_GDSR.json")
+        with open(FILE_PATH / "test_set2/jhg_GDSR.json") as f:
+            data = json.load(f)
+
+        expected_transactions = extract_expected_transactions(data, test_game.name_to_id, game_id=1)
+
+        test_game.cursor.execute("SELECT * FROM transactions")
+        actual_transactions = test_game.cursor.fetchall()
+
+        assert expected_transactions.issubset(set(actual_transactions))
+
+    def test_set_id_to_name_dicts(self, game):
         test_game1 = game(FILE_PATH / "test_set1/jhg_GDHP.json")
         test_game2 = game(FILE_PATH / "test_set1/jhg_MGNP.json")
         test_game3 = game(FILE_PATH / "test_set1/jhg_GDHP.json")
 
-        expected_game_1 = {1: "Jane Doe", 2: "James Doe", 3: "John Doe", 4 : "Jessica Doe"}
-        expected_game_2 = {5: "John Doe", 6: "Jane Doe", 7: "James Doe", 8: "Jessica Doe"}
+        expected_game_1 = {1: "Bravo", 2: "Uniform", 3: "X-ray", 4 : "Quebec"}
+        expected_game_2 = {5: "Sierra", 6: "Romeo", 7: "Uniform", 8: "Tango"}
 
-        assert test_game1.id_to_name_dict == test_game3.id_to_name_dict
-        assert test_game1.id_to_name_dict == expected_game_1
-        assert test_game3.id_to_name_dict == expected_game_1
-        assert test_game2.id_to_name_dict == expected_game_2
+        assert test_game1.id_to_name == test_game3.id_to_name
+        assert test_game1.id_to_name == expected_game_1
+        assert test_game3.id_to_name == expected_game_1
+        assert test_game2.id_to_name == expected_game_2

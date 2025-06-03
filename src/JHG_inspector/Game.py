@@ -6,23 +6,13 @@ from src.JHG_inspector.DB_commands.DB_init import get_schema, TableData
 
 FILE_PATH = Path(__file__).resolve().parent
 
-PLAYER_COLUMNS = ["name", "experience", "permissionLevel", "color", "hue", "avatar", "icon"]
-PLAYER_COLUMN_TYPES = {
-    "name": "TEXT",
-    "experience": "INTEGER",
-    "permissionLevel": "INTEGER",
-    "color": "TEXT",
-    "hue": "REAL",
-    "avatar": "TEXT",
-    "icon": "TEXT"
-}
-
 
 class Game:
     def __init__(self, connection, game_path, base_path=FILE_PATH):
         self.connection = connection
         self.cursor = connection.cursor()
-        self.id_to_name_dict = {}
+        self.id_to_name = {}
+        self.name_to_id = {}
         self.schema = get_schema(self.cursor)
         self.code = re.match(r"jhg_(.+)\.json", game_path.name).group(1)
 
@@ -32,6 +22,7 @@ class Game:
         if result is not None:
             print(f"Loading game {self.code} from the database...")
             self.id = result[0]
+            self.set_id_to_name_dicts()
         else:
             print(f"Adding game {self.code} to the database...")
 
@@ -42,12 +33,14 @@ class Game:
 
             self.load_data_from_file(game_path)
 
+    def set_id_to_name_dicts(self):
         # Set up the id_to_name_dict
-        self.cursor.execute("SELECT id, name FROM players WHERE gameId = ?", (self.id,))
+        self.cursor.execute("SELECT id, gameName FROM players WHERE gameId = ?", (self.id,))
         results = self.cursor.fetchall()
 
         for result in results:
-            self.id_to_name_dict[result[0]] = result[1]
+            self.id_to_name[result[0]] = result[1]
+            self.name_to_id[result[1]] = result[0]
 
     def load_data_from_file(self, game_path):
         if not game_path.is_file():
@@ -60,6 +53,9 @@ class Game:
 
         self._load_metadata_and_config(data)
         self._load_player_data(data)
+        self.set_id_to_name_dicts()
+
+        self._load_transactions_data(data)
         self.connection.commit()
 
     def _load_metadata_and_config(self, data):
@@ -77,7 +73,7 @@ class Game:
         columns, column_names, placeholders = self._prepare_sql_strings("players")
         player_values = []
 
-        for i, entry in enumerate(data["players"]):
+        for entry in data["players"]:
             player_values.append((self.id,) + tuple(entry[col[0]] for col in columns))
 
         self.cursor.executemany(
@@ -85,9 +81,26 @@ class Game:
             player_values
         )
 
+    def _load_transactions_data(self, data):
+        columns, column_names, placeholders = self._prepare_sql_strings("transactions")
+        transaction_values = []
+
+        for round_num, (round_name, round_transactions) in enumerate(data["transactions"].items()):
+            for player_from, transactions in round_transactions.items():
+                player_from_id = self.name_to_id[player_from]
+                for player_to, allocation in transactions.items():
+                    player_to_id = self.name_to_id[player_to]
+                    transaction_values.append((self.id, round_num + 1, player_from_id, player_to_id, allocation))
+
+        self.cursor.executemany(
+            f"INSERT INTO transactions ({column_names}) VALUES ({placeholders})",
+            transaction_values
+        )
+
+
     def _prepare_sql_strings(self, table_name: str):
         table_data = TableData(self.schema[table_name])
-        columns = table_data.non_key_columns
+        columns = table_data.non_excluded_columns
         column_names = ", ".join(["gameId"] + [column[0] for column in columns])
         placeholders = ", ".join(["?"] + ["?" for _ in columns])
 

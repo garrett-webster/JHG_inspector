@@ -134,6 +134,7 @@
   "players": {
     "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
     "gameId": "INTEGER",
+    "gameName": "TEXT",
     "name": "TEXT",
     "experience": "TEXT",
     "permissionLevel": "TEXT",
@@ -141,7 +142,7 @@
     "hue": "TEXT",
     "avatar": "TEXT",
     "icon": "TEXT",
-    "FOREIGN_KEYS": [
+    "FOREIGN_KEYS_EXCLUDE": [
       {
         "column": "gameId",
         "references": {
@@ -166,6 +167,7 @@
     ]
   },
   "transactions": {
+    "gameId": "INTEGER",
     "round_num": "INTEGER",
     "player_from_id": "INTEGER",
     "player_to_id": "INTEGER",
@@ -182,6 +184,15 @@
         "column": "player_to_id",
         "references": {
           "table": "players",
+          "column": "id"
+        }
+      }
+    ],
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
           "column": "id"
         }
       }
