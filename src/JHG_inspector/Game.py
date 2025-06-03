@@ -79,7 +79,6 @@ class Game:
 
         for i, entry in enumerate(data["players"]):
             player_values.append((self.id,) + tuple(entry[col[0]] for col in columns))
-            self.id_to_name_dict[i + 1] = entry["name"]
 
         self.cursor.executemany(
             f"INSERT INTO players ({column_names}) VALUES ({placeholders})",
