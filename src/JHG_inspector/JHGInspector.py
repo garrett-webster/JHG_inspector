@@ -26,14 +26,6 @@ class JHGInspector:
             self.connection.close()
             self.connection = None
 
-    def get_next_gameset_id(self):
-        if self.cursor:
-            self.cursor.execute("SELECT seq FROM sqlite_sequence WHERE name = 'gameset';")
-            row = self.cursor.fetchone()
-            if row is None or row[0] is None:
-                return 1
-            return row[0] + 1
-
     def connect(self, base_path):
         # Probably should be handled at the GUI level, but if the db file already exists, we probably want to confirm the name (so as to not overwrite data)
         # Connect to the database

@@ -19,7 +19,7 @@ def jhg_inspector(temp_folder):
 
 @pytest.fixture
 def game_set(temp_folder, jhg_inspector):
-    gameset = GameSet("test_set", jhg_inspector.connection, jhg_inspector.get_next_gameset_id(), base_path=temp_folder)
+    gameset = GameSet("test_set", jhg_inspector.connection, base_path=temp_folder)
     yield gameset
     jhg_inspector.close()
 
