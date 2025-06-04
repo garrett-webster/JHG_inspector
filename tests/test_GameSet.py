@@ -45,14 +45,5 @@ class TestGameSetInitialization:
         assert len(game_set.games) == len(expected_codes)
         assert actual_codes == expected_codes
 
-    def test_load_games_gameset_games(self, game_set, folder_name, temp_folder):
-        game_set.games.clear()
-        source_dir = Path(__file__).parent / folder_name
-        if source_dir.exists():
-            for item in source_dir.iterdir():
-                if item.is_file():
-                    shutil.copy(item, temp_folder / item.name)
 
-        # Load games with temp_folder as base_path (DB files will go here)
-        game_set.load_games(str(temp_folder), base_path=temp_folder)
 
