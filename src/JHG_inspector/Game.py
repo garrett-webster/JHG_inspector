@@ -77,14 +77,6 @@ class Game:
         self._load_influences_data(data)
         self.connection.commit()
 
-    # def _load_metadata_and_config(self, data):
-    #     # Minimum insert to get the ids tracking correctly
-    #     code = data["lobby"]["code"]
-    #     self.cursor.execute(
-    #         "INSERT INTO games (code) VALUES (?)",
-    #         (code,)
-    #     )
-
     @load_data("games")
     def _load_games_data(self, data, values, table_name):
         # There are circular dependencies with doing this. This relies on name_to_id which relies on the id existing.
