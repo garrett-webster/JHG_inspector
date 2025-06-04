@@ -6,6 +6,24 @@ from src.JHG_inspector.DB_commands.DB_init import get_schema, TableData
 
 FILE_PATH = Path(__file__).resolve().parent
 
+"""Loads the data from the game file in to the table that corresponds with the table_name passed to the load_data decorator
+   The passed function will compile the values for each row in that table. This function gets the table meta data that the
+   decorated function needs to compile the data, then does the insertion operations into the data base"""
+def load_data(table_name: str):
+    def decorator(function):
+        def wrapper(self, data):
+            columns, column_names, placeholders = self._prepare_sql_strings(table_name)
+            values = []
+
+            function(self, data, values, table_name)
+
+            self.cursor.executemany(
+                f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})",
+                values
+            )
+        return wrapper
+    return decorator
+
 
 class Game:
     def __init__(self, connection, game_path, base_path=FILE_PATH):
@@ -70,47 +88,27 @@ class Game:
             (code,)
         )
 
-    def _load_player_data(self, data):
-        columns, column_names, placeholders = self._prepare_sql_strings("players")
-        player_values = []
-
+    @load_data("players")
+    def _load_player_data(self, data, values, table_name):
         for entry in data["players"]:
-            player_values.append((self.id,) + tuple(entry[col[0]] for col in columns))
+            values.append((self.id, entry["gameName"], entry["name"], entry["experience"], entry["permissionLevel"],
+                           entry["color"], entry["hue"], entry["avatar"], entry["icon"]))
 
-        self.cursor.executemany(
-            f"INSERT INTO players ({column_names}) VALUES ({placeholders})",
-            player_values
-        )
-
-    def _load_transactions_data(self, data):
-        columns, column_names, placeholders = self._prepare_sql_strings("transactions")
-        transaction_values = []
-
-        for round_num, (round_name, round_transactions) in enumerate(data["transactions"].items()):
+    @load_data("transactions")
+    def _load_transactions_data(self, data, values, table_name):
+        for round_num, (round_name, round_transactions) in enumerate(data[table_name].items()):
             for player_from, transactions in round_transactions.items():
                 player_from_id = self.name_to_id[player_from]
                 for player_to, allocation in transactions.items():
                     player_to_id = self.name_to_id[player_to]
-                    transaction_values.append((self.id, round_num + 1, player_from_id, player_to_id, allocation))
+                    values.append((self.id, round_num + 1, player_from_id, player_to_id, allocation))
 
-        self.cursor.executemany(
-            f"INSERT INTO transactions ({column_names}) VALUES ({placeholders})",
-            transaction_values
-        )
-
-    def _load_popularities_data(self, data):
-        columns, column_names, placeholders = self._prepare_sql_strings("popularities")
-        popularities_values = []
-
-        for round_num, (round_name, round_data) in enumerate(data["popularities"].items()):
+    @load_data("popularities")
+    def _load_popularities_data(self, data, values, table_name):
+        for round_num, (round_name, round_data) in enumerate(data[table_name].items()):
             for player, popularity in round_data.items():
                 player_id = self.name_to_id[player]
-                popularities_values.append((self.id, round_num + 1, player_id, popularity))
-
-        self.cursor.executemany(
-            f"INSERT INTO popularities ({column_names}) VALUES ({placeholders})",
-            popularities_values
-        )
+                values.append((self.id, round_num + 1, player_id, popularity))
 
     def _prepare_sql_strings(self, table_name: str):
         table_data = TableData(self.schema[table_name])
