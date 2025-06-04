@@ -1,7 +1,4 @@
-import json
-
 from pathlib import Path
-from src.JHG_inspector.Game import Game
 from testing_utilities import *
 
 FILE_PATH = Path(__file__).resolve().parent
@@ -14,6 +11,18 @@ class TestGameInitialization:
     def test_init_invalid_path(self, game_set, temp_folder):
         with pytest.raises(FileNotFoundError):
             Game(game_set.connection, Path("test_set1/jhg_AAAA.json") , temp_folder)
+
+    def test_load_data_to_database_games(self, game, temp_folder):
+        test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")
+
+        test_game.cursor.execute("SELECT * FROM games")
+        actual_game_data = test_game.cursor.fetchone()
+
+        expected_game_data = (1, "GDHP", 4, 0, "started", "2025-05-15T16:04:55.960738Z", 150000000, "radio", "none",
+                              "freeForm", None, 10, 30, "time", 0.2, 0.5, 1.3, 0.95, 1.6, 0, 60, "ratio", True, 200, 50,
+                              True, False, 1747325756118000, "time")
+
+        assert actual_game_data == expected_game_data
 
     # Tests that the players table is correctly loaded into the database
     def test_load_data_to_database_players(self, game, temp_folder):
@@ -41,6 +50,7 @@ class TestGameInitialization:
 
         # Use Counter for unordered comparison with duplicates support
         assert players_in_db == expected_players, f"Expected players {expected_players}, but found {players_in_db}"
+
 
     def test_load_data_to_database_transactions(self, game, temp_folder):
         def extract_expected_transactions(json_data, name_to_id, game_id):
@@ -89,6 +99,30 @@ class TestGameInitialization:
                 ex[:3] == ac[:3] and abs(ex[3] - ac[3]) < 1e-6
                 for ac in actual
             ), f"Expected popularity {ex} not found"
+
+    def test_load_data_to_database_influences(self, game, temp_folder):
+        def extract_expected_influences(json_data, name_to_id, game_id):
+            results = set()
+            for round_name, round_data in json_data["influences"].items():
+                round_num = int(round_name.split("_")[1])
+                for sender, receivers in round_data.items():
+                    sender_id = name_to_id[sender]
+                    for receiver, amount in receivers.items():
+                        if receiver != "__intrinsic__":
+                            receiver_id = name_to_id[receiver]
+                            results.add((game_id, round_num, sender_id, receiver_id, amount))
+            return results
+
+        test_game = game(FILE_PATH / "test_set2/jhg_GDSR.json")
+        with open(FILE_PATH / "test_set2/jhg_GDSR.json") as f:
+            data = json.load(f)
+
+        expected_influences = extract_expected_influences(data, test_game.name_to_id, game_id=1)
+
+        test_game.cursor.execute("SELECT * FROM influences")
+        actual_influences = test_game.cursor.fetchall()
+
+        assert expected_influences.issubset(set(actual_influences))
 
     def test_set_id_to_name_dicts(self, game):
         test_game1 = game(FILE_PATH / "test_set1/jhg_GDHP.json")

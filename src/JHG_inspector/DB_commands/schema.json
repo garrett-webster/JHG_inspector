@@ -13,14 +13,12 @@
     "numPlayers": "INTEGER",
     "numObservers": "INTEGER",
     "status": "TEXT",
-    "creatorId": "TEXT",
     "startDateTime": "TIMESTAMP",
-    "name": "TEXT",
     "lengthOfRound": "INTEGER",
     "nameSet": "TEXT",
     "chatType": "TEXT",
     "messageType": "TEXT",
-    "advancedGameSetup": "TEXT",
+    "advancedGameSetup": "BLOB",
     "gameEndLow": "INTEGER",
     "gameEndHigh": "INTEGER",
     "gameEndType": "TEXT",
@@ -214,10 +212,11 @@
     ]
   },
   "influences": {
+    "gameId": "INTEGER",
     "round_num": "INTEGER",
     "player_from_id": "INTEGER",
     "player_to_id": "INTEGER",
-    "influence": "REAL",
+    "influence": "INTEGER",
     "FOREIGN_KEYS": [
       {
         "column": "player_from_id",
@@ -230,6 +229,15 @@
         "column": "player_to_id",
         "references": {
           "table": "players",
+          "column": "id"
+        }
+      }
+    ],
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
           "column": "id"
         }
       }
