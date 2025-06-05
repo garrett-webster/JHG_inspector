@@ -1,7 +1,6 @@
-import shutil
-from pathlib import Path
 from testing_utilities import *
 
+FILE_PATH = Path(__file__).resolve().parent
 
 class TestGameSetInitialization:
     def test_init(self, game_set):
@@ -28,22 +27,9 @@ class TestGameSetInitialization:
     )
     def test_load_games_codes(self, game_set, folder_name, expected_codes, temp_folder):
         # Clear previous games from game_set to isolate runs
-        game_set.games.clear()
+        test_gameset = game_set(FILE_PATH / folder_name)
 
-        # Create a copy of the sample data to test on
-        source_dir = Path(__file__).parent / folder_name
-        if source_dir.exists():
-            for item in source_dir.iterdir():
-                if item.is_file():
-                    shutil.copy(item, temp_folder / item.name)
+        actual_codes = {game.code for game in test_gameset.games.values()}
 
-        # Load games with temp_folder as base_path (DB files will go here)
-        game_set.load_games(str(temp_folder), base_path=temp_folder)
-
-        actual_codes = {game.code for game in game_set.games.values()}
-
-        assert len(game_set.games) == len(expected_codes)
+        assert len(test_gameset.games) == len(expected_codes)
         assert actual_codes == expected_codes
-
-
-

@@ -1,4 +1,6 @@
 import json
+import shutil
+from pathlib import Path
 
 import pytest
 
@@ -19,8 +21,19 @@ def jhg_inspector(temp_folder):
 
 @pytest.fixture
 def game_set(temp_folder, jhg_inspector):
-    gameset = GameSet("test_set", jhg_inspector.connection, base_path=temp_folder)
-    yield gameset
+    def create_gameset(path=None, name = "test_set"):
+        gameset = GameSet(name, jhg_inspector.connection, base_path=temp_folder)
+
+        if path is not None:
+            if path.exists():
+                for item in path.iterdir():
+                    if item.is_file():
+                        shutil.copy(item, temp_folder / item.name)
+
+            gameset.load_games(path)
+
+        return gameset
+    yield create_gameset
     jhg_inspector.close()
 
 @pytest.fixture
