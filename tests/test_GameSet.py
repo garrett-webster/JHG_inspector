@@ -33,3 +33,18 @@ class TestGameSetInitialization:
 
         assert len(test_gameset.games) == len(expected_codes)
         assert actual_codes == expected_codes
+
+
+    def test_load_games_gameset_games(self, game_set, temp_folder):
+        test_gameset1 = game_set(FILE_PATH / "test_set1")
+        test_gameset2 = game_set(FILE_PATH / "test_set2")
+
+        test_gameset1.cursor.execute("SELECT * FROM gameset_games WHERE gamesetId = ?", (test_gameset1.id,))
+        result = test_gameset1.cursor.fetchall()
+        expected_results = [(1, 1), (1,2), (1,3)]
+        assert result == expected_results
+
+        test_gameset2.cursor.execute("SELECT * FROM gameset_games WHERE gamesetId = ?", (test_gameset2.id,))
+        result = test_gameset2.cursor.fetchall()
+        expected_results = [(2, 4)]
+        assert result == expected_results
