@@ -4,9 +4,9 @@ FILE_PATH = Path(__file__).resolve().parent
 
 class TestGameSetInitialization:
     def test_init(self, game_set):
-        assert game_set.name == "test_set"
+        assert game_set().name == "test_set"
 
-        cursor = game_set.connection.cursor()
+        cursor = game_set().connection.cursor()
 
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name != 'sqlite_sequence';")
         expected_tables = ["searchTags", "gamesets", "games", "admins", "playersThatWillBeGovernment", "colorGroups",

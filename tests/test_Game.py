@@ -10,7 +10,7 @@ class TestGameInitialization:
 
     def test_init_invalid_path(self, game_set, temp_folder):
         with pytest.raises(FileNotFoundError):
-            Game(game_set.connection, Path("test_set1/jhg_AAAA.json") , temp_folder)
+            Game(game_set().connection, Path("test_set1/jhg_AAAA.json") , temp_folder)
 
     def test_load_data_to_database_games(self, game, temp_folder):
         test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")

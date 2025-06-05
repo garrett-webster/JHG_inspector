@@ -57,7 +57,7 @@ def game(temp_folder, game_set):
         with open(json_path, "w") as f:
             json.dump(game_data, f)
 
-        game = Game(game_set.connection, json_path, base_path=temp_folder)
+        game = Game(game_set().connection, json_path, base_path=temp_folder)
         return game
 
     return _create_game
