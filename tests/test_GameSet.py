@@ -46,5 +46,5 @@ class TestGameSetInitialization:
 
         test_gameset2.cursor.execute("SELECT * FROM gameset_games WHERE gamesetId = ?", (test_gameset2.id,))
         result = test_gameset2.cursor.fetchall()
-        expected_results = [(2, 4)]
+        expected_results = [(2, 4), (2,5)]
         assert result == expected_results

@@ -1,4 +1,3 @@
-from pathlib import Path
 from testing_utilities import *
 
 FILE_PATH = Path(__file__).resolve().parent
@@ -136,3 +135,54 @@ class TestGameInitialization:
         assert test_game1.id_to_name == expected_game_1
         assert test_game3.id_to_name == expected_game_1
         assert test_game2.id_to_name == expected_game_2
+
+    def test_load_chatInfo_data(self, game):
+        test_game = game(FILE_PATH / "test_set2/jhg_XJPV.json")
+        test_game.cursor.execute("SELECT * FROM chatInfo")
+        actual_chats = test_game.cursor.fetchall()
+
+        expected_chats = [
+            (1, 1, "-OS4sOQs0a34MI3Pb8U4", "RAH"),
+            (2, 1, "-OS4sOsEKJIlWUQBmx8A", "With Mike"),
+            (3, 1, "global", "Global Chat")
+        ]
+
+        assert actual_chats == expected_chats
+
+    def test_load_chatParticipants_data(self, game):
+        test_game = game(FILE_PATH / "test_set2/jhg_XJPV.json")
+        test_game.cursor.execute("SELECT id FROM chatInfo")
+        chat_ids = test_game.cursor.fetchall()
+
+        expected_participants = [
+            [(1,),(3,)],
+            [(3,), (2,)],
+            [(1,), (2,), (3,)]
+        ]
+
+        for i, chat_id in enumerate(chat_ids):
+            test_game.cursor.execute("SELECT playerId FROM chatParticipants WHERE conversationId = ?", chat_id)
+            actual_participants = test_game.cursor.fetchall()
+            assert actual_participants == expected_participants[i]
+
+    def test_load_messages_data(self, game):
+        test_game = game(FILE_PATH / "test_set2/jhg_XJPV.json")
+        test_game.cursor.execute("SELECT * FROM messages")
+        actual_messages = test_game.cursor.fetchall()
+
+        expected_messages = [
+            (1, 1, "-OS4sQ20LRln-2_0LASt", "Yankee", "Hi, Mike", "2025-06-06T15:35:08.227247Z", "identified"),
+            (2, 1, "-OS4sSCopRs_Htr3CYGh", "Mike", "Hi, Yank", "2025-06-06T15:35:17.110586Z", "identified"),
+            (3, 1, "-OS4sUhXW3zeuE4gvHEc", None, "Round 2", "2025-06-06T15:35:27.332050Z", "gameNotification"),
+
+            (4, 2, "-OS4sUhcj2P8TMjlGkck", None, "Round 2", "2025-06-06T15:35:27.338517Z", "gameNotification"),
+
+            (5, 3, "-OS4sM9wxGTEq2Y2SKNz", "Yankee", "Hey guys", "2025-06-06T15:34:52.349720Z", "identified"),
+            (6, 3, "-OS4sNJMDVohmr20BKzs", "Tango", "sending 3 to both", "2025-06-06T15:34:57.049240Z", "identified"),
+            (7, 3, "-OS4sRXDccbttAQ_Mw3-", "Yankee", "No", "2025-06-06T15:35:14.320444Z", "identified"),
+            (8, 3, "-OS4sUhQ8NUCCToD81Qd", None, "Round 2", "2025-06-06T15:35:27.324972Z", "gameNotification"),
+            (9, 3, "-OS4s_d-tzktuvpGOf9X", "Tango", "Alright, we have to tank yankee", "2025-06-06T15:35:51.618578Z",
+             "identified"),
+        ]
+
+        assert actual_messages == expected_messages

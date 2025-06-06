@@ -75,6 +75,9 @@ class Game:
         self._load_transactions_data(data)
         self._load_popularities_data(data)
         self._load_influences_data(data)
+        self._load_chatInfo_data(data)
+        self._load_chatParticipants_data(data)
+        self._load_messages_data(data)
         self.connection.commit()
 
     @load_data("games")
@@ -145,6 +148,41 @@ class Game:
                     if player_to != "__intrinsic__":
                         player_to_id = self.name_to_id[player_to]
                         values.append((self.id, round_num + 1, player_from_id, player_to_id, influence))
+
+    @load_data("chatInfo")
+    def _load_chatInfo_data(self, data, values, table_name):
+        for in_game_id, chat_info in data[table_name].items():
+            values.append((self.id, in_game_id, chat_info["name"]))
+
+    def  _load_chatParticipants_data(self, data):
+        game_id = self.id
+        for chat_name, chat_info in data["chatInfo"].items():
+            chat_id = self.cursor.execute(
+                "SELECT id FROM chatInfo WHERE inGameId = ? AND gameId = ?",
+                (chat_name, game_id)
+            ).fetchone()[0]
+            if chat_name == "global":
+                for player_id in self.id_to_name.keys():
+                    self.cursor.execute("INSERT INTO chatParticipants (conversationId, playerId) VALUES (?, ?)", (chat_id, player_id))
+            else:
+                for participant in chat_info["participants"]:
+                    participant_id = self.name_to_id[participant]
+                    self.cursor.execute("INSERT INTO chatParticipants (conversationId, playerId) VALUES (?, ?)",
+                        (chat_id, participant_id))
+
+    def  _load_messages_data(self, data):
+        game_id = self.id
+        for chat_name, chat_info in data["chatInfo"].items():
+            chat_id = self.cursor.execute(
+                "SELECT id FROM chatInfo WHERE inGameId = ? AND gameId = ?",
+                (chat_name, game_id)
+            ).fetchone()[0]
+
+
+            for in_game_id, message in chat_info["messages"].items():
+                if "from" not in message: message["from"] = None
+                self.cursor.execute("INSERT INTO messages (conversationId, inGameId, playerFrom, body, time, runtimeType) VALUES (?, ?, ?, ?, ?, ?)",
+                    (chat_id, in_game_id, message["from"], message["body"], message["time"], message["runtimeType"]))
 
     def _prepare_sql_strings(self, table_name: str):
         table_data = TableData(self.schema[table_name])

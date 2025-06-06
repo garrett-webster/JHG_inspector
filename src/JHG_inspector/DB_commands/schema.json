@@ -312,8 +312,9 @@
   "chatInfo": {
     "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
     "gameId": "INTEGER",
+    "inGameId": "TEXT",
     "name": "TEXT",
-    "FOREIGN_KEYS": [
+    "FOREIGN_KEYS_EXCLUDE": [
       {
         "column": "gameId",
         "references": {
@@ -326,7 +327,6 @@
   "chatParticipants": {
     "conversationId": "INTEGER",
     "playerId": "INTEGER",
-    "participant": "TEXT",
     "FOREIGN_KEYS": [
       {
         "column": "conversationId",
@@ -347,6 +347,8 @@
   "messages": {
     "messageId": "INTEGER PRIMARY KEY AUTOINCREMENT",
     "conversationId": "INTEGER",
+    "inGameId": "TEXT",
+    "playerFrom": "INTEGER",
     "body": "TEXT",
     "time": "TIMESTAMP",
     "runtimeType": "TEXT",
