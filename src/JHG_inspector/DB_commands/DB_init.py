@@ -25,8 +25,8 @@ class TableData:
             self.foreign_keys.append(fk)
             # Removes any foreign keys from the column list so you are left with only the non key columns
 
-        for fk in fk_exclude_data:
-            self.non_excluded_columns = [col for col in self.columns if col[0] != fk["column"]]
+        excluded_columns = {fk["column"] for fk in fk_exclude_data}
+        self.non_excluded_columns = [col for col in self.columns if col[0] not in excluded_columns]
 
         if self.primary_key:
             self.non_excluded_columns.remove(self.primary_key)

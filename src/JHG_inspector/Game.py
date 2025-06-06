@@ -69,7 +69,9 @@ class Game:
             data = json.load(game_file)
 
         self._load_games_data(data)
+        self._load_searchTags_data(data)
         self._load_player_data(data)
+        self._load_admins_data(data)
         self.set_id_to_name_dicts()
 
         self._load_transactions_data(data)
@@ -117,11 +119,25 @@ class Game:
             data["endCondition"]["runtimeType"],
         ))
 
+    @load_data("searchTags")
+    def _load_searchTags_data(self, data, values, table_name):
+        for tag, value in data["gameParams"]["show"].items():
+            values.append((self.id, "show_" + tag, value))
+
+        for tag, value in data["gameParams"]["allowEdit"].items():
+            values.append((self.id, "allowEdit_" + tag, value))
+
     @load_data("players")
     def _load_player_data(self, data, values, table_name):
         for entry in data[table_name]:
             values.append((self.id, entry["gameName"], entry["name"], entry["experience"], entry["permissionLevel"],
                            entry["color"], entry["hue"], entry["avatar"], entry["icon"]))
+
+    @load_data("admins")
+    def _load_admins_data(self, data, values, table_name):
+        for game_name in data["lobby"]["admins"]:
+            admin_id = self.name_to_id[game_name]
+            values.append((self.id, game_name, admin_id))
 
     @load_data("transactions")
     def _load_transactions_data(self, data, values, table_name):

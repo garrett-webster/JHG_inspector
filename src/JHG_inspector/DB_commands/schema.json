@@ -1,9 +1,20 @@
 {
   "searchTags": {
     "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
-    "tag": "TEXT"
+    "gameId": "INTEGER",
+    "tag": "TEXT",
+    "value": "TEXT",
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
   },
-    "gamesets": {
+  "gamesets": {
     "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
     "name": "TEXT"
   },
@@ -38,10 +49,40 @@
     "duration": "INTEGER",
     "runtimeType": "TEXT"
   },
+  "players": {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "gameId": "INTEGER",
+    "gameName": "TEXT",
+    "name": "TEXT",
+    "experience": "TEXT",
+    "permissionLevel": "TEXT",
+    "color": "TEXT",
+    "hue": "TEXT",
+    "avatar": "TEXT",
+    "icon": "TEXT",
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
   "admins": {
     "gameId": "INTEGER",
-    "name": "TEXT",
+    "playerId": "INTEGER",
     "FOREIGN_KEYS": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ],
+    "FOREIGN_KEYS_EXCLUDE": [
       {
         "column": "gameId",
         "references": {
@@ -120,27 +161,6 @@
     "gameId": "INTEGER",
     "roundNum": "INTEGER",
     "FOREIGN_KEYS": [
-      {
-        "column": "gameId",
-        "references": {
-          "table": "games",
-          "column": "id"
-        }
-      }
-    ]
-  },
-  "players": {
-    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
-    "gameId": "INTEGER",
-    "gameName": "TEXT",
-    "name": "TEXT",
-    "experience": "TEXT",
-    "permissionLevel": "TEXT",
-    "color": "TEXT",
-    "hue": "TEXT",
-    "avatar": "TEXT",
-    "icon": "TEXT",
-    "FOREIGN_KEYS_EXCLUDE": [
       {
         "column": "gameId",
         "references": {
@@ -398,26 +418,6 @@
         "column": "gamesetId",
         "references": {
           "table": "gamesets",
-          "column": "id"
-        }
-      }
-    ]
-  },
-  "games_searchTags": {
-    "searchTagId": "INTEGER",
-    "gameId": "INTEGER",
-    "FOREIGN_KEYS": [
-      {
-        "column": "searchTagId",
-        "references": {
-          "table": "searchTags",
-          "column": "id"
-        }
-      },
-      {
-        "column": "gameId",
-        "references": {
-          "table": "games",
           "column": "id"
         }
       }

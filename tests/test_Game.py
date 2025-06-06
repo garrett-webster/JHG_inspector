@@ -23,6 +23,33 @@ class TestGameInitialization:
 
         assert actual_game_data == expected_game_data
 
+    def test_load_searchTags_data(self, game):
+        test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")
+
+        expected_search_tags = [
+            ("show_roundLength",), ("show_gameLength",), ("show_chatType",),("show_messageType",),("show_nameSet",),
+            ("show_initialSetup",),("show_grouping",),("show_labels",),("show_advancedParams",),("show_government",),
+            ("show_visibilities",),("show_colorGrouping",),("show_pregame",),("show_agents",),("allowEdit_roundLength",),
+            ("allowEdit_gameLength",),("allowEdit_chatType",),("allowEdit_messageType",),("allowEdit_nameSet",),
+            ("allowEdit_initialSetup",),("allowEdit_grouping",),("allowEdit_labels",),("allowEdit_advancedParams",),
+            ("allowEdit_government",),("allowEdit_visibilities",),("allowEdit_colorGrouping",),("allowEdit_pregame",),
+            ("allowEdit_agents",),
+        ]
+        test_game.cursor.execute("SELECT tag FROM searchTags")
+        actual_search_tags = test_game.cursor.fetchall()
+
+        assert actual_search_tags == expected_search_tags
+
+        expected_search_tag_values = [("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),
+                                      ("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),
+                                      ("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),
+        ]
+        test_game.cursor.execute("SELECT value FROM searchTags")
+        actual_search_tag_values = test_game.cursor.fetchall()
+
+        assert actual_search_tag_values == expected_search_tag_values
+
+
     # Tests that the players table is correctly loaded into the database
     def test_load_data_to_database_players(self, game, temp_folder):
         test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")

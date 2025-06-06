@@ -9,10 +9,10 @@ class TestGameSetInitialization:
         cursor = game_set().connection.cursor()
 
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name != 'sqlite_sequence';")
-        expected_tables = ["searchTags", "gamesets", "games", "admins", "playersThatWillBeGovernment", "colorGroups",
-            "labelPools", "customParams", "governmentRoundInfo", "players", "customRoundInfo", "transactions", "playerRoundInfo",
+        expected_tables = ["searchTags", "gamesets", "games", "players", "admins", "playersThatWillBeGovernment", "colorGroups",
+            "labelPools", "customParams", "governmentRoundInfo", "customRoundInfo", "transactions", "playerRoundInfo",
             "influences", "popularities", "groups", "groups_players", "chatInfo", "chatParticipants",
-            "messages", "messageTargets", "gameset_games", "games_searchTags"]
+            "messages", "messageTargets", "gameset_games"]
         actual_tables = [row[0] for row in cursor.fetchall()]
 
         assert actual_tables == expected_tables
