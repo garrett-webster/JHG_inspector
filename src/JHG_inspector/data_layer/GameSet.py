@@ -1,11 +1,11 @@
 from pathlib import Path, PosixPath
 
-from src.JHG_inspector.Game import Game
+from src.JHG_inspector.data_layer.Game import Game
 
 
 FILE_PATH = Path(__file__).resolve().parent
 
-
+# I might want to add a permanent/temporary flag (or maybe visible) to allow for a tool to clone a gameset and add games temporarily without making it persistent
 class GameSet:
     def __init__(self, name, connection, base_path=FILE_PATH):
         self.games = {}

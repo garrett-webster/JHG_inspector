@@ -2,7 +2,7 @@ import json
 import re
 from pathlib import Path
 
-from src.JHG_inspector.DB_commands.DB_init import get_schema, TableData
+from src.JHG_inspector.data_layer.DB_commands.DB_init import get_schema, TableData
 
 FILE_PATH = Path(__file__).resolve().parent
 

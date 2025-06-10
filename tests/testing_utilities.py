@@ -1,12 +1,11 @@
 import json
 import shutil
-from pathlib import Path
 
 import pytest
 
-from src.JHG_inspector.Game import Game
-from src.JHG_inspector.GameSet import GameSet
-from src.JHG_inspector.JHGInspector import JHGInspector
+from src.JHG_inspector.data_layer.Game import Game
+from src.JHG_inspector.data_layer.GameSet import GameSet
+from src.JHG_inspector.data_layer.DatabaseAccess import DatabaseAccess
 
 @pytest.fixture
 def temp_folder(tmp_path):
@@ -17,7 +16,7 @@ def temp_folder(tmp_path):
 @pytest.fixture
 def jhg_inspector(temp_folder):
     # Make sure JHGInspector creates a new DB at temp_folder
-    return JHGInspector(temp_folder / "test.db")
+    return DatabaseAccess(temp_folder / "test.db")
 
 @pytest.fixture
 def game_set(temp_folder, jhg_inspector):

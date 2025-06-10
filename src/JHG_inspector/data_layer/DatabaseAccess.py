@@ -1,11 +1,11 @@
 import sqlite3
 from pathlib import Path
 
-from src.JHG_inspector.DB_commands.DB_init import initialize_DB
+from src.JHG_inspector.data_layer.DB_commands.DB_init import initialize_DB
 
 FILE_PATH = Path(__file__).resolve().parent
 
-class JHGInspector:
+class DatabaseAccess:
     def __init__(self, base_path=FILE_PATH):
         self.games = {}
         self.connection = None
@@ -26,6 +26,7 @@ class JHGInspector:
             self.connection.close()
             self.connection = None
 
+    # TODO: Set this up to be able to connect to a different data base, closing the previous connection if one exists
     def connect(self, base_path):
         # Probably should be handled at the GUI level, but if the db file already exists, we probably want to confirm the name (so as to not overwrite data)
         # Connect to the database
