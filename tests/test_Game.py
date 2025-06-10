@@ -51,7 +51,6 @@ class TestGameInitialization:
 
         assert actual_search_tag_values == expected_search_tag_values
 
-
     # Tests that the players table is correctly loaded into the database
     def test_load_data_to_database_players(self, game, temp_folder):
         test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")

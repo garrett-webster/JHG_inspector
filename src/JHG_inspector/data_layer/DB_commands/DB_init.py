@@ -51,7 +51,3 @@ def initialize_DB(connection):
 
         columns_sql = ", ".join(column_lines)
         cursor.execute(f"CREATE TABLE IF NOT EXISTS {table_name} ({columns_sql})")
-
-def get_schema(cursor) -> dict:
-    with open(PATH / "schema.json", "r") as f:
-        return json.load(f)
