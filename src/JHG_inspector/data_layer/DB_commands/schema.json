@@ -107,21 +107,13 @@
   },
   "colorGroups": {
     "gameId": "INTEGER",
-    "playerId": "INTEGER",
-    "hue": "REAL",
-    "colorName": "TEXT",
-    "FOREIGN_KEYS": [
+    "percentOfPlayers": "int",
+    "color": "TEXT",
+    "FOREIGN_KEYS_EXCLUDE": [
       {
         "column": "gameId",
         "references": {
           "table": "games",
-          "column": "id"
-        }
-      },
-      {
-        "column": "playerId",
-        "references": {
-          "table": "players",
           "column": "id"
         }
       }

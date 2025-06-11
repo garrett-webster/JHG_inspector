@@ -63,6 +63,8 @@ class GameFileLoader(ABC):
         self._load_playersThatWillBeGovernment_data(data)
         self.game.set_id_to_name_dicts()
 
+
+        self._load_colorGroups_data(data)
         self._load_transactions_data(data)
         self._load_popularities_data(data)
         self._load_influences_data(data)
@@ -137,6 +139,12 @@ class GameFileLoader(ABC):
                 self.game.cursor.execute("SELECT id FROM players WHERE name = ? AND gameId = ?", (name, self.game.id))
                 player_id = self.game.cursor.fetchone()
                 values.append((self.game.id, player_id[0]))
+
+    @load_data("colorGroups")
+    def _load_colorGroups_data(self, data, values, table_name):
+        if ["colorGroups"] is not None:
+            for color_group in data["colorGroups"]:
+                values.append((self.game.id, color_group["percentOfPlayers"], color_group["color"]))
 
     @load_data("transactions")
     def _load_transactions_data(self, data, values, table_name):

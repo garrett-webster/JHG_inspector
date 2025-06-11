@@ -61,6 +61,15 @@ class TestGameInitialization:
 
         assert actual_players == expected_players
 
+    def test_load_colorGroups_data(self, game, temp_folder):
+        test_game = game(FILE_PATH / "test_set3/jhg_DGMT.json")
+
+        test_game.cursor.execute("SELECT * FROM colorGroups")
+        actual_color_groups = test_game.cursor.fetchall()
+        expected_color_groups = [(1, 50, "Red"), (1, 25, "Blue")]
+
+        assert expected_color_groups == actual_color_groups
+
     # Tests that the players table is correctly loaded into the database
     def test_load_data_to_database_players(self, game, temp_folder):
         test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")
