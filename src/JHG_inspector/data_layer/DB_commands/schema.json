@@ -287,10 +287,10 @@
   },
   "groups": {
     "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
-    "roundNum": "INTEGER",
     "gameId": "INTEGER",
+    "roundNum": "INTEGER",
     "name": "TEXT",
-    "FOREIGN_KEYS": [
+    "FOREIGN_KEYS_EXCLUDE": [
       {
         "column": "gameId",
         "references": {

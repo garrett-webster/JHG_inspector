@@ -63,10 +63,10 @@ class GameFileLoader(ABC):
         self._load_playersThatWillBeGovernment_data(data)
         self.game.set_id_to_name_dicts()
 
-
         self._load_colorGroups_data(data)
         self._load_transactions_data(data)
         self._load_popularities_data(data)
+        self._load_groups_data(data)
         self._load_influences_data(data)
         self._load_chatInfo_data(data)
         self._load_chatParticipants_data(data)
@@ -161,6 +161,11 @@ class GameFileLoader(ABC):
             for player, popularity in round_data.items():
                 player_id = self.game.name_to_id[player]
                 values.append((self.game.id, round_num + 1, player_id, popularity))
+
+    @load_data("groups")
+    def _load_groups_data(self, data, values, table_name):
+        for round_num, (round_name, round_data) in enumerate(data[table_name].items()):
+            values.append((self.game.id, round_num + 1, round_name))
 
     @load_data("influences")
     def _load_influences_data(self, data, values, table_name):
