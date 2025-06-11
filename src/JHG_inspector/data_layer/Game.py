@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader import GameFileLoader
+from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
 
 FILE_PATH = Path(__file__).resolve().parent
 
@@ -31,7 +31,7 @@ class Game:
             file_loader.load_data_from_file(game_path)
 
     def create_game_file_loader(self):
-        return GameFileLoader(self)
+        return GameFileLoader_JsonV1(self)
 
     def set_id_to_name_dicts(self):
         # Set up the id_to_name_dict
@@ -41,10 +41,3 @@ class Game:
         for result in results:
             self.id_to_name[result[0]] = result[1]
             self.name_to_id[result[1]] = result[0]
-
-
-
-
-
-
-

@@ -1,13 +1,18 @@
 import json
 import re
-from abc import ABC, abstractmethod
 from pathlib import Path
 
 from src.JHG_inspector.data_layer.DB_commands.DB_init import TableData
 
 """Loads the data from the game file in to the table that corresponds with the table_name passed to the load_data decorator
    The passed function will compile the values for each row in that table. This function gets the table meta data that the
-   decorated function needs to compile the data, then does the insertion operations into the data base"""
+   decorated function needs to compile the data, then does the insertion operations into the data base.
+   
+   To use a function decorated with load_data, pass a string with the name of the database table you want to insert into
+   load_data (the decoration will look like @load_data("tableName")). The decorated function must take 
+   (self, data, values, table_name) as its arguments. Then, do logic needed to collect the values that should be
+    inserted into the given table and vall values.append(), passing it a tuple with the values in the order defined in
+    the schema for that table (see src/data_layer/DB_commands/schema.json)"""
 
 NUM_LOAD_FUNCTIONS = 0
 def load_data(table_name: str = None):
@@ -30,7 +35,12 @@ def load_data(table_name: str = None):
     return decorator
 
 
-class GameFileLoader(ABC):
+"""Base class for game file loading. Each subclass defines the functions necessary to load the data from a different 
+   version of the json, allowing for updates to the json to not break existing datasets. These methods (in the subclass)
+   are decorated with @load_data, which marks them to be ran by load_data_from_file. They are run in the order that they
+   are declared, which allows for control of call order for handling dependencies (especially the creation of the 
+   name_to_id and id_to_name dictionaries)"""
+class GameFileLoader:
     def __init__(self, game):
         self.game = game
         self.connection = game.connection
@@ -40,7 +50,6 @@ class GameFileLoader(ABC):
 
         # Collect all the functions annotated with @load_data and sort them in order of declaration
         self._load_functions = []
-
         for attr in dir(self):
             func = getattr(self, attr)
             if callable(func) and hasattr(func, "_load_function_order"):
@@ -73,141 +82,3 @@ class GameFileLoader(ABC):
             func(data)  # or func(self, data) depending on your wrapper
 
         self.connection.commit()
-
-    @load_data("games")
-    def _load_games_data(self, data, values, table_name):
-        values.append((
-            data["lobby"]["code"],
-            data["lobby"]["numPlayers"],
-            data["lobby"]["numObservers"],
-            data["status"],
-            # creatorId,
-            data["startDateTime"],
-            data["gameParams"]["lengthOfRound"],
-            data["gameParams"]["nameSet"],
-            data["gameParams"]["chatType"],
-            data["gameParams"]["messageType"],
-            data["gameParams"]["advancedGameSetup"],
-            data["gameParams"]["gameEndCriteria"]["low"],
-            data["gameParams"]["gameEndCriteria"]["high"],
-            data["gameParams"]["gameEndCriteria"]["runtimeType"],
-            data["gameParams"]["popularityFunctionParams"]["alpha"],
-            data["gameParams"]["popularityFunctionParams"]["beta"],
-            data["gameParams"]["popularityFunctionParams"]["cGive"],
-            data["gameParams"]["popularityFunctionParams"]["cKeep"],
-            data["gameParams"]["popularityFunctionParams"]["cSteal"],
-            data["gameParams"]["popularityFunctionParams"]["povertyLine"],
-            data["gameParams"]["governmentParams"]["initialPopularity"],
-            data["gameParams"]["governmentParams"]["initialPopularityType"],
-
-            data["gameParams"]["popularityRandomizationParams"]["randomPopularities"],
-            data["gameParams"]["popularityRandomizationParams"]["randomPopHigh"],
-            data["gameParams"]["popularityRandomizationParams"]["randomPopLow"],
-
-            data["gameParams"]["governmentParams"]["sendVotesImmediately"],
-            data["gameParams"]["labels"]["enabled"],
-            data["endCondition"]["duration"],
-            data["endCondition"]["runtimeType"],
-        ))
-
-    @load_data("searchTags")
-    def _load_searchTags_data(self, data, values, table_name):
-        for tag, value in data["gameParams"]["show"].items():
-            values.append((self.game.id, "show_" + tag, value))
-
-        for tag, value in data["gameParams"]["allowEdit"].items():
-            values.append((self.game.id, "allowEdit_" + tag, value))
-
-    @load_data("players")
-    def _load_player_data(self, data, values, table_name):
-        for entry in data[table_name]:
-            values.append((self.game.id, entry["gameName"], entry["name"], entry["experience"], entry["permissionLevel"],
-                           entry["color"], entry["hue"], entry["avatar"], entry["icon"]))
-
-    @load_data("admins")
-    def _load_admins_data(self, data, values, table_name):
-        for game_name in data["lobby"]["admins"]:
-            admin_id = self.game.name_to_id[game_name]
-            values.append((self.game.id, game_name, admin_id))
-
-    @load_data("playersThatWillBeGovernment")
-    def _load_playersThatWillBeGovernment_data(self, data, values, table_name):
-        if data["gameParams"]["governmentParams"]["playersThatWillBeGovernment"] is not None:
-            for name in data["gameParams"]["governmentParams"]["playersThatWillBeGovernment"]:
-                self.game.cursor.execute("SELECT id FROM players WHERE name = ? AND gameId = ?", (name, self.game.id))
-                player_id = self.game.cursor.fetchone()
-                values.append((self.game.id, player_id[0]))
-
-        self.game.set_id_to_name_dicts()
-
-    @load_data("colorGroups")
-    def _load_colorGroups_data(self, data, values, table_name):
-        if data.get("colorGroups") is not None:
-            for color_group in data["colorGroups"]:
-                values.append((self.game.id, color_group["percentOfPlayers"], color_group["color"]))
-
-    @load_data("transactions")
-    def _load_transactions_data(self, data, values, table_name):
-        for round_num, (round_name, round_transactions) in enumerate(data[table_name].items()):
-            for player_from, transactions in round_transactions.items():
-                player_from_id = self.game.name_to_id[player_from]
-                for player_to, allocation in transactions.items():
-                    player_to_id = self.game.name_to_id[player_to]
-                    values.append((self.game.id, round_num + 1, player_from_id, player_to_id, allocation))
-
-    @load_data("popularities")
-    def _load_popularities_data(self, data, values, table_name):
-        for round_num, (round_name, round_data) in enumerate(data[table_name].items()):
-            for player, popularity in round_data.items():
-                player_id = self.game.name_to_id[player]
-                values.append((self.game.id, round_num + 1, player_id, popularity))
-
-    @load_data("groups")
-    def _load_groups_data(self, data, values, table_name):
-        for round_num, (round_name, round_data) in enumerate(data[table_name].items()):
-            values.append((self.game.id, round_num + 1, round_name))
-
-    @load_data("influences")
-    def _load_influences_data(self, data, values, table_name):
-        for round_num, (round_name, round_transactions) in enumerate(data[table_name].items()):
-            for player_from, influences in round_transactions.items():
-                player_from_id = self.game.name_to_id[player_from]
-                for player_to, influence in influences.items():
-                    if player_to != "__intrinsic__":
-                        player_to_id = self.game.name_to_id[player_to]
-                        values.append((self.game.id, round_num + 1, player_from_id, player_to_id, influence))
-
-    @load_data("chatInfo")
-    def _load_chatInfo_data(self, data, values, table_name):
-        for in_game_id, chat_info in data[table_name].items():
-            values.append((self.game.id, in_game_id, chat_info["name"]))
-
-    @load_data("chatParticipants")
-    def  _load_chatParticipants_data(self, data, values, table_name):
-        game_id = self.game.id
-        for chat_name, chat_info in data["chatInfo"].items():
-            chat_id = self.game.cursor.execute(
-                "SELECT id FROM chatInfo WHERE inGameId = ? AND gameId = ?",
-                (chat_name, game_id)
-            ).fetchone()[0]
-
-            if chat_name == "global":
-                for player_id in self.game.id_to_name.keys():
-                    values.append((chat_id, player_id))
-            else:
-                for participant in chat_info["participants"]:
-                    participant_id = self.game.name_to_id[participant]
-                    values.append((chat_id, participant_id))
-
-    @load_data("messages")
-    def _load_messages_data(self, data, values, table_name):
-        game_id = self.game.id
-        for chat_name, chat_info in data["chatInfo"].items():
-            chat_id = self.game.cursor.execute(
-                "SELECT id FROM chatInfo WHERE inGameId = ? AND gameId = ?",
-                (chat_name, game_id)
-            ).fetchone()[0]
-
-            for in_game_id, message in chat_info["messages"].items():
-                if "from" not in message: message["from"] = None
-                values.append((chat_id, in_game_id, message["from"], message["body"], message["time"], message["runtimeType"]))
