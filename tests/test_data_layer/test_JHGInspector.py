@@ -1,12 +1,11 @@
-import json
 from pathlib import Path
 
-from testing_utilities import *
+from tests.testing_utilities import *
 
 class TestJhgInspectorInitialization:
     def test_schema_columns_match_json(self, jhg_inspector):
         # Load schema from JSON
-        schema_path = Path(__file__).parent.parent / "src" / "JHG_inspector" / "data_layer" / "DB_commands" / "schema.json"
+        schema_path = Path(__file__).parent.parent.parent / "src" / "JHG_inspector" / "data_layer" / "DB_commands" / "schema.json"
         with open(schema_path, "r") as f:
             expected_schema = json.load(f)
 

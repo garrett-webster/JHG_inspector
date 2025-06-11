@@ -1,20 +1,14 @@
 from pathlib import Path
 
-from testing_utilities import *
+from tests.testing_utilities import *
 
 FILE_PATH = Path(__file__).resolve().parent
+TESTS_PATH = FILE_PATH.parent.parent
 
-class TestGameInitialization:
-    def test_init_valid_path(self, game):
-        test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")
-        assert test_game.code == "GDHP"
 
-    def test_init_invalid_path(self, game_set, temp_folder):
-        with pytest.raises(FileNotFoundError):
-            Game(game_set().connection, Path("test_set1/jhg_AAAA.json") , temp_folder)
-
+class TestGameFileLoader_JsonV1:
     def test_load_data_to_database_games(self, game, temp_folder):
-        test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")
+        test_game = game(TESTS_PATH / "test_set1/jhg_GDHP.json")
 
         test_game.cursor.execute("SELECT * FROM games")
         actual_game_data = test_game.cursor.fetchone()
@@ -26,34 +20,35 @@ class TestGameInitialization:
         assert actual_game_data == expected_game_data
 
     def test_load_searchTags_data(self, game):
-        test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")
+        test_game = game(TESTS_PATH / "test_set1/jhg_GDHP.json")
 
         expected_search_tags = [
-            ("show_roundLength",), ("show_gameLength",), ("show_chatType",),("show_messageType",),("show_nameSet",),
-            ("show_initialSetup",),("show_grouping",),("show_labels",),("show_advancedParams",),("show_government",),
-            ('show_popularityRandomization',),("show_visibilities",),("show_colorGrouping",),("show_pregame",),
-            ("show_agents",),("allowEdit_roundLength",),("allowEdit_gameLength",),("allowEdit_chatType",),
-            ("allowEdit_messageType",),("allowEdit_nameSet",),("allowEdit_initialSetup",),("allowEdit_grouping",),
-            ("allowEdit_labels",),("allowEdit_advancedParams",),("allowEdit_government",),
-            ('allowEdit_popularityRandomization',),("allowEdit_visibilities",),("allowEdit_colorGrouping",),
-            ("allowEdit_pregame",),("allowEdit_agents",),
+            ("show_roundLength",), ("show_gameLength",), ("show_chatType",), ("show_messageType",), ("show_nameSet",),
+            ("show_initialSetup",), ("show_grouping",), ("show_labels",), ("show_advancedParams",),
+            ("show_government",),
+            ('show_popularityRandomization',), ("show_visibilities",), ("show_colorGrouping",), ("show_pregame",),
+            ("show_agents",), ("allowEdit_roundLength",), ("allowEdit_gameLength",), ("allowEdit_chatType",),
+            ("allowEdit_messageType",), ("allowEdit_nameSet",), ("allowEdit_initialSetup",), ("allowEdit_grouping",),
+            ("allowEdit_labels",), ("allowEdit_advancedParams",), ("allowEdit_government",),
+            ('allowEdit_popularityRandomization',), ("allowEdit_visibilities",), ("allowEdit_colorGrouping",),
+            ("allowEdit_pregame",), ("allowEdit_agents",),
         ]
         test_game.cursor.execute("SELECT tag FROM searchTags")
         actual_search_tags = test_game.cursor.fetchall()
 
         assert actual_search_tags == expected_search_tags
 
-        expected_search_tag_values = [("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),
-                                      ("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),
-                                      ("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",)
-        ]
+        expected_search_tag_values = [("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",),
+                                      ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",),
+                                      ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",), ("1",)
+                                      ]
         test_game.cursor.execute("SELECT value FROM searchTags")
         actual_search_tag_values = test_game.cursor.fetchall()
 
         assert actual_search_tag_values == expected_search_tag_values
 
     def test_load_playersThatWillBeGovernment_data(self, game, temp_folder):
-        test_game = game(FILE_PATH / "test_set3/jhg_NMBT.json")
+        test_game = game(TESTS_PATH / "test_set3/jhg_NMBT.json")
 
         test_game.cursor.execute("SELECT playerId FROM playersThatWillBeGovernment")
         actual_players = test_game.cursor.fetchall()
@@ -62,7 +57,7 @@ class TestGameInitialization:
         assert actual_players == expected_players
 
     def test_load_colorGroups_data(self, game, temp_folder):
-        test_game = game(FILE_PATH / "test_set3/jhg_DGMT.json")
+        test_game = game(TESTS_PATH / "test_set3/jhg_DGMT.json")
 
         test_game.cursor.execute("SELECT * FROM colorGroups")
         actual_color_groups = test_game.cursor.fetchall()
@@ -72,7 +67,7 @@ class TestGameInitialization:
 
     # Tests that the players table is correctly loaded into the database
     def test_load_data_to_database_players(self, game, temp_folder):
-        test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")
+        test_game = game(TESTS_PATH / "test_set1/jhg_GDHP.json")
 
         # Fetch all players data from the database
         test_game.cursor.execute("""
@@ -97,7 +92,6 @@ class TestGameInitialization:
         # Use Counter for unordered comparison with duplicates support
         assert players_in_db == expected_players, f"Expected players {expected_players}, but found {players_in_db}"
 
-
     def test_load_data_to_database_transactions(self, game, temp_folder):
         def extract_expected_transactions(json_data, name_to_id, game_id):
             results = set()
@@ -110,8 +104,8 @@ class TestGameInitialization:
                         results.add((game_id, round_num, sender_id, receiver_id, amount))
             return results
 
-        test_game = game(FILE_PATH / "test_set2/jhg_GDSR.json")
-        with open(FILE_PATH / "test_set2/jhg_GDSR.json") as f:
+        test_game = game(TESTS_PATH / "test_set2/jhg_GDSR.json")
+        with open(TESTS_PATH / "test_set2/jhg_GDSR.json") as f:
             data = json.load(f)
 
         expected_transactions = extract_expected_transactions(data, test_game.name_to_id, game_id=1)
@@ -130,8 +124,8 @@ class TestGameInitialization:
                     results.add((game_id, round_num, name_to_id[name], score))
             return results
 
-        test_game = game(FILE_PATH / "test_set2/jhg_GDSR.json")
-        with open(FILE_PATH / "test_set2/jhg_GDSR.json") as f:
+        test_game = game(TESTS_PATH / "test_set2/jhg_GDSR.json")
+        with open(TESTS_PATH / "test_set2/jhg_GDSR.json") as f:
             json_data = json.load(f)
 
         expected = extract_expected_popularities(json_data, test_game.name_to_id, game_id=1)
@@ -159,8 +153,8 @@ class TestGameInitialization:
                             results.add((game_id, round_num, sender_id, receiver_id, amount))
             return results
 
-        test_game = game(FILE_PATH / "test_set2/jhg_GDSR.json")
-        with open(FILE_PATH / "test_set2/jhg_GDSR.json") as f:
+        test_game = game(TESTS_PATH / "test_set2/jhg_GDSR.json")
+        with open(TESTS_PATH / "test_set2/jhg_GDSR.json") as f:
             data = json.load(f)
 
         expected_influences = extract_expected_influences(data, test_game.name_to_id, game_id=1)
@@ -170,21 +164,8 @@ class TestGameInitialization:
 
         assert expected_influences.issubset(set(actual_influences))
 
-    def test_set_id_to_name_dicts(self, game):
-        test_game1 = game(FILE_PATH / "test_set1/jhg_GDHP.json")
-        test_game2 = game(FILE_PATH / "test_set1/jhg_MGNP.json")
-        test_game3 = game(FILE_PATH / "test_set1/jhg_GDHP.json")
-
-        expected_game_1 = {1: "Bravo", 2: "Uniform", 3: "X-ray", 4 : "Quebec"}
-        expected_game_2 = {5: "Sierra", 6: "Romeo", 7: "Uniform", 8: "Tango"}
-
-        assert test_game1.id_to_name == test_game3.id_to_name
-        assert test_game1.id_to_name == expected_game_1
-        assert test_game3.id_to_name == expected_game_1
-        assert test_game2.id_to_name == expected_game_2
-
     def test_load_chatInfo_data(self, game):
-        test_game = game(FILE_PATH / "test_set2/jhg_XJPV.json")
+        test_game = game(TESTS_PATH / "test_set2/jhg_XJPV.json")
         test_game.cursor.execute("SELECT * FROM chatInfo")
         actual_chats = test_game.cursor.fetchall()
 
@@ -197,12 +178,12 @@ class TestGameInitialization:
         assert actual_chats == expected_chats
 
     def test_load_chatParticipants_data(self, game):
-        test_game = game(FILE_PATH / "test_set2/jhg_XJPV.json")
+        test_game = game(TESTS_PATH / "test_set2/jhg_XJPV.json")
         test_game.cursor.execute("SELECT id FROM chatInfo")
         chat_ids = test_game.cursor.fetchall()
 
         expected_participants = [
-            [(1,),(3,)],
+            [(1,), (3,)],
             [(3,), (2,)],
             [(1,), (2,), (3,)]
         ]
@@ -213,7 +194,7 @@ class TestGameInitialization:
             assert actual_participants == expected_participants[i]
 
     def test_load_messages_data(self, game):
-        test_game = game(FILE_PATH / "test_set2/jhg_XJPV.json")
+        test_game = game(TESTS_PATH / "test_set2/jhg_XJPV.json")
         test_game.cursor.execute("SELECT * FROM messages")
         actual_messages = test_game.cursor.fetchall()
 

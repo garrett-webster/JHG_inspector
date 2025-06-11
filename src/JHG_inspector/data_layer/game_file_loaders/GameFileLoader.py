@@ -11,13 +11,14 @@ from src.JHG_inspector.data_layer.DB_commands.DB_init import TableData
    To use a function decorated with load_data, pass a string with the name of the database table you want to insert into
    load_data (the decoration will look like @load_data("tableName")). The decorated function must take 
    (self, data, values, table_name) as its arguments. Then, do logic needed to collect the values that should be
-    inserted into the given table and vall values.append(), passing it a tuple with the values in the order defined in
+    inserted into the given table and call values.append(), passing it a tuple with the values in the order defined in
     the schema for that table (see src/data_layer/DB_commands/schema.json)"""
 
 NUM_LOAD_FUNCTIONS = 0
 def load_data(table_name: str = None):
     def decorator(function):
         global NUM_LOAD_FUNCTIONS
+
         def wrapper(self, data):
             if table_name is not None:
                 columns, column_names, placeholders = self._prepare_sql_strings(table_name)
@@ -29,9 +30,11 @@ def load_data(table_name: str = None):
                     f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})",
                     values
                 )
+
         wrapper._load_function_order = NUM_LOAD_FUNCTIONS
         NUM_LOAD_FUNCTIONS += 1
         return wrapper
+
     return decorator
 
 
@@ -40,6 +43,8 @@ def load_data(table_name: str = None):
    are decorated with @load_data, which marks them to be ran by load_data_from_file. They are run in the order that they
    are declared, which allows for control of call order for handling dependencies (especially the creation of the 
    name_to_id and id_to_name dictionaries)"""
+
+
 class GameFileLoader:
     def __init__(self, game):
         self.game = game
