@@ -9,20 +9,23 @@ from src.JHG_inspector.data_layer.DB_commands.DB_init import TableData
    The passed function will compile the values for each row in that table. This function gets the table meta data that the
    decorated function needs to compile the data, then does the insertion operations into the data base"""
 
-
-def load_data(table_name: str):
+NUM_LOAD_FUNCTIONS = 0
+def load_data(table_name: str = None):
     def decorator(function):
+        global NUM_LOAD_FUNCTIONS
         def wrapper(self, data):
-            columns, column_names, placeholders = self._prepare_sql_strings(table_name)
-            values = []
+            if table_name is not None:
+                columns, column_names, placeholders = self._prepare_sql_strings(table_name)
+                values = []
 
-            function(self, data, values, table_name)
+                function(self, data, values, table_name)
 
-            self.cursor.executemany(
-                f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})",
-                values
-            )
-
+                self.cursor.executemany(
+                    f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})",
+                    values
+                )
+        wrapper._load_function_order = NUM_LOAD_FUNCTIONS
+        NUM_LOAD_FUNCTIONS += 1
         return wrapper
     return decorator
 
@@ -35,15 +38,26 @@ class GameFileLoader(ABC):
         with open(Path(__file__).parent.parent / "DB_commands" / "schema.json", "r") as f:
             self.schema = json.load(f)
 
+        # Collect all the functions annotated with @load_data and sort them in order of declaration
+        self._load_functions = []
+
+        for attr in dir(self):
+            func = getattr(self, attr)
+            if callable(func) and hasattr(func, "_load_function_order"):
+                self._load_functions.append((func._load_function_order, func))
+
+        # Sort by load order
+        self._load_functions.sort(key=lambda x: x[0])
+
     def _prepare_sql_strings(self, table_name: str):
         table_data = TableData(self.schema[table_name])
         columns = table_data.non_excluded_columns
-        if table_name == "games":
-            column_names = ", ".join([column[0] for column in columns])
-            placeholders = ", ".join(["?" for _ in columns])
-        else:
+        if ('gameId', 'INTEGER') in table_data.columns:
             column_names = ", ".join(["gameId"] + [column[0] for column in columns])
             placeholders = ", ".join(["?"] + ["?" for _ in columns])
+        else:
+            column_names = ", ".join([column[0] for column in columns])
+            placeholders = ", ".join(["?" for _ in columns])
 
         return columns, column_names, placeholders
 
@@ -55,29 +69,13 @@ class GameFileLoader(ABC):
 
         with open(game_path, "r") as game_file:
             data = json.load(game_file)
+        for _, func in self._load_functions:
+            func(data)  # or func(self, data) depending on your wrapper
 
-        self._load_games_data(data)
-        self._load_searchTags_data(data)
-        self._load_player_data(data)
-        self._load_admins_data(data)
-        self._load_playersThatWillBeGovernment_data(data)
-        self.game.set_id_to_name_dicts()
-
-        self._load_colorGroups_data(data)
-        self._load_transactions_data(data)
-        self._load_popularities_data(data)
-        self._load_groups_data(data)
-        self._load_influences_data(data)
-        self._load_chatInfo_data(data)
-        self._load_chatParticipants_data(data)
-        self._load_messages_data(data)
         self.connection.commit()
 
     @load_data("games")
     def _load_games_data(self, data, values, table_name):
-        # There are circular dependencies with doing this. This relies on name_to_id which relies on the id existing.
-        # creatorId = self.name_to_id[data["lobby"]["creatorName"]] if data["lobby"]["creatorName"] is not None else None
-
         values.append((
             data["lobby"]["code"],
             data["lobby"]["numPlayers"],
@@ -140,9 +138,11 @@ class GameFileLoader(ABC):
                 player_id = self.game.cursor.fetchone()
                 values.append((self.game.id, player_id[0]))
 
+        self.game.set_id_to_name_dicts()
+
     @load_data("colorGroups")
     def _load_colorGroups_data(self, data, values, table_name):
-        if ["colorGroups"] is not None:
+        if data.get("colorGroups") is not None:
             for color_group in data["colorGroups"]:
                 values.append((self.game.id, color_group["percentOfPlayers"], color_group["color"]))
 
@@ -182,23 +182,25 @@ class GameFileLoader(ABC):
         for in_game_id, chat_info in data[table_name].items():
             values.append((self.game.id, in_game_id, chat_info["name"]))
 
-    def  _load_chatParticipants_data(self, data):
+    @load_data("chatParticipants")
+    def  _load_chatParticipants_data(self, data, values, table_name):
         game_id = self.game.id
         for chat_name, chat_info in data["chatInfo"].items():
             chat_id = self.game.cursor.execute(
                 "SELECT id FROM chatInfo WHERE inGameId = ? AND gameId = ?",
                 (chat_name, game_id)
             ).fetchone()[0]
+
             if chat_name == "global":
                 for player_id in self.game.id_to_name.keys():
-                    self.game.cursor.execute("INSERT INTO chatParticipants (conversationId, playerId) VALUES (?, ?)", (chat_id, player_id))
+                    values.append((chat_id, player_id))
             else:
                 for participant in chat_info["participants"]:
                     participant_id = self.game.name_to_id[participant]
-                    self.game.cursor.execute("INSERT INTO chatParticipants (conversationId, playerId) VALUES (?, ?)",
-                        (chat_id, participant_id))
+                    values.append((chat_id, participant_id))
 
-    def _load_messages_data(self, data):
+    @load_data("messages")
+    def _load_messages_data(self, data, values, table_name):
         game_id = self.game.id
         for chat_name, chat_info in data["chatInfo"].items():
             chat_id = self.game.cursor.execute(
@@ -206,8 +208,6 @@ class GameFileLoader(ABC):
                 (chat_name, game_id)
             ).fetchone()[0]
 
-
             for in_game_id, message in chat_info["messages"].items():
                 if "from" not in message: message["from"] = None
-                self.game.cursor.execute("INSERT INTO messages (conversationId, inGameId, playerFrom, body, time, runtimeType) VALUES (?, ?, ?, ?, ?, ?)",
-                    (chat_id, in_game_id, message["from"], message["body"], message["time"], message["runtimeType"]))
+                values.append((chat_id, in_game_id, message["from"], message["body"], message["time"], message["runtimeType"]))
