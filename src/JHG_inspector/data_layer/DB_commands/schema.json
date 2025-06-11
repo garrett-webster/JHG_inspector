@@ -94,9 +94,8 @@
   },
   "playersThatWillBeGovernment": {
     "gameId": "INTEGER",
-    "name": "TEXT",
-    "gameName": "TEXT",
-    "FOREIGN_KEYS": [
+    "playerId": "INTEGER",
+    "FOREIGN_KEYS_EXCLUDE": [
       {
         "column": "gameId",
         "references": {

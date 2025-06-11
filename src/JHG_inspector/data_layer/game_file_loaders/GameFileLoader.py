@@ -99,9 +99,11 @@ class GameFileLoader(ABC):
             data["gameParams"]["popularityFunctionParams"]["povertyLine"],
             data["gameParams"]["governmentParams"]["initialPopularity"],
             data["gameParams"]["governmentParams"]["initialPopularityType"],
-            data["gameParams"]["governmentParams"]["randomPopularities"],
-            data["gameParams"]["governmentParams"]["randomPopHigh"],
-            data["gameParams"]["governmentParams"]["randomPopLow"],
+
+            data["gameParams"]["popularityRandomizationParams"]["randomPopularities"],
+            data["gameParams"]["popularityRandomizationParams"]["randomPopHigh"],
+            data["gameParams"]["popularityRandomizationParams"]["randomPopLow"],
+
             data["gameParams"]["governmentParams"]["sendVotesImmediately"],
             data["gameParams"]["labels"]["enabled"],
             data["endCondition"]["duration"],
@@ -134,7 +136,7 @@ class GameFileLoader(ABC):
             for name in data["gameParams"]["governmentParams"]["playersThatWillBeGovernment"]:
                 self.game.cursor.execute("SELECT id FROM players WHERE name = ? AND gameId = ?", (name, self.game.id))
                 player_id = self.game.cursor.fetchone()
-                values.append((player_id[0], self.game.id))
+                values.append((self.game.id, player_id[0]))
 
     @load_data("transactions")
     def _load_transactions_data(self, data, values, table_name):

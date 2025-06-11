@@ -19,9 +19,9 @@ class TestGameInitialization:
         test_game.cursor.execute("SELECT * FROM games")
         actual_game_data = test_game.cursor.fetchone()
 
-        expected_game_data = (1, "GDHP", 4, 0, "started", "2025-05-15T16:04:55.960738Z", 150000000, "radio", "none",
-                              "freeForm", None, 10, 30, "time", 0.2, 0.5, 1.3, 0.95, 1.6, 0, 60, "ratio", True, 200, 50,
-                              True, False, 1747325756118000, "time")
+        expected_game_data = (1, "GDHP", 4, 0, "finished", "2025-05-15T16:04:55.960738Z", 150000000, "radio", "none",
+                              "freeForm", None, 10, 30, "time", 0.2, 0.5, 1.3, 0.95, 1.6, 0.0, 60, "ratio", 0, 200, 50,
+                              1, 0, 1747325756118000, "time")
 
         assert actual_game_data == expected_game_data
 
@@ -31,11 +31,12 @@ class TestGameInitialization:
         expected_search_tags = [
             ("show_roundLength",), ("show_gameLength",), ("show_chatType",),("show_messageType",),("show_nameSet",),
             ("show_initialSetup",),("show_grouping",),("show_labels",),("show_advancedParams",),("show_government",),
-            ("show_visibilities",),("show_colorGrouping",),("show_pregame",),("show_agents",),("allowEdit_roundLength",),
-            ("allowEdit_gameLength",),("allowEdit_chatType",),("allowEdit_messageType",),("allowEdit_nameSet",),
-            ("allowEdit_initialSetup",),("allowEdit_grouping",),("allowEdit_labels",),("allowEdit_advancedParams",),
-            ("allowEdit_government",),("allowEdit_visibilities",),("allowEdit_colorGrouping",),("allowEdit_pregame",),
-            ("allowEdit_agents",),
+            ('show_popularityRandomization',),("show_visibilities",),("show_colorGrouping",),("show_pregame",),
+            ("show_agents",),("allowEdit_roundLength",),("allowEdit_gameLength",),("allowEdit_chatType",),
+            ("allowEdit_messageType",),("allowEdit_nameSet",),("allowEdit_initialSetup",),("allowEdit_grouping",),
+            ("allowEdit_labels",),("allowEdit_advancedParams",),("allowEdit_government",),
+            ('allowEdit_popularityRandomization',),("allowEdit_visibilities",),("allowEdit_colorGrouping",),
+            ("allowEdit_pregame",),("allowEdit_agents",),
         ]
         test_game.cursor.execute("SELECT tag FROM searchTags")
         actual_search_tags = test_game.cursor.fetchall()
@@ -44,7 +45,7 @@ class TestGameInitialization:
 
         expected_search_tag_values = [("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),
                                       ("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),
-                                      ("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),
+                                      ("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",),("1",)
         ]
         test_game.cursor.execute("SELECT value FROM searchTags")
         actual_search_tag_values = test_game.cursor.fetchall()
