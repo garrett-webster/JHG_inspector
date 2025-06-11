@@ -52,6 +52,15 @@ class TestGameInitialization:
 
         assert actual_search_tag_values == expected_search_tag_values
 
+    def test_load_playersThatWillBeGovernment_data(self, game, temp_folder):
+        test_game = game(FILE_PATH / "test_set3/jhg_NMBT.json")
+
+        test_game.cursor.execute("SELECT playerId FROM playersThatWillBeGovernment")
+        actual_players = test_game.cursor.fetchall()
+        expected_players = [(9,), (1,)]
+
+        assert actual_players == expected_players
+
     # Tests that the players table is correctly loaded into the database
     def test_load_data_to_database_players(self, game, temp_folder):
         test_game = game(FILE_PATH / "test_set1/jhg_GDHP.json")
