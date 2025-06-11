@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import pytest
-
 from src.JHG_inspector.data_layer.Game import AlreadyExistsError
 from tests.testing_utilities import *
 

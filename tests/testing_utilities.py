@@ -14,15 +14,14 @@ def temp_folder(tmp_path):
     yield test_folder
 
 @pytest.fixture
-def jhg_inspector(temp_folder):
+def database_access(temp_folder):
     # Make sure JHGInspector creates a new DB at temp_folder
     return DatabaseAccess(temp_folder / "test.db")
 
 @pytest.fixture
-def game_set(temp_folder, jhg_inspector):
+def game_set(temp_folder, database_access):
     def create_gameset(path=None, name = "test_set"):
-        gameset = GameSet(name, jhg_inspector.connection, base_path=temp_folder)
-
+        gameset = GameSet(name, database_access.connection)
         if path is not None:
             if path.exists():
                 for item in path.iterdir():
@@ -33,7 +32,7 @@ def game_set(temp_folder, jhg_inspector):
 
         return gameset
     yield create_gameset
-    jhg_inspector.close()
+    database_access.close()
 
 @pytest.fixture
 def game(temp_folder, game_set):

@@ -14,8 +14,6 @@ class Game:
         self.name_to_id = {}
         self.code = None
 
-
-
     # Determine the version of the json file and return the correct GameFileLoader for that version
     def create_game_file_loader(self):
         return GameFileLoader_JsonV1(self)

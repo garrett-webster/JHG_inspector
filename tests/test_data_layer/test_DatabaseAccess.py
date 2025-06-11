@@ -3,13 +3,13 @@ from pathlib import Path
 from tests.testing_utilities import *
 
 class TestJhgInspectorInitialization:
-    def test_schema_columns_match_json(self, jhg_inspector):
+    def test_schema_columns_match_json(self, database_access):
         # Load schema from JSON
         schema_path = Path(__file__).parent.parent.parent / "src" / "JHG_inspector" / "data_layer" / "DB_commands" / "schema.json"
         with open(schema_path, "r") as f:
             expected_schema = json.load(f)
 
-        cursor = jhg_inspector.connection.cursor()
+        cursor = database_access.connection.cursor()
 
         for table, expected_columns in expected_schema.items():
             cursor.execute(f"PRAGMA table_info({table})")
