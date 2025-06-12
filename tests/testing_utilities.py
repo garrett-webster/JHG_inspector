@@ -4,7 +4,6 @@ import shutil
 import pytest
 
 from src.JHG_inspector.data_layer.Game import Game
-from src.JHG_inspector.data_layer.GameSet import GameSet
 from src.JHG_inspector.data_layer.DatabaseAccess import DatabaseAccess
 
 @pytest.fixture
