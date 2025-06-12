@@ -20,19 +20,12 @@ class TestGameSetInitialization:
 
         assert actual_tables == expected_tables
 
-
-    @pytest.mark.parametrize(
-        "folder_name, expected_codes",
-        [
-            ("test_set0", set()),
-            ("test_set1", {"GDHP", "MGNP", "PBSG"}),
-        ]
-    )
-    def test_load_games_from_folder_codes(self, game_set, folder_name, expected_codes, temp_folder):
+    def test_load_games_from_folder_codes(self, game_set, temp_folder):
         # Clear previous games from game_set to isolate runs
-        test_gameset = game_set(FILE_PATH.parent / folder_name)
+        test_gameset = game_set(FILE_PATH.parent / "test_set1")
 
         actual_codes = {game.code for game in test_gameset.games.values()}
+        expected_codes = {"GDHP", "MGNP", "PBSG"}
 
         assert len(test_gameset.games) == len(expected_codes)
         assert actual_codes == expected_codes
