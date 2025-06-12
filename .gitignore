@@ -2,3 +2,4 @@
 /.idea
 /data_bases
 temp_main.py
+*.pyc
