@@ -52,9 +52,19 @@ class TestGameSetInitialization:
         expected_results = [(2, 4), (2,5)]
         assert result == expected_results
 
-    @pytest.mark.skip(reason="not implemented")
-    def test_load_games_from_database(self):
-        ...
+    def test_load_games_from_database(self, database_access):
+        test_gameset = database_access.create_gameset("testing")
+        test_gameset.load_games_from_folder(str(Path(FILE_PATH / "../../tests/test_set1").resolve()), base_path=Path(FILE_PATH))
+
+        loaded_games = list(test_gameset.games.values())
+
+        test_gameset.games.clear()
+        test_gameset.load_games_from_database()
+
+        assert len(test_gameset.games) == len(loaded_games)
+        for i, game in enumerate(test_gameset.games.values()):
+            assert game.code == loaded_games[i].code
+            assert game.id == loaded_games[i].id
 
     def test_add_game_from_file(self, game_set):
         test_gameset = game_set(FILE_PATH.parent / "test_set1")
@@ -71,3 +81,15 @@ class TestGameSetInitialization:
 
         with pytest.raises(AlreadyExistsError):
             test_gameset.add_game_from_file(FILE_PATH.parent / "test_set1/jhg_GDHP.json")
+
+    def test_add_game_from_database(self, game, game_set):
+        game(FILE_PATH.parent / "test_set2/jhg_GDSR.json")
+        test_gameset = game_set(FILE_PATH.parent / "test_set1")
+        test_gameset.add_game_from_database(1)
+
+        expected_game_codes = ["MGNP", "GDHP", "PBSG", "GDSR"]
+        expected_game_ids = [2, 3, 4, 1]
+
+        for i, game in enumerate(test_gameset.games.values()):
+            assert game.code == expected_game_codes[i]
+            assert game.id == expected_game_ids[i]

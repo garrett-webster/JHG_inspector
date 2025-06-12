@@ -37,10 +37,11 @@ class TestGameInitialization:
         assert test_game1.code == "GDHP"
         assert test_game2.code == "MGNP"
 
-    @pytest.mark.skip(reason="not implemented")
-    def test_create_game_file_loader(self):
-        ...
+    def test_load_from_database(self, game, game_set):
+        game(FILE_PATH.parent / "test_set1/jhg_GDHP.json")
 
-    @pytest.mark.skip(reason="not implemented")
-    def test_load_from_database(self):
-        ...
+        test_game = game()
+        test_game.load_from_database(1)
+
+        assert test_game.id == 1
+        assert test_game.code == "GDHP"

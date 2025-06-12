@@ -2,12 +2,13 @@ import sqlite3
 from pathlib import Path
 
 from src.JHG_inspector.data_layer.DB_commands.DB_init import initialize_DB
+from src.JHG_inspector.data_layer.GameSet import GameSet
 
 FILE_PATH = Path(__file__).resolve().parent
 
 class DatabaseAccess:
     def __init__(self, base_path=FILE_PATH):
-        self.games = {}
+        self.gamesets = {}
         self.connection = None
         self.cursor = None
         self.connect(base_path)
@@ -38,3 +39,29 @@ class DatabaseAccess:
         self.cursor = self.connection.cursor()
 
         initialize_DB(self.connection)
+        self.load_gamesets_from_database()
+        print("DEBUG")
+
+    def load_gamesets_from_database(self):
+        self.cursor.execute("SELECT id FROM gamesets")
+        gameset_ids = self.cursor.fetchall()
+
+        for gameset_id in gameset_ids:
+            new_gameset = GameSet(gameset_id[0], self.connection, self.send_gameset_update)
+            new_gameset.load_games_from_database()
+            self.gamesets[new_gameset.id] = new_gameset
+
+    def create_gameset(self, name):
+        self.cursor.execute(
+            "INSERT INTO gamesets (name) VALUES (?)",
+            (name, )
+        )
+        new_gameset_id = self.cursor.lastrowid
+        new_gameset = GameSet(new_gameset_id, self.connection, self.send_gameset_update)
+        self.gamesets[new_gameset.id] = new_gameset
+
+        return new_gameset
+
+    def send_gameset_update(self, gameset_id):
+        # Placeholder. This will tie into a ToolsManager object
+        print("HEY!")
