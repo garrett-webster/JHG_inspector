@@ -1,13 +1,13 @@
 from pathlib import Path
 
 from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader import GameFileLoader
-from tests.testing_utilities import *
+from tests.test_data_layer.data_layer_testing_utilities import *
 
 FILE_PATH = Path(__file__).resolve().parent
 
 class TestGameFileLoader:
     def test_prepare_sql_strings(self, game):
-        test_game = test_game = game(FILE_PATH.parent.parent / "test_set1/jhg_GDHP.json")
+        test_game = test_game = game(FILE_PATH.parent / "test_set1/jhg_GDHP.json")
         test_game_loader = GameFileLoader(test_game)
         columns, column_names, placeholders = test_game_loader._prepare_sql_strings("players")
 

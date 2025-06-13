@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from tests.testing_utilities import *
+from tests.test_data_layer.data_layer_testing_utilities import *
 
 FILE_PATH = Path(__file__).resolve().parent
-TESTS_PATH = FILE_PATH.parent.parent
+TESTS_PATH = FILE_PATH.parent
 
 
 class TestGameFileLoader_JsonV1:

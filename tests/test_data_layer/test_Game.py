@@ -1,9 +1,9 @@
 from pathlib import Path
 
 from src.JHG_inspector.data_layer.Game import AlreadyExistsError
-from tests.testing_utilities import *
+from tests.test_data_layer.data_layer_testing_utilities import *
 
-FILE_PATH = Path(__file__).resolve().parent
+FILE_PATH = Path(__file__).resolve()
 
 
 class TestGameInitialization:

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from tests.testing_utilities import *
+from tests.test_data_layer.data_layer_testing_utilities import *
 
 class TestJhgInspectorInitialization:
     def test_schema_columns_match_json(self, database_access):

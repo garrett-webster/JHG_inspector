@@ -1,9 +1,9 @@
 from pathlib import Path
 
 from src.JHG_inspector.data_layer.Game import AlreadyExistsError
-from tests.testing_utilities import *
+from tests.test_data_layer.data_layer_testing_utilities import *
 
-FILE_PATH = Path(__file__).resolve().parent
+FILE_PATH = Path(__file__).resolve()
 
 class TestGameSetInitialization:
     def test_init(self, game_set):
@@ -47,7 +47,7 @@ class TestGameSetInitialization:
 
     def test_load_games_from_database(self, database_access):
         test_gameset = database_access.create_gameset("testing")
-        test_gameset.load_games_from_folder(str(Path(FILE_PATH / "../../tests/test_set1").resolve()), base_path=Path(FILE_PATH))
+        test_gameset.load_games_from_folder(str(Path(FILE_PATH / "../test_set1").resolve()), base_path=Path(FILE_PATH))
 
         loaded_games = list(test_gameset.games.values())
 
