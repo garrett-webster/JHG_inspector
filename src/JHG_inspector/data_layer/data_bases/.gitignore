@@ -1,4 +1,0 @@
-# Ignore everything in this directory--should be specific to the particular user (and could become very large)
-.gitignore
-# The inclusion of this file allows the data_bases directory, without tracking the user's databases
-!.gitignore
