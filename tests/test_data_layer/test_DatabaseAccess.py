@@ -2,6 +2,8 @@ from pathlib import Path
 
 from tests.test_data_layer.data_layer_testing_utilities import *
 
+FILE_PATH = Path(__file__).resolve().parent
+
 class TestJhgInspectorInitialization:
     def test_schema_columns_match_json(self, database_access):
         # Load schema from JSON
@@ -22,3 +24,19 @@ class TestJhgInspectorInitialization:
                 f"Expected: {sorted(expected_column_names)}\n"
                 f"Actual:   {sorted(actual_columns)}"
             )
+
+    def test_games(self, database_access):
+        gameset = database_access.create_gameset("testing")
+        gameset2 = database_access.create_gameset("testing2")
+        gameset.load_games_from_folder(str(Path(FILE_PATH / "test_set1").resolve()), base_path=Path(FILE_PATH))
+        gameset2.load_games_from_folder(str(Path(FILE_PATH / "test_set4").resolve()), base_path=Path(FILE_PATH))
+
+        games = database_access.games
+        expected_codes = ["MGNP", "GDHP", "PBSG", "GDSR"]
+        actual_codes = []
+
+        for i, game in enumerate(games.values()):
+            assert game.id == i + 1
+            actual_codes.append(game.code)
+
+        assert actual_codes == expected_codes
