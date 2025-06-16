@@ -15,7 +15,12 @@ class DatabaseAccess:
 
     @property
     def games(self):
-        return {gid: gs.games for gid, gs in self.gamesets.items()}
+        games = {}
+        for gameset in self.gamesets.values():
+            for game_id, game in gameset.games.items():
+                games[game_id] = game
+
+        return games
 
     def __enter__(self, base_path=FILE_PATH):
         return self
