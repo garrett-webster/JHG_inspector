@@ -13,6 +13,10 @@ class DatabaseAccess:
         self.cursor = None
         self.connect(base_path)
 
+    @property
+    def games(self):
+        return {gid: gs.games for gid, gs in self.gamesets.items()}
+
     def __enter__(self, base_path=FILE_PATH):
         return self
 
@@ -40,7 +44,6 @@ class DatabaseAccess:
 
         initialize_DB(self.connection)
         self.load_gamesets_from_database()
-        print("DEBUG")
 
     def load_gamesets_from_database(self):
         self.cursor.execute("SELECT id FROM gamesets")
