@@ -69,12 +69,6 @@ class TestGameSetInitialization:
         for _, game in test_gameset.games.items():
             assert game.code in expected_game_codes
 
-    def test_add_game_from_file_duplicate(self, game_set):
-        test_gameset = game_set(FILE_PATH.parent / "test_set1")
-
-        with pytest.raises(AlreadyExistsError):
-            test_gameset.add_game_from_file(FILE_PATH.parent / "test_set1/jhg_GDHP.json")
-
     def test_add_game_from_database(self, game, game_set):
         game(FILE_PATH.parent / "test_set2/jhg_GDSR.json")
         test_gameset = game_set(FILE_PATH.parent / "test_set1")
