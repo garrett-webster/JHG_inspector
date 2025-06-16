@@ -28,14 +28,15 @@ class TestGameInitialization:
     def test_load_from_file(self, game):
         test_game1 = game(FILE_PATH.parent / "test_set1/jhg_GDHP.json")
         test_game2 = game(FILE_PATH.parent / "test_set1/jhg_MGNP.json")
-        with pytest.raises(AlreadyExistsError):
-            game(FILE_PATH.parent / "test_set1/jhg_GDHP.json")
+        test_game3 = game(FILE_PATH.parent / "test_set1/jhg_GDHP.json")
 
         assert test_game1.id == 1
         assert test_game2.id == 2
+        assert test_game3.id == 1
 
         assert test_game1.code == "GDHP"
         assert test_game2.code == "MGNP"
+        assert test_game3.code == "GDHP"
 
     def test_load_from_database(self, game, game_set):
         game(FILE_PATH.parent / "test_set1/jhg_GDHP.json")
