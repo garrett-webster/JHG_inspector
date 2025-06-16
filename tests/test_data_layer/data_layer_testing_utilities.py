@@ -4,7 +4,7 @@ import shutil
 import pytest
 
 from src.JHG_inspector.data_layer.Game import Game
-from src.JHG_inspector.data_layer.DatabaseAccess import DatabaseAccess
+from src.JHG_inspector.logic_layer.DatabaseAccess import DatabaseAccess
 
 @pytest.fixture
 def temp_folder(tmp_path):

@@ -19,9 +19,9 @@ class Game:
         return GameFileLoader_JsonV1(self)
 
     def load_from_database(self, game_id):
-        print(f"Loading game {self.code} from the database...")
         self.cursor.execute("SELECT code FROM games WHERE id = ?", (game_id,))
         self.code = self.cursor.fetchone()[0]
+        print(f"Loading game {self.code} from the database...")
         self.id = game_id
         self.set_id_to_name_dicts()
 

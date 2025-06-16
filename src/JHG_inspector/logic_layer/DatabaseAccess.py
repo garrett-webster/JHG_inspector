@@ -72,4 +72,4 @@ class DatabaseAccess:
 
     def send_gameset_update(self, gameset_id):
         # Placeholder. This will tie into a ToolsManager object
-        print("HEY!")
+        ...
