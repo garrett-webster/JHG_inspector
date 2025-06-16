@@ -26,18 +26,21 @@ class Game:
         self.set_id_to_name_dicts()
 
     def load_from_file(self, game_path):
-        print(f"Adding game {self.code} to the database...")
         self.code = re.match(r"jhg_(.+)\.json", game_path.name).group(1)
+        print(f"Adding game {self.code} to the database...")
 
         self.cursor.execute("SELECT id FROM games WHERE code = ?", (self.code,))
-        if self.cursor.fetchone() is not None: raise AlreadyExistsError(f"A game with code {self.code} already exists")
-
-        # Find the next id (which will be this game's id) and set self.id to it
-        self.cursor.execute("SELECT seq FROM sqlite_sequence WHERE name = 'games';")
-        row = self.cursor.fetchone()
-        self.id = (row[0] if row and row[0] is not None else 0) + 1
-        file_loader = self.create_game_file_loader()
-        file_loader.load_data_from_file(game_path)
+        result = self.cursor.fetchone()
+        if result is None:
+            # Find the next id (which will be this game's id) and set self.id to it
+            self.cursor.execute("SELECT seq FROM sqlite_sequence WHERE name = 'games';")
+            row = self.cursor.fetchone()
+            self.id = (row[0] if row and row[0] is not None else 0) + 1
+            file_loader = self.create_game_file_loader()
+            file_loader.load_data_from_file(game_path)
+        else:
+            self.id = result[0]
+            print(f"Game {self.code} already exists")
 
     def set_id_to_name_dicts(self):
         # Set up the id_to_name_dict
