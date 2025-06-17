@@ -50,6 +50,3 @@ class Game:
         for result in results:
             self.id_to_name[result[0]] = result[1]
             self.name_to_id[result[1]] = result[0]
-
-class AlreadyExistsError(Exception):
-    pass
