@@ -40,7 +40,7 @@ class GamesetManager(Panel):
         dialog = GamesDialog(self.database.games)
         if dialog.exec() == 1:
             game = dialog.selected
-            gameset.add_game_from_database(game.id)
+            gameset.add_game(game.id)
 
     def remove_game(self, gameset: Gameset, game_id: int):
         gameset.remove_game(game_id)

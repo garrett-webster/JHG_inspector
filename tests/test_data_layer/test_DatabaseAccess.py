@@ -26,10 +26,8 @@ class TestJhgInspectorInitialization:
             )
 
     def test_games(self, database_access):
-        gameset = database_access.create_gameset("testing")
-        gameset2 = database_access.create_gameset("testing2")
-        gameset.load_games_from_folder(str(Path(FILE_PATH / "test_set1").resolve()), base_path=Path(FILE_PATH))
-        gameset2.load_games_from_folder(str(Path(FILE_PATH / "test_set4").resolve()), base_path=Path(FILE_PATH))
+        database_access.load_games_from_folder(Path(FILE_PATH / "test_set1"))
+        database_access.load_games_from_folder(Path(FILE_PATH / "test_set4"))
 
         games = database_access.games
         expected_codes = ["MGNP", "GDHP", "PBSG", "GDSR"]

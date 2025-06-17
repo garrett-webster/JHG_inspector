@@ -27,7 +27,9 @@ def game_set(temp_folder, database_access):
                     if item.is_file():
                         shutil.copy(item, temp_folder / item.name)
 
-            gameset.load_games_from_folder(path)
+            database_access.load_games_from_folder(path)
+            for game_id in database_access.games.keys():
+                gameset.add_game(game_id)
         return gameset
     yield create_gameset
     database_access.close()

@@ -1,5 +1,5 @@
 import sqlite3
-from pathlib import Path
+from pathlib import Path, PosixPath
 
 from src.JHG_inspector.data_layer.DB_commands.DB_init import initialize_DB
 from src.JHG_inspector.data_layer.Game import Game
@@ -22,7 +22,7 @@ class DatabaseAccess:
         for game_id in game_ids:
             game = Game(self.connection)
             game.load_from_database(game_id[0])
-            games[game_id] = game
+            games[game_id[0]] = game
 
         return games
 
@@ -52,15 +52,15 @@ class DatabaseAccess:
         self.cursor = self.connection.cursor()
 
         initialize_DB(self.connection)
-        self.load_gamesets_from_database()
+        self.load_gamesets()
 
-    def load_gamesets_from_database(self):
+    def load_gamesets(self):
         self.cursor.execute("SELECT id FROM gamesets")
         gameset_ids = self.cursor.fetchall()
 
         for gameset_id in gameset_ids:
-            new_gameset = Gameset(gameset_id[0], self.connection, self.send_gameset_update)
-            new_gameset.load_games_from_database()
+            new_gameset = Gameset(gameset_id[0], self)
+            new_gameset.load_games()
             self.gamesets[new_gameset.id] = new_gameset
 
     def create_gameset(self, name):
@@ -69,10 +69,23 @@ class DatabaseAccess:
             (name, )
         )
         new_gameset_id = self.cursor.lastrowid
-        new_gameset = Gameset(new_gameset_id, self.connection, self.send_gameset_update)
+        new_gameset = Gameset(new_gameset_id, self)
         self.gamesets[new_gameset.id] = new_gameset
 
         return new_gameset
+
+    def load_games_from_folder(self, folder_path, base_path=None):
+        game_paths = [f for f in folder_path.iterdir() if f.is_file()]
+
+        for game_path in game_paths:
+            self.load_game_from_file(game_path, base_path=base_path)
+
+        self.connection.commit()
+
+    def load_game_from_file(self, game_path: PosixPath, base_path=None):
+        new_game = Game(self.connection, base_path)
+        new_game.load_from_file(game_path)
+        self.games[new_game.id] = new_game
 
     def send_gameset_update(self, gameset_id):
         # Placeholder. This will tie into a ToolsManager object
