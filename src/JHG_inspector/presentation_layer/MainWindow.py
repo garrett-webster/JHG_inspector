@@ -21,7 +21,7 @@ class MainWindow(QMainWindow):
 
 
     def show_games(self):
-        games_dialog = GamesDialog(self, self.database.games)
+        games_dialog = GamesDialog(self.database.games)
         games_dialog.setWindowTitle('Loaded Games')
         games_dialog.exec()
 

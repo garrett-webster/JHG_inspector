@@ -66,3 +66,9 @@ class Gameset:
         self.cursor.execute("SELECT gameId FROM gameset_games WHERE gamesetId = ? AND gameId = ?", (self.id, game_id))
         if self.cursor.fetchone() is None:
             self.cursor.execute("INSERT INTO gameset_games (gamesetId, gameId) VALUES (?, ?)", (self.id, new_game.id))
+            self.connection.commit()
+
+    def remove_game(self, game_id: int):
+        self.cursor.execute("DELETE FROM gameset_games WHERE gamesetId = ? AND gameId = ?", (self.id, game_id))
+        self.connection.commit()
+        print(f"Removing game with id {game_id}...")

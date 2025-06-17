@@ -2,6 +2,7 @@ import sqlite3
 from pathlib import Path
 
 from src.JHG_inspector.data_layer.DB_commands.DB_init import initialize_DB
+from src.JHG_inspector.data_layer.Game import Game
 from src.JHG_inspector.data_layer.Gameset import Gameset
 
 FILE_PATH = Path(__file__).resolve().parent
@@ -15,10 +16,13 @@ class DatabaseAccess:
 
     @property
     def games(self):
+        self.cursor.execute('SELECT id FROM games')
+        game_ids = self.cursor.fetchall()
         games = {}
-        for gameset in self.gamesets.values():
-            for game_id, game in gameset.games.items():
-                games[game_id] = game
+        for game_id in game_ids:
+            game = Game(self.connection)
+            game.load_from_database(game_id[0])
+            games[game_id] = game
 
         return games
 
