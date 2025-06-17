@@ -18,7 +18,7 @@ def update_function(func):
     return wrapper
 
 # I might want to add a permanent/temporary flag (or maybe visible/invisible) to allow for a tool to clone a gameset and add games temporarily without making it persistent
-class GameSet:
+class Gameset:
     def __init__(self, gameset_id, connection, update_signal: Optional[Callable] = None):
         self.id = gameset_id
         self.connection = connection

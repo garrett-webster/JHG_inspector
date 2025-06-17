@@ -2,7 +2,7 @@ import sqlite3
 from pathlib import Path
 
 from src.JHG_inspector.data_layer.DB_commands.DB_init import initialize_DB
-from src.JHG_inspector.data_layer.GameSet import GameSet
+from src.JHG_inspector.data_layer.Gameset import Gameset
 
 FILE_PATH = Path(__file__).resolve().parent
 
@@ -55,7 +55,7 @@ class DatabaseAccess:
         gameset_ids = self.cursor.fetchall()
 
         for gameset_id in gameset_ids:
-            new_gameset = GameSet(gameset_id[0], self.connection, self.send_gameset_update)
+            new_gameset = Gameset(gameset_id[0], self.connection, self.send_gameset_update)
             new_gameset.load_games_from_database()
             self.gamesets[new_gameset.id] = new_gameset
 
@@ -65,7 +65,7 @@ class DatabaseAccess:
             (name, )
         )
         new_gameset_id = self.cursor.lastrowid
-        new_gameset = GameSet(new_gameset_id, self.connection, self.send_gameset_update)
+        new_gameset = Gameset(new_gameset_id, self.connection, self.send_gameset_update)
         self.gamesets[new_gameset.id] = new_gameset
 
         return new_gameset
