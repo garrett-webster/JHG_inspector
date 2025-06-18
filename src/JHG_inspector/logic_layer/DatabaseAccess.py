@@ -74,7 +74,7 @@ class DatabaseAccess:
 
         return new_gameset
 
-    def load_games_from_folder(self, folder_path, base_path=None):
+    def load_games_from_directory(self, folder_path, base_path=None):
         game_paths = [f for f in folder_path.iterdir() if f.is_file()]
 
         for game_path in game_paths:

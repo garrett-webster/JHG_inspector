@@ -20,7 +20,7 @@ class TestGameSetInitialization:
         assert actual_tables == expected_tables
 
     def test_load_games_from_database(self, database_access):
-        database_access.load_games_from_folder(Path(FILE_PATH.parent / "test_set1"))
+        database_access.load_games_from_directory(Path(FILE_PATH.parent / "test_set1"))
         test_gameset = database_access.create_gameset("testing")
         for game_id in database_access.games.keys():
             test_gameset.add_game(game_id)
