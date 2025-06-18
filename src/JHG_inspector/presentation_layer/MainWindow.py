@@ -3,7 +3,6 @@ from PyQt6.QtWidgets import QMainWindow
 
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.dialogs.GamesetsDialog import GamesetsDialog
-from src.JHG_inspector.presentation_layer.InspectorToolbar import InspectorToolbar
 from src.JHG_inspector.presentation_layer.panels.GamesetManager import GamesetManager
 
 
@@ -12,9 +11,6 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.database = database_access
         self.setWindowTitle('JHG Inspector')
-
-        self.toolbar = InspectorToolbar(self)
-        self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolbar)
 
         self.gameset_manager = GamesetManager(self.database)
         self.setCentralWidget(self.gameset_manager)
