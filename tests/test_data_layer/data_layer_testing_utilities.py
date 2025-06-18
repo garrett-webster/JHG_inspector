@@ -20,6 +20,7 @@ def database_access(temp_folder):
 @pytest.fixture
 def game_set(temp_folder, database_access):
     def create_gameset(path=None, name = "test_set"):
+        database_access.load_games()
         gameset = database_access.create_gameset(name)
         if path is not None:
             if path.exists():

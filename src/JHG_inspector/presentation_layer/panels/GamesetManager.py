@@ -1,6 +1,7 @@
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSizePolicy
 
+from src.JHG_inspector.data_layer.Game import Game
 from src.JHG_inspector.data_layer.Gameset import Gameset
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.dialogs.GamesetElement import GamesetElement
@@ -11,7 +12,7 @@ class GamesetManager(Panel):
     def __init__(self, database):
         super().__init__()
         self.database = database
-        self.gameset_elements = []
+        self.gameset_elements = {}
 
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
@@ -34,20 +35,32 @@ class GamesetManager(Panel):
     def add_gameset_section(self, title: str, gameset: Gameset, database):
         section = GamesetElement(title, gameset, self.add_game_via_dialog, self.remove_game)
         section.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.gameset_elements[gameset.id] = section
         self.layout.addWidget(section)
 
     def add_game_via_dialog(self, gameset):
-        dialog = GamesDialog(self.database.games)
+        games_list = self.gameset_elements[gameset.id].content
+
+        dialog = GamesDialog(self.database.games, gameset, parent=self.window())
+        dialog.setWindowFlag(Qt.WindowType.Tool)  # <-- Tool windows don’t drag the parent
+        dialog.setWindowModality(Qt.WindowModality.ApplicationModal)
         if dialog.exec() == 1:
             game = dialog.selected
-            gameset.add_game(game.id)
+            if game == gameset.games.get(game.id):
+                print("ERRRR!!")
+            else:
+                gameset.add_game(game.id) # Adds the game on the backend
+                games_list.add_game(game) # Adds the game on the frontend
 
-    def remove_game(self, gameset: Gameset, game_id: int):
-        gameset.remove_game(game_id)
+
+    def remove_game(self, gameset: Gameset, game: Game):
+        gameset.remove_game(game.id)
+        games_list = self.gameset_elements[gameset.id].content
+        games_list.remove_game_item(game)
 
     def sizeHint(self):
         if not self.gameset_elements:
             return QSize(100, 800)
 
-        min_width = min(element.sizeHint().width for element in self.gameset_elements)
-        return QSize(min_width, 800)
+        # min_width = min(element.sizeHint().width for element in self.gameset_elements)
+        return QSize(100, 800)

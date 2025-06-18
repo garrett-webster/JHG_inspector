@@ -3,6 +3,7 @@ from functools import partial
 from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QFormLayout, QSizePolicy, QHBoxLayout
 
+from src.JHG_inspector.data_layer.Game import Game
 from src.JHG_inspector.data_layer.Gameset import Gameset
 
 
@@ -35,9 +36,11 @@ class GamesetElement(QWidget):
 class GamesList(QWidget):
     def __init__(self, gameset, select_game, remove_game):
         super().__init__()
+        self.remove_game = remove_game
+        self.gameset = gameset
         self.buttons = []
 
-        layout = QVBoxLayout()
+        self.layout = QVBoxLayout()
 
         header = QHBoxLayout()
         header.addWidget(QLabel("Game Code"))
@@ -45,27 +48,41 @@ class GamesList(QWidget):
         add_game_button.clicked.connect(partial(select_game, gameset))
 
         header.addWidget(add_game_button)
-        layout.addLayout(header)
+        self.layout.addLayout(header)
 
-        game_widgets = []
-        for i, game in enumerate(gameset.games.values()):
-            game_widgets.append(QLabel(game.code))
-            delete_button = QPushButton("Delete")
-            delete_button.clicked.connect(partial(remove_game, gameset, game.id))
-            delete_button.setSizePolicy(
-                QSizePolicy.Policy.Maximum,  # no stretching horizontally
-                QSizePolicy.Policy.Fixed  # no stretching vertically
-            )
-            self.buttons.append(delete_button)
+        self.game_rows = {}
+        for game in gameset.games.values():
+            self.add_game(game)
 
-            # delete_button.clicked.connect(lambda: self.delete_button(game))
+        self.setLayout(self.layout)
 
-            row = QHBoxLayout()
-            row.addWidget(game_widgets[i])
-            row.addWidget(delete_button)
-            layout.addLayout(row)
+    def add_game(self, game: Game):
+        self.game_rows[game.id] = QHBoxLayout() #(QLabel(game.code))
+        delete_button = QPushButton("Delete")
+        delete_button.clicked.connect(partial(self.remove_game, self.gameset, game))
+        delete_button.setSizePolicy(
+            QSizePolicy.Policy.Maximum,  # no stretching horizontally
+            QSizePolicy.Policy.Fixed  # no stretching vertically
+        )
+        self.buttons.append(delete_button)
 
-        self.setLayout(layout)
+        self.game_rows[game.id].addWidget(QLabel(game.code))
+        self.game_rows[game.id].addWidget(delete_button)
+
+        self.layout.addLayout(self.game_rows[game.id])
+
+    def remove_game_item(self, game: Game):
+        row = self.game_rows[game.id]
+        while row.count():
+            item = row.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        self.layout.removeItem(row)
+        row.deleteLater()
+        del self.game_rows[game.id]
 
     def get_smallest_width(self):
         if not self.buttons:

@@ -9,22 +9,11 @@ FILE_PATH = Path(__file__).resolve().parent
 
 class DatabaseAccess:
     def __init__(self, base_path=FILE_PATH):
+        self.games = {}
         self.gamesets = {}
         self.connection = None
         self.cursor = None
         self.connect(base_path)
-
-    @property
-    def games(self):
-        self.cursor.execute('SELECT id FROM games')
-        game_ids = self.cursor.fetchall()
-        games = {}
-        for game_id in game_ids:
-            game = Game(self.connection)
-            game.load_from_database(game_id[0])
-            games[game_id[0]] = game
-
-        return games
 
     def __enter__(self, base_path=FILE_PATH):
         return self
@@ -52,9 +41,11 @@ class DatabaseAccess:
         self.cursor = self.connection.cursor()
 
         initialize_DB(self.connection)
+        self.load_games()
         self.load_gamesets()
 
     def load_gamesets(self):
+        self.gamesets = {}
         self.cursor.execute("SELECT id FROM gamesets")
         gameset_ids = self.cursor.fetchall()
 
@@ -62,6 +53,15 @@ class DatabaseAccess:
             new_gameset = Gameset(gameset_id[0], self)
             new_gameset.load_games()
             self.gamesets[new_gameset.id] = new_gameset
+
+    def load_games(self):
+        self.games = {}
+        self.cursor.execute('SELECT id FROM games')
+        game_ids = self.cursor.fetchall()
+        for game_id in game_ids:
+            game = Game(self.connection)
+            game.load_from_database(game_id[0])
+            self.games[game_id[0]] = game
 
     def create_gameset(self, name):
         self.cursor.execute(
