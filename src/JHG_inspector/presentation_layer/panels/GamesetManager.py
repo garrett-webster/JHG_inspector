@@ -1,10 +1,13 @@
+from pathlib import Path
+
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSizePolicy
+from PyQt6.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSizePolicy, QDialog
 
 from src.JHG_inspector.data_layer.Game import Game
 from src.JHG_inspector.data_layer.Gameset import Gameset
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
-from src.JHG_inspector.presentation_layer.dialogs.GamesetElement import GamesetElement
+from src.JHG_inspector.presentation_layer.components.GamesetElement import GamesetElement
+from src.JHG_inspector.presentation_layer.dialogs.NewGamesetDialog import NewGamesetDialog
 from src.JHG_inspector.presentation_layer.panels.Panel import Panel
 
 
@@ -30,9 +33,20 @@ class GamesetManager(Panel):
         wrapper_layout.setContentsMargins(0, 0, 0, 0)
 
         for gameset in database.gamesets.values():
-            self.add_gameset_section(gameset.name, gameset, database)
+            self.add_gameset_section(gameset.name, gameset)
 
-    def add_gameset_section(self, title: str, gameset: Gameset, database):
+    def add_gameset(self):
+        dialog = NewGamesetDialog()
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            path = Path(dialog.directory_path)
+            name = dialog.name
+            new_gameset = self.database.create_gameset(name)
+
+            if path: self.database.load_games_from_directory(path, gameset=new_gameset)
+
+            self.add_gameset_section(name, new_gameset)
+
+    def add_gameset_section(self, title: str, gameset: Gameset):
         section = GamesetElement(title, gameset, self.add_game_via_dialog, self.remove_game)
         section.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self.gameset_elements[gameset.id] = section
@@ -46,12 +60,9 @@ class GamesetManager(Panel):
         dialog.setWindowModality(Qt.WindowModality.ApplicationModal)
         if dialog.exec() == 1:
             game = dialog.selected
-            if game == gameset.games.get(game.id):
-                print("ERRRR!!")
-            else:
+            if game != gameset.games.get(game.id):
                 gameset.add_game(game.id) # Adds the game on the backend
                 games_list.add_game(game) # Adds the game on the frontend
-
 
     def remove_game(self, gameset: Gameset, game: Game):
         gameset.remove_game(game.id)
@@ -62,5 +73,4 @@ class GamesetManager(Panel):
         if not self.gameset_elements:
             return QSize(100, 800)
 
-        # min_width = min(element.sizeHint().width for element in self.gameset_elements)
         return QSize(100, 800)

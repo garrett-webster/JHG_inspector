@@ -1,8 +1,8 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QScrollArea, QWidget, QSizePolicy, QLabel
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QScrollArea, QWidget, QSizePolicy
 
 from src.JHG_inspector.data_layer.Gameset import Gameset
-from src.JHG_inspector.presentation_layer.dialogs.GamesetElement import GamesetElement
+from src.JHG_inspector.presentation_layer.components.GamesetElement import GamesetElement
 
 
 class GamesetsDialog(QDialog):

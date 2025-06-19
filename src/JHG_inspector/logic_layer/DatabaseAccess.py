@@ -74,18 +74,24 @@ class DatabaseAccess:
 
         return new_gameset
 
-    def load_games_from_directory(self, folder_path, base_path=None):
+    def load_games_from_directory(self, folder_path, base_path=None, gameset: Gameset = None):
         game_paths = [f for f in folder_path.iterdir() if f.is_file()]
+        new_games = []
 
         for game_path in game_paths:
-            self.load_game_from_file(game_path, base_path=base_path)
-
+            new_games.append(self.load_game_from_file(game_path, base_path=base_path))
         self.connection.commit()
+
+        if gameset:
+            for game in new_games:
+                gameset.add_game(game.id)
 
     def load_game_from_file(self, game_path: PosixPath, base_path=None):
         new_game = Game(self.connection, base_path)
         new_game.load_from_file(game_path)
         self.games[new_game.id] = new_game
+
+        return new_game
 
     def send_gameset_update(self, gameset_id):
         # Placeholder. This will tie into a ToolsManager object
