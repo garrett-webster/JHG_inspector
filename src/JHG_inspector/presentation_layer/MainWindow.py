@@ -1,10 +1,12 @@
 from pathlib import Path
 
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QDialog
+from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QDialog, QSplitter
 
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.panels.GamesetManager import GamesetManager
+from src.JHG_inspector.presentation_layer.panels.Panel import Panel
 
 
 class MainWindow(QMainWindow):
@@ -17,8 +19,14 @@ class MainWindow(QMainWindow):
         self.setStatusBar(QStatusBar())
         self.add_menubar()
 
+        self.central_panel = Panel(self)
 
-        self.setCentralWidget(self.gameset_manager)
+        self.body_splitter = QSplitter(Qt.Orientation.Horizontal)
+        self.body_splitter.addWidget(self.gameset_manager)
+        self.body_splitter.addWidget(self.central_panel)
+        self.body_splitter.setCollapsible(0, False)
+
+        self.setCentralWidget(self.body_splitter)
 
 
     def add_menubar(self):

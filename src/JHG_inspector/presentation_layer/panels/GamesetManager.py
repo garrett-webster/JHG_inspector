@@ -21,6 +21,7 @@ class GamesetManager(Panel):
 
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         content_widget = QWidget()
         self.layout = QVBoxLayout(content_widget)
