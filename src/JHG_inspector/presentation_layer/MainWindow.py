@@ -4,8 +4,6 @@ from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QDialog
 
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
-from src.JHG_inspector.presentation_layer.dialogs.GamesetsDialog import GamesetsDialog
-from src.JHG_inspector.presentation_layer.dialogs.NewGamesetDialog import NewGamesetDialog
 from src.JHG_inspector.presentation_layer.panels.GamesetManager import GamesetManager
 
 
@@ -14,11 +12,14 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.database = database_access
         self.setWindowTitle('JHG Inspector')
-
         self.gameset_manager = GamesetManager(self.database)
-        self.setCentralWidget(self.gameset_manager)
+
         self.setStatusBar(QStatusBar())
         self.add_menubar()
+
+
+        self.setCentralWidget(self.gameset_manager)
+
 
     def add_menubar(self):
         menubar = self.menuBar()
@@ -37,7 +38,7 @@ class MainWindow(QMainWindow):
 
         # Gameset menu
         gamesets_menu = menubar.addMenu('Gamesets')
-        add_menu_action(gamesets_menu, 'Show Gamesets', self.show_gamesets)
+        add_menu_action(gamesets_menu, 'Show/Hide Gamesets', self.show_hide_gamesets, "Toggles the gameset sidebar")
         add_menu_action(gamesets_menu, "New Gameset", self.gameset_manager.add_gameset, "Create a new gameset")
 
     # --- QAction functions --- #
@@ -56,7 +57,8 @@ class MainWindow(QMainWindow):
         if directory_path:
             self.database.load_games_from_directory(Path(directory_path))
 
-    def show_gamesets(self):
-        gamesets_dialog = GamesetsDialog(self.database)
-        gamesets_dialog.setWindowTitle('Gamesets')
-        gamesets_dialog.exec()
+    def show_hide_gamesets(self):
+        if self.gameset_manager.isVisible():
+            self.gameset_manager.hide()
+        else:
+            self.gameset_manager.show()
