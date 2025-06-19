@@ -1,10 +1,11 @@
 from pathlib import Path
 
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar
+from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QDialog
 
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.dialogs.GamesetsDialog import GamesetsDialog
+from src.JHG_inspector.presentation_layer.dialogs.NewGamesetDialog import NewGamesetDialog
 from src.JHG_inspector.presentation_layer.panels.GamesetManager import GamesetManager
 
 
@@ -37,6 +38,7 @@ class MainWindow(QMainWindow):
         # Gameset menu
         gamesets_menu = menubar.addMenu('Gamesets')
         add_menu_action(gamesets_menu, 'Show Gamesets', self.show_gamesets)
+        add_menu_action(gamesets_menu, "New Gameset", self.gameset_manager.add_gameset, "Create a new gameset")
 
     # --- QAction functions --- #
     def show_games(self):
