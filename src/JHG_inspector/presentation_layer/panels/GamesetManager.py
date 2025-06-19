@@ -48,8 +48,13 @@ class GamesetManager(Panel):
 
             self.add_gameset_section(name, new_gameset)
 
+    def remove_gameset(self, gameset: Gameset):
+        self.database.delete_gameset(gameset)
+        self.gameset_elements[gameset.id].deleteLater()
+        del self.gameset_elements[gameset.id]
+
     def add_gameset_section(self, title: str, gameset: Gameset):
-        section = GamesetElement(title, gameset, self.add_game_via_dialog, self.remove_game)
+        section = GamesetElement(title, gameset, self.add_game_via_dialog, self.remove_game, self.remove_gameset)
         section.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self.gameset_elements[gameset.id] = section
         self.layout.addWidget(section)

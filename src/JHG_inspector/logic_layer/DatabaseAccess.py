@@ -74,6 +74,11 @@ class DatabaseAccess:
 
         return new_gameset
 
+    def delete_gameset(self, gameset: Gameset):
+        self.cursor.execute("DELETE FROM gameset_games WHERE gamesetId = ?", (gameset.id,))
+        self.cursor.execute("DELETE FROM gamesets WHERE id = ?", (gameset.id,))
+        del self.gamesets[gameset.id]
+
     def load_games_from_directory(self, folder_path, base_path=None, gameset: Gameset = None):
         game_paths = [f for f in folder_path.iterdir() if f.is_file()]
         new_games = []

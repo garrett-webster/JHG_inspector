@@ -1,24 +1,29 @@
 from functools import partial
 
 from PyQt6.QtCore import QSize
-from PyQt6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QFormLayout, QSizePolicy, QHBoxLayout
+from PyQt6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QFormLayout, QSizePolicy, QHBoxLayout, \
+    QMessageBox
 
 from src.JHG_inspector.data_layer.Game import Game
 from src.JHG_inspector.data_layer.Gameset import Gameset
 
 
 class GamesetElement(QWidget):
-    def __init__(self, title: str, gameset: Gameset, select_game, remove_game):
+    def __init__(self, title: str, gameset: Gameset, select_game, remove_game, remove_gameset):
         super().__init__()
+        self.gameset = gameset
+        self.remove_gameset = remove_gameset
 
         self.toggle_button = QPushButton(title)
         self.toggle_button.setCheckable(True)
         self.toggle_button.setChecked(False)
-
-        self.content = GamesList(gameset, select_game, remove_game)
-        self.content.setVisible(False)
-
         self.toggle_button.clicked.connect(self.toggle_content)
+
+        delete_button = QPushButton("Delete")
+        delete_button.clicked.connect(self.delete)
+
+        self.content = GamesList(gameset, delete_button, select_game, remove_game)
+        self.content.setVisible(False)
 
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
@@ -33,8 +38,19 @@ class GamesetElement(QWidget):
     def get_smallest_width(self):
         return self.content.get_smallest_width()
 
+    def delete(self):
+        result = QMessageBox.question(
+            self,
+            "Delete Gameset",
+            "Are you sure you want to delete this gameset?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if result == QMessageBox.StandardButton.Yes:
+            self.remove_gameset(self.gameset)
+
 class GamesList(QWidget):
-    def __init__(self, gameset, select_game, remove_game):
+    def __init__(self, gameset, delete_button, select_game, remove_game):
         super().__init__()
         self.remove_game = remove_game
         self.gameset = gameset
@@ -43,11 +59,12 @@ class GamesList(QWidget):
         self.layout = QVBoxLayout()
 
         header = QHBoxLayout()
-        header.addWidget(QLabel("Game Code"))
         add_game_button = QPushButton("Add Game")
         add_game_button.clicked.connect(partial(select_game, gameset))
 
+        header.addWidget(QLabel("Game Code"))
         header.addWidget(add_game_button)
+        header.addWidget(delete_button)
         self.layout.addLayout(header)
 
         self.game_rows = {}
