@@ -5,9 +5,8 @@ from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QDialog, QSplitter
 
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
+from src.JHG_inspector.presentation_layer.panels.CentralPanel import CentralPanel
 from src.JHG_inspector.presentation_layer.panels.GamesetManager import GamesetManager
-from src.JHG_inspector.presentation_layer.panels.Panel import Panel
-
 
 class MainWindow(QMainWindow):
     def __init__(self, database_access):
@@ -19,11 +18,13 @@ class MainWindow(QMainWindow):
         self.setStatusBar(QStatusBar())
         self.add_menubar()
 
-        self.central_panel = Panel(self)
+        self.central_panel = CentralPanel(self)
 
         self.body_splitter = QSplitter(Qt.Orientation.Horizontal)
         self.body_splitter.addWidget(self.gameset_manager)
         self.body_splitter.addWidget(self.central_panel)
+        self.body_splitter.setStretchFactor(0, 0)
+        self.body_splitter.setStretchFactor(1, 1)
         self.body_splitter.setCollapsible(0, False)
 
         self.setCentralWidget(self.body_splitter)
