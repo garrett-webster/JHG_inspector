@@ -78,7 +78,4 @@ class GamesetManager(Panel):
         games_list.remove_game_item(game)
 
     def sizeHint(self):
-        if not self.gameset_elements:
-            return QSize(100, 800)
-
-        return QSize(100, 800)
+        return QSize(150, 800)
