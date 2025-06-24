@@ -1,145 +1,119 @@
-from typing import Callable
+from functools import partial
 
-from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtWidgets import QSplitter, QTabWidget, QLabel, QWidget
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QContextMenuEvent
+from PyQt6.QtWidgets import QSplitter, QWidget, QMenu, QLabel
 
-from src.JHG_inspector.presentation_layer.components.ContainerTabBar import ContainerTabBar
+from src.JHG_inspector.presentation_layer.components.TabbedPanels import TabbedPanels
+
 
 class Container(QSplitter):
-    """Displays TabbedPanels objects and allows for custom runtime panel layouts.
+    """Used to create a runtime customizable layout.
 
-    Each container is created with a TabbedPanels object by default. It can also have sub-containers added,
-    which creates the custom panel layouts. If all tabs are closed, the TabbedPanels object is deleted. Similarly, if
-    there are no tabs nor sub-containers, the Container object is deleted.
-    """
+       Each Container can hold up to two items (which can be either TabbedPanel objects, other Containers, or one
+       of each). They are either displayed vertically or horizontally, based on the orientation passed at construction.
+       By calling the split command, you can add either the second item, or if two already exist, replace an item with
+       a new container with its first item being the replaced item. If both items are removed, the Container is deleted.
+       """
 
     num_containers = 0
-    def __init__(self, default_panel_check: Callable, parent=None):
+
+    def __init__(self, orientation: Qt.Orientation = Qt.Orientation.Horizontal):
         """
         Parameters
         ----------
-        default_panel_check : Callable
-            A function passed from the CentralPanel that checks if there are any panels left.
-            If there are not, it displays a default pane. Each time a Container object is deleted,
-            it calls default_panel_check.
-        parent : QWidget, optional
-            The QWidget that should be made the parent of the Container.
+        orientation: Qt.Orientation
+            Defines whether the items will be displayed one on top of the other (Qt.Orientation.Vertical), or side
+            by side (Qt.Orientation.Horizontal).
         """
 
-        super().__init__(parent)
         Container.num_containers += 1
-        self.num_containers += 1
-        self.default_panel_check = default_panel_check
+        self.container_num = Container.num_containers
+        super().__init__()
+        self.setOrientation(orientation)
 
-        self.orientation = Qt.Orientation.Horizontal
-        self.tabs = self.TabbedPanels(self.check_is_empty)
-        self.addWidget(self.tabs)
+    def add_child(self, widget: QWidget, index: int, split_direction):
+        """Adds a widget to a Container, nesting a new container if necessary.
 
-    # The orientation determines whether a child container will be displayed horizontally or vertically
-    def set_orientation(self, orientation: Qt.Orientation):
-        """
-        Parameters
-        ----------
-        orientation : Qt.Orientation
-            Used to define whether children Containers will be laid out horizontally or vertically.
-        """
-        self.orientation = orientation
+           Adds a widget if there is only one item in the Container. Otherwise, creates a new Container, places the item
+           at the index to be split in the new Container, adds the passed widget to the new Container, a replaces the
+           item at the index to be split with the new Container.
 
-    # To be empty, a container must have all tabs closed and not have a child container. If that is true, it deletes itself
-    def check_is_empty(self):
-        if self.tabs.count() == 0 and self.count() == 0:
+           Parameters
+           ----------
+           widget: QWidget
+               The new widget to be added
+           index: int
+               The index of the parent Container where the new widget should be placed (usually through instantiating a
+               new Container and placing the widget in it)
+           split_direction
+               The orientation (horizontal or vertical) that the container the widget will be placed in should display
+               its items. If the parent Container has only one item, that is the affected container. If it already has
+               two, then the split_direction is applied to the new Container.
+           """
+
+        if self.count() == 1:
+            self.setOrientation(split_direction)
+            self.addWidget(widget)
+
+            if isinstance(widget, TabbedPanels):
+                widget.parent_container = self
+        else:
+            old_widget = self.widget(index)  # The widget at the position where the split is to occur
+            old_widget.setParent(None)
+
+            nested_container = Container(orientation=split_direction)
+            nested_container.addWidget(old_widget)
+            nested_container.addWidget(widget)
+
+            if isinstance(widget, TabbedPanels):
+                widget.parent_container = nested_container
+            if isinstance(old_widget, TabbedPanels):
+                old_widget.parent_container = nested_container
+
+            self.insertWidget(index, nested_container)
+
+    def empty_check(self):
+        """A call back called by children Containers and TabbedPanels when they are cleared.
+
+           Allows for Container's items to let the Container know when it should check if it is empty. If it is, it then
+           propagates the empty_check up to its parent, allowing for all ancestor Containers to close once they have
+           no more items in their tree.
+           """
+
+        if self.count() == 0:
+            Container.num_containers -= 1
+
+            parent_container = self.find_parent_container()
+
             self.setParent(None)
             self.deleteLater()
-            Container.num_containers -= 1
-            self.default_panel_check()
 
-    class DefaultTab(QLabel):
-        def __init__(self, parent=None):
-            super().__init__(parent)
-            self.setText("New Tab")
+            if parent_container is not None:
+                parent_container.empty_check()
 
-    class TabbedPanels(QTabWidget):
-        """A tabbed container for panel widgets.
+    def find_parent_container(self):
+        parent = self.parent()
+        while parent and not isinstance(parent, Container):
+            parent = parent.parent()
+        return parent
 
-        Allows for panels to occupy the same space. Panels can be dragged from any TabbedPanels object to another.
-        Once the last tab is closed, the TabbedPanels object deletes itself.
-        """
+    def contextMenuEvent(self, event: QContextMenuEvent):
+        widget_under_mouse = self.childAt(event.pos())
+        while widget_under_mouse and widget_under_mouse.parent() != self:
+            widget_under_mouse = widget_under_mouse.parent()
+        index = self.indexOf(widget_under_mouse)
 
-        def __init__(self, check_container_empty: Callable, parent: "Container"=None, widget: QWidget=None):
-            """
-            Parameters
-            ----------
-            check_container_empty : Callable
-                A function passed from the parent Container that checks whether the Container is empty. TabbedPanels
-                calls this function when the last tab is closed or moved to a different TabbedPanels.
-            parent : QWidget, optional
-                The QWidget that should be made the parent of the TabbedPanels.
-            widget : QWidget, optional
-                 The widget (usually a panel associated with a tool) that will be displayed as the first tab when the
-                 TabbedPanels object is added.
-            """
-            super().__init__(parent)
-            self.deleted = False
-            self.check_container_empty = check_container_empty
-            self.setTabBar(ContainerTabBar())
-            self.setAcceptDrops(True)
+        menu = QMenu(self)
+        split_right = menu.addAction("Split Right")
+        split_right.triggered.connect(partial(self.split, Qt.Orientation.Horizontal, splitter_index=index))
 
-            if widget is None:
-                widget = Container.DefaultTab()
-            self.addTab(widget, "New Tab")
+        split_down = menu.addAction("Split Down")
+        split_down.triggered.connect(partial(self.split, Qt.Orientation.Vertical, splitter_index=index))
 
-            self.setTabsClosable(True)
-            self.tabCloseRequested.connect(self.close_tab)
+        menu.exec(event.globalPos())
 
-        def dragEnterEvent(self, event):
-            if event.mimeData().hasFormat("application/x-tab-index"):
-                event.acceptProposedAction()
-
-        def dropEvent(self, event):
-            if not event.mimeData().hasFormat("application/x-tab-index"):
-                return
-
-            source_tabbar = event.source()
-            index_bytes = event.mimeData().data("application/x-tab-index")
-            index = int(bytes(index_bytes).decode("utf-8"))
-
-            source_tabwidget = source_tabbar.parentWidget()
-            if not isinstance(source_tabwidget, Container.TabbedPanels):
-                return
-
-            panel = source_tabwidget.widget(index)
-            label = source_tabwidget.tabText(index)
-
-            source_tabwidget.removeTab(index)
-            if source_tabwidget.count() == 0:
-                source_tabwidget.deleted = True
-                source_tabwidget.setParent(None)
-                source_tabwidget.deleteLater()
-                source_tabwidget.check_container_empty()
-
-            # Tells the source container to check if it is empty after removing the tab
-            source_container = source_tabwidget.parentWidget()
-            if source_container and hasattr(source_container, 'check_is_empty'):
-                source_container.check_is_empty()
-
-            # Add to this widget
-            self.addTab(panel, label)
-            self.setCurrentWidget(panel)
-
-            event.acceptProposedAction()
-
-        # Closes the current tab. If that was the last tab, removes the TabbedPanels element
-        def close_tab(self, index: int):
-            widget = self.widget(index)
-            self.removeTab(index)
-            if widget is not None:
-                widget.deleteLater()
-
-            if self.count() == 0:
-                self.deleted = True
-                self.setParent(None)
-                self.deleteLater()
-                self.check_container_empty()
-
-        def sizeHint(self):
-            return QSize(600, 400)
+    def split(self, split_direction: Qt.Orientation, splitter_index=None, widget: QWidget = None):
+        if not widget:
+            widget = TabbedPanels(self.empty_check)
+        self.add_child(widget, splitter_index, split_direction)
