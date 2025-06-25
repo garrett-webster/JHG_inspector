@@ -1,7 +1,9 @@
 from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader import GameFileLoader, load_data
 
-"""Game file loader for the first version of the json"""
+
 class GameFileLoader_JsonV1(GameFileLoader):
+    """Game file loader for the first version of the json"""
+
     @load_data("games")
     def _load_games_data(self, data, values, table_name):
         values.append((
@@ -9,7 +11,6 @@ class GameFileLoader_JsonV1(GameFileLoader):
             data["lobby"]["numPlayers"],
             data["lobby"]["numObservers"],
             data["status"],
-            # creatorId,
             data["startDateTime"],
             data["gameParams"]["lengthOfRound"],
             data["gameParams"]["nameSet"],

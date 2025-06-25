@@ -1,11 +1,12 @@
 import re
-from pathlib import Path
+from pathlib import Path, PosixPath
 
 from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
 
 FILE_PATH = Path(__file__).resolve().parent
 
 class Game:
+    """Holds the data for a single game."""
     def __init__(self, connection, base_path=FILE_PATH):
         self.id = None
         self.connection = connection
@@ -16,16 +17,29 @@ class Game:
 
     # Determine the version of the json file and return the correct GameFileLoader for that version
     def create_game_file_loader(self):
+        """Factory method for game file loaders.
+
+           Determines the version of the JSON file and returns a GameFileLoader object of the correct type.
+           """
+
         return GameFileLoader_JsonV1(self)
 
-    def load_from_database(self, game_id):
+    def load_from_database(self, game_id: int):
+        """Find the game record based on the games id and load the data from the database"""
+
         self.cursor.execute("SELECT code FROM games WHERE id = ?", (game_id,))
         self.code = self.cursor.fetchone()[0]
         print(f"Loading game {self.code} from the database...")
         self.id = game_id
         self.set_id_to_name_dicts()
 
-    def load_from_file(self, game_path):
+    def load_from_file(self, game_path: PosixPath):
+        """Loads a game from a file into the database and the Game object.
+
+           Checks whether a game with the same game code has been loaded into the database yet. If not, find the next
+           id, create a GameFileLoader, and load the data from the file.
+           """
+
         self.code = re.match(r"jhg_(.+)\.json", game_path.name).group(1)
         print(f"Adding game {self.code} to the database...")
 
@@ -43,7 +57,10 @@ class Game:
             print(f"Game {self.code} already exists")
 
     def set_id_to_name_dicts(self):
-        # Set up the id_to_name_dict
+        """Create the id_to_name and name_to_id dictionaries.
+
+           id_to_name takes a game id from the database and returns the name of the player.
+           name_to_id takes a player name and returns the game id from the database."""
         self.cursor.execute("SELECT id, gameName FROM players WHERE gameId = ?", (self.id,))
         results = self.cursor.fetchall()
 
