@@ -1,27 +1,49 @@
+import json
 from abc import ABC, abstractmethod
+from pathlib import Path
 from sqlite3 import Connection
 
-def set_sql_strings(cls):
-    table_name = cls.__name__
-    cls.table_name = table_name[:-3]
-
-
-    return cls
+from src.JHG_inspector.data_layer.DB_init import TableData
 
 class TableDoa(ABC):
+    with open(Path(__file__).parent.parent / "schema.json", "r") as f:
+        schema = json.load(f)
+
     def __init__(self, connection: Connection):
         self.connection = connection
         self.cursor = connection.cursor()
-        self.column_names_string = ""
-        self.placeholder_string = ""
 
-        # self.column_names = ", ".join([column[0] for column in columns])
-        # self.placeholders = ", ".join(["?" for _ in columns])
+        # Automatically prepare SQL strings (only once per subclass)
+        cls = self.__class__
+        if not getattr(cls, "_sql_strings_initialized", False):
+            cls.prepare_sql_strings()
+            cls._sql_strings_initialized = True
 
-    def set_strings(self):
-        ...
+    @classmethod
+    def prepare_sql_strings(cls):
+        """Prepares the column name and placeholder strings to be used in insert statements
 
-    @abstractmethod
+           Gets the schema of the table with name table_name and creates a string (column_names_string) that can be
+           used in creating a SQL insert statement. Also creates a string of question marks with the same number of
+           question marks as column names.
+           """
+
+        class_name = cls.__name__
+        cls.table_name = class_name[0].lower() + class_name[1:-3]
+
+        if cls.table_name not in TableDoa.schema:
+            raise ValueError(f"No schema found for table '{cls.table_name}' in schema.json")
+
+        table_data = TableData(TableDoa.schema[cls.table_name])
+        columns = table_data.non_excluded_columns
+
+        if ('gameId', 'INTEGER') in table_data.columns:
+            cls.column_names_string = ", ".join(["gameId"] + [col[0] for col in columns])
+            cls.placeholder_string = ", ".join(["?"] * (len(columns) + 1))
+        else:
+            cls.column_names_string = ", ".join([col[0] for col in columns])
+            cls.placeholder_string = ", ".join(["?"] * len(columns))
+
     def insert(self, values):
         ...
 
