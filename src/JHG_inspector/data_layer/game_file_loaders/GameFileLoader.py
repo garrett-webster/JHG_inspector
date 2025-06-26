@@ -2,6 +2,7 @@ import json
 import re
 from pathlib import Path, PosixPath
 
+from src.JHG_inspector.data_layer.DatabaseManager import DatabaseManager
 from src.JHG_inspector.old_data_layer.DB_commands.DB_init import TableData
 
 NUM_LOAD_FUNCTIONS = 0
@@ -27,15 +28,10 @@ def load_data(table_name: str = None):
 
         def wrapper(self, data):
             if table_name is not None:
-                columns, column_names, placeholders = self._prepare_sql_strings(table_name)
                 values = []
-
                 function(self, data, values, table_name)
 
-                self.connection.executemany(
-                    f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})",
-                    values
-                )
+                self.database_manager.DAOs[table_name].insert(values)
 
         # Marks the functions so that they can be collected and run later on
         wrapper._load_function_order = NUM_LOAD_FUNCTIONS
@@ -55,7 +51,7 @@ class GameFileLoader:
        id_to_name dictionaries)
        """
 
-    def __init__(self, game: "Game"):
+    def __init__(self, database_manager: DatabaseManager, game: "Game"):
         """
         Parameters
         ----------
@@ -63,7 +59,8 @@ class GameFileLoader:
             A Game object that will hold the data read from the file
         """
         self.game = game
-        self.connection = game.connection
+        self.database_manager = database_manager
+        self.connection = database_manager.connection
         with open(Path(__file__).parent.parent / "DB_commands" / "schema.json", "r") as f:
             self.schema = json.load(f)
 
@@ -76,25 +73,6 @@ class GameFileLoader:
 
         # Sort by load order
         self._load_functions.sort(key=lambda x: x[0])
-
-    def _prepare_sql_strings(self, table_name: str):
-        """Prepares the column name and placeholder strings to be used in insert statements
-
-           Gets the schema of the table with name table_name and creates a string (column_names) that can be used in
-           creating a SQL insert statement. Also creates a string of question marks with the same number of question
-           marks as column names.
-           """
-
-        table_data = TableData(self.schema[table_name])
-        columns = table_data.non_excluded_columns
-        if ('gameId', 'INTEGER') in table_data.columns:
-            column_names = ", ".join(["gameId"] + [column[0] for column in columns])
-            placeholders = ", ".join(["?"] + ["?" for _ in columns])
-        else:
-            column_names = ", ".join([column[0] for column in columns])
-            placeholders = ", ".join(["?" for _ in columns])
-
-        return columns, column_names, placeholders
 
     def load_data_from_file(self, game_path: PosixPath):
         """Runs all the functions annotated with @load_data, passing in the data loaded from the passed game_path file.
