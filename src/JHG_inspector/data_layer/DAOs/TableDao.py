@@ -58,13 +58,33 @@ class TableDoa(ABC):
             values
         )
 
-    @abstractmethod
-    def select_one(self):
-        ...
+    def select(self, select_columns: list[str], matching_columns: list[str], matching_vals: list):
+        """Performs a select operation on the database.
 
-    @abstractmethod
-    def select_all(self):
-        ...
+           Parameters
+           ----------
+           select_columns: list[str]
+               A list of the columns to be returned, as strings
+           matching_columns: list[str]
+               A list of columns that you want to match against, as strings. Each string is turned into a string like
+               'column = ?' where column is a string in matching_columns
+           matching_vals: list
+               The values that the columns in matching_columns should be compared against. Must be in the same order as
+               their corresponding column in matching_columns.
+               """
+
+        select_columns_string = ", ".join(select_columns)
+        matching_columns_string = " AND ".join([column + " = ?" for column in matching_columns])
+
+        cursor = self.connection.cursor()
+        return cursor.execute(f"SELECT {select_columns_string} FROM {self.cls.table_name} WHERE {matching_columns_string}",
+                       matching_vals)
+
+    def select_one(self, select_columns, matching_columns, matching_vals):
+        return self.select(select_columns, matching_columns, matching_vals).fetchone()
+
+    def select_all(self, select_columns, matching_columns, matching_vals):
+        return self.select(select_columns, matching_columns, matching_vals).fetchall()
 
     def __init_subclass__(cls, **kwargs):
         """Ensures that all subclasses follow the TablenameDao naming convention (which the prepare_sql_strings method
