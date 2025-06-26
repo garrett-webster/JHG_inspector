@@ -1,11 +1,11 @@
 from functools import partial
 
 from PyQt6.QtCore import QSize
-from PyQt6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QFormLayout, QSizePolicy, QHBoxLayout, \
+from PyQt6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QSizePolicy, QHBoxLayout, \
     QMessageBox
 
-from src.JHG_inspector.data_layer.Game import Game
-from src.JHG_inspector.data_layer.Gameset import Gameset
+from src.JHG_inspector.old_data_layer.Game import Game
+from src.JHG_inspector.old_data_layer.Gameset import Gameset
 
 
 class GamesetElement(QWidget):

@@ -1,6 +1,4 @@
-from pathlib import Path, PosixPath
-
-from src.JHG_inspector.data_layer.Game import Game
+from pathlib import Path
 
 FILE_PATH = Path(__file__).resolve().parent
 

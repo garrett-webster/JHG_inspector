@@ -1,7 +1,7 @@
 import re
-from pathlib import Path, PosixPath
+from pathlib import Path
 
-from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
+from src.JHG_inspector.old_data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
 
 FILE_PATH = Path(__file__).resolve().parent
 
@@ -33,7 +33,7 @@ class Game:
         self.id = game_id
         self.set_id_to_name_dicts()
 
-    def load_from_file(self, game_path: PosixPath):
+    def load_from_file(self, game_path):
         """Loads a game from a file into the database and the Game object.
 
            Checks whether a game with the same game code has been loaded into the database yet. If not, find the next

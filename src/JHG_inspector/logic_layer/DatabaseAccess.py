@@ -1,9 +1,9 @@
 import sqlite3
 from pathlib import Path, PosixPath
 
-from src.JHG_inspector.data_layer.DB_commands.DB_init import initialize_DB
-from src.JHG_inspector.data_layer.Game import Game
-from src.JHG_inspector.data_layer.Gameset import Gameset
+from src.JHG_inspector.old_data_layer.DB_commands.DB_init import initialize_DB
+from src.JHG_inspector.old_data_layer.Game import Game
+from src.JHG_inspector.old_data_layer.Gameset import Gameset
 
 FILE_PATH = Path(__file__).resolve().parent
 

@@ -1,0 +1,417 @@
+{
+  "searchTags": {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "gameId": "INTEGER",
+    "tag": "TEXT",
+    "value": "TEXT",
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "gamesets": {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "name": "TEXT"
+  },
+  "games": {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "code": "TEXT",
+    "numPlayers": "INTEGER",
+    "numObservers": "INTEGER",
+    "status": "TEXT",
+    "startDateTime": "TIMESTAMP",
+    "lengthOfRound": "INTEGER",
+    "nameSet": "TEXT",
+    "chatType": "TEXT",
+    "messageType": "TEXT",
+    "advancedGameSetup": "BLOB",
+    "gameEndLow": "INTEGER",
+    "gameEndHigh": "INTEGER",
+    "gameEndType": "TEXT",
+    "alpha": "REAL",
+    "beta": "REAL",
+    "cGive": "REAL",
+    "cKeep": "REAL",
+    "cSteal": "REAL",
+    "povertyLine": "REAL",
+    "govInitialPopularity": "INTEGER",
+    "govInitialPopularityType": "TEXT",
+    "govRandomPopularities": "BOOLEAN",
+    "govRandomPopHigh": "INTEGER",
+    "govRandomPopLow": "INTEGER",
+    "govSendVotesImmediately": "BOOLEAN",
+    "labelsEnabled": "BOOLEAN",
+    "duration": "INTEGER",
+    "runtimeType": "TEXT"
+  },
+  "players": {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "gameId": "INTEGER",
+    "gameName": "TEXT",
+    "name": "TEXT",
+    "experience": "TEXT",
+    "permissionLevel": "TEXT",
+    "color": "TEXT",
+    "hue": "TEXT",
+    "avatar": "TEXT",
+    "icon": "TEXT",
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "admins": {
+    "gameId": "INTEGER",
+    "playerId": "INTEGER",
+    "FOREIGN_KEYS": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ],
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "playersThatWillBeGovernment": {
+    "gameId": "INTEGER",
+    "playerId": "INTEGER",
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "colorGroups": {
+    "gameId": "INTEGER",
+    "percentOfPlayers": "int",
+    "color": "TEXT",
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "labelPools": {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "gameId": "INTEGER",
+    "label": "TEXT",
+    "FOREIGN_KEYS": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "customParams": {
+    "gameId": "INTEGER",
+    "property": "TEXT",
+    "propertyValue": "TEXT",
+    "FOREIGN_KEYS": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "governmentRoundInfo": {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "gameId": "INTEGER",
+    "roundNum": "INTEGER",
+    "FOREIGN_KEYS": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "customRoundInfo": {
+    "gameId": "INTEGER",
+    "property": "TEXT",
+    "propertyValue": "TEXT",
+    "FOREIGN_KEYS": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "transactions": {
+    "gameId": "INTEGER",
+    "round_num": "INTEGER",
+    "player_from_id": "INTEGER",
+    "player_to_id": "INTEGER",
+    "tokens": "INTEGER",
+    "FOREIGN_KEYS": [
+      {
+        "column": "player_from_id",
+        "references": {
+          "table": "players",
+          "column": "id"
+        }
+      },
+      {
+        "column": "player_to_id",
+        "references": {
+          "table": "players",
+          "column": "id"
+        }
+      }
+    ],
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "playerRoundInfo": {
+    "round_num": "INTEGER",
+    "player_id": "INTEGER",
+    "groupId": "TEXT",
+    "numTokens": "INTEGER",
+    "FOREIGN_KEYS": [
+      {
+        "column": "player_id",
+        "references": {
+          "table": "players",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "influences": {
+    "gameId": "INTEGER",
+    "round_num": "INTEGER",
+    "player_from_id": "INTEGER",
+    "player_to_id": "INTEGER",
+    "influence": "INTEGER",
+    "FOREIGN_KEYS": [
+      {
+        "column": "player_from_id",
+        "references": {
+          "table": "players",
+          "column": "id"
+        }
+      },
+      {
+        "column": "player_to_id",
+        "references": {
+          "table": "players",
+          "column": "id"
+        }
+      }
+    ],
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "popularities": {
+    "gameId": "INTEGER",
+    "round_num": "INTEGER",
+    "player_id": "INTEGER",
+    "popularity": "REAL",
+    "FOREIGN_KEYS": [
+      {
+        "column": "player_id",
+        "references": {
+          "table": "players",
+          "column": "id"
+        }
+      },
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ],
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "groups": {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "gameId": "INTEGER",
+    "roundNum": "INTEGER",
+    "name": "TEXT",
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "groups_players": {
+    "groupId": "INTEGER",
+    "playerId": "INTEGER",
+    "FOREIGN_KEYS": [
+      {
+        "column": "groupId",
+        "references": {
+          "table": "groups",
+          "column": "id"
+        }
+      },
+      {
+        "column": "playerId",
+        "references": {
+          "table": "players",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "chatInfo": {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "gameId": "INTEGER",
+    "inGameId": "TEXT",
+    "name": "TEXT",
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "chatParticipants": {
+    "conversationId": "INTEGER",
+    "playerId": "INTEGER",
+    "FOREIGN_KEYS": [
+      {
+        "column": "conversationId",
+        "references": {
+          "table": "chatInfo",
+          "column": "id"
+        }
+      },
+      {
+        "column": "playerId",
+        "references": {
+          "table": "players",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "messages": {
+    "messageId": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "conversationId": "INTEGER",
+    "inGameId": "TEXT",
+    "playerFrom": "INTEGER",
+    "body": "TEXT",
+    "time": "TIMESTAMP",
+    "runtimeType": "TEXT",
+    "FOREIGN_KEYS": [
+      {
+        "column": "conversationId",
+        "references": {
+          "table": "chatInfo",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "messageTargets": {
+    "messageId": "INTEGER",
+    "playerId": "INTEGER",
+    "target": "TEXT",
+    "FOREIGN_KEYS": [
+      {
+        "column": "messageId",
+        "references": {
+          "table": "messages",
+          "column": "messageId"
+        }
+      },
+      {
+        "column": "playerId",
+        "references": {
+          "table": "players",
+          "column": "id"
+        }
+      }
+    ]
+  },
+  "gameset_games": {
+    "gamesetId": "INTEGER",
+    "gameId": "INTEGER",
+    "FOREIGN_KEYS": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
+          "column": "id"
+        }
+      },
+      {
+        "column": "gamesetId",
+        "references": {
+          "table": "gamesets",
+          "column": "id"
+        }
+      }
+    ]
+  }
+}

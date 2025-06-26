@@ -1,4 +1,4 @@
-from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader import GameFileLoader, load_data
+from src.JHG_inspector.old_data_layer.game_file_loaders.GameFileLoader import GameFileLoader, load_data
 
 
 class GameFileLoader_JsonV1(GameFileLoader):

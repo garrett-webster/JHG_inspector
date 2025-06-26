@@ -2,7 +2,7 @@ import json
 import re
 from pathlib import Path, PosixPath
 
-from src.JHG_inspector.data_layer.DB_commands.DB_init import TableData
+from src.JHG_inspector.old_data_layer.DB_commands.DB_init import TableData
 
 NUM_LOAD_FUNCTIONS = 0
 
