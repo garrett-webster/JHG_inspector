@@ -11,7 +11,7 @@ class TableDoa(ABC):
 
     def __init__(self, connection: Connection):
         self.connection = connection
-        self.cursor = connection.cursor()
+        self.cls = self.__class__
 
         # Automatically prepare SQL strings (only once per subclass)
         cls = self.__class__
@@ -44,10 +44,17 @@ class TableDoa(ABC):
             cls.column_names_string = ", ".join([col[0] for col in columns])
             cls.placeholder_string = ", ".join(["?"] * len(columns))
 
-    def insert(self, values):
-        cls = self.__class__
-        self.cursor.executemany(
-            f"INSERT INTO {cls.table_name} ({cls.column_names_string}) VALUES ({cls.placeholder_string})",
+    def insert(self, values: list[tuple]):
+        """Performs an insert operation into the database, using the values passed in values.
+
+        Parameters
+        ----------
+        values : list[tuple]
+            values is a list of tuples where each tuple is the data for one record to be inserted.
+            """
+
+        self.connection.executemany(
+            f"INSERT INTO {self.cls.table_name} ({self.cls.column_names_string}) VALUES ({self.cls.placeholder_string})",
             values
         )
 
