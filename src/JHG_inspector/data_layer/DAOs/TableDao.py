@@ -45,7 +45,11 @@ class TableDoa(ABC):
             cls.placeholder_string = ", ".join(["?"] * len(columns))
 
     def insert(self, values):
-        ...
+        cls = self.__class__
+        self.cursor.executemany(
+            f"INSERT INTO {cls.table_name} ({cls.column_names_string}) VALUES ({cls.placeholder_string})",
+            values
+        )
 
     @abstractmethod
     def select_one(self):
