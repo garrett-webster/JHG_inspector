@@ -34,7 +34,7 @@ class Game:
         self.id = game_id
         self.set_id_to_name_dicts()
 
-    def load_from_file(self, game_path):
+    def load_from_file(self, game_path: Path):
         """Loads a game from a file into the database and the Game object.
 
            Checks whether a game with the same game code has been loaded into the database yet. If not, find the next
