@@ -1,0 +1,347 @@
+{
+  "status": "finished",
+  "lobby": {
+    "code": "PBSG",
+    "numPlayers": 4,
+    "numObservers": 0,
+    "creatorName": null,
+    "admins": [],
+    "playerNames": [],
+    "gameStarted": true
+  },
+  "gameParams": {
+    "lengthOfRound": 150000000,
+    "gameEndCriteria": {
+      "low": 10,
+      "high": 30,
+      "runtimeType": "time"
+    },
+    "popularityFunctionParams": {
+      "alpha": 0.2,
+      "beta": 0.5,
+      "cGive": 1.3,
+      "cKeep": 0.95,
+      "cSteal": 1.6,
+      "povertyLine": 0,
+      "shouldUseNewUpdate": true
+    },
+    "governmentParams": {
+      "initialPopularity": 60,
+      "initialPopularityType": "ratio",
+      "taxesFirst": true,
+      "playersThatWillBeGovernment": null,
+      "sendVotesImmediately": true
+    },
+    "popularityRandomizationParams": {
+      "rawlsPopularity": false,
+      "randomPopularities": false,
+      "randomPopHigh": 200,
+      "randomPopLow": 50
+    },
+    "nameSet": "radio",
+    "chatType": "none",
+    "messageType": "freeForm",
+    "colorGroups": [],
+    "labels": {
+      "enabled": false,
+      "labelPools": []
+    },
+    "customParams": {},
+    "show": {
+      "roundLength": true,
+      "gameLength": true,
+      "chatType": true,
+      "messageType": true,
+      "nameSet": true,
+      "initialSetup": true,
+      "grouping": true,
+      "labels": true,
+      "advancedParams": true,
+      "government": true,
+      "popularityRandomization": true,
+      "visibilities": true,
+      "colorGrouping": true,
+      "pregame": true,
+      "agents": true
+    },
+    "advancedGameSetup": null,
+    "preGame": null,
+    "allowEdit": {
+      "roundLength": true,
+      "gameLength": true,
+      "chatType": true,
+      "messageType": true,
+      "nameSet": true,
+      "initialSetup": true,
+      "grouping": true,
+      "labels": true,
+      "advancedParams": true,
+      "government": true,
+      "popularityRandomization": true,
+      "visibilities": true,
+      "colorGrouping": true,
+      "pregame": true,
+      "agents": true
+    }
+  },
+  "creatorId": "30263ea0-9340-142f-bb5a-ef89b730d82c",
+  "endCondition": {
+    "duration": 1747326161104000,
+    "runtimeType": "time"
+  },
+  "players": [
+    {
+      "name": "Jessica Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Uniform",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "John Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Tango",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "James Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Juliett",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "Jane Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "November",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    }
+  ],
+  "observers": [],
+  "transactions": {
+    "round_1": {
+      "Juliett": {
+        "Juliett": 2,
+        "November": 2,
+        "Tango": 2,
+        "Uniform": 2
+      },
+      "November": {
+        "Juliett": 2,
+        "November": 2,
+        "Tango": 2,
+        "Uniform": 2
+      },
+      "Tango": {
+        "Juliett": 2,
+        "November": 2,
+        "Tango": 2,
+        "Uniform": 2
+      },
+      "Uniform": {
+        "Juliett": 2,
+        "November": 2,
+        "Tango": 2,
+        "Uniform": 2
+      }
+    }
+  },
+  "voteData": null,
+  "playerRoundInfo": {
+    "round_1": {
+      "Juliett": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "November": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Tango": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Uniform": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    },
+    "round_2": {
+      "Juliett": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "November": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Tango": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Uniform": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    }
+  },
+  "influences": {
+    "round_1": {
+      "Juliett": {
+        "Juliett": 0,
+        "November": 0,
+        "Tango": 0,
+        "Uniform": 0,
+        "__intrinsic__": 100
+      },
+      "November": {
+        "Juliett": 0,
+        "November": 0,
+        "Tango": 0,
+        "Uniform": 0,
+        "__intrinsic__": 100
+      },
+      "Tango": {
+        "Juliett": 0,
+        "November": 0,
+        "Tango": 0,
+        "Uniform": 0,
+        "__intrinsic__": 100
+      },
+      "Uniform": {
+        "Juliett": 0,
+        "November": 0,
+        "Tango": 0,
+        "Uniform": 0,
+        "__intrinsic__": 100
+      }
+    },
+    "round_2": {
+      "Juliett": {
+        "Juliett": 4.75,
+        "November": 6.5,
+        "Tango": 6.5,
+        "Uniform": 6.5,
+        "__intrinsic__": 80
+      },
+      "November": {
+        "Juliett": 6.5,
+        "November": 4.75,
+        "Tango": 6.5,
+        "Uniform": 6.5,
+        "__intrinsic__": 80
+      },
+      "Tango": {
+        "Juliett": 6.5,
+        "November": 6.5,
+        "Tango": 4.75,
+        "Uniform": 6.5,
+        "__intrinsic__": 80
+      },
+      "Uniform": {
+        "Juliett": 6.5,
+        "November": 6.5,
+        "Tango": 6.5,
+        "Uniform": 4.75,
+        "__intrinsic__": 80
+      }
+    }
+  },
+  "popularities": {
+    "round_1": {
+      "Juliett": 100,
+      "November": 100,
+      "Tango": 100,
+      "Uniform": 100
+    },
+    "round_2": {
+      "Juliett": 104.25,
+      "November": 104.25,
+      "Tango": 104.25,
+      "Uniform": 104.25
+    }
+  },
+  "groups": {
+    "round_1": {
+      "Everyone": {
+        "gameNames": [
+          "Uniform",
+          "Tango",
+          "Juliett",
+          "November"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    },
+    "round_2": {
+      "Everyone": {
+        "gameNames": [
+          "Uniform",
+          "Tango",
+          "Juliett",
+          "November"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    }
+  },
+  "startDateTime": "2025-05-15T16:05:40.921754Z",
+  "chatInfo": {
+    "global": {
+      "conversationId": "global",
+      "name": "Global Chat",
+      "messages": {
+        "-OQJgWJ6UIZBmfgfeRhl": {
+          "body": "Round 2",
+          "time": "2025-05-15T16:06:02.761564Z",
+          "targets": null,
+          "runtimeType": "gameNotification"
+        }
+      },
+      "participants": []
+    }
+  },
+  "governmentRoundInfo": {
+    "governmentPlayerNames": null,
+    "round": 0,
+    "playerVoteBallots": null,
+    "customRoundInfo": {}
+  },
+  "colorGroups": []
+}
