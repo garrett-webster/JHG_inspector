@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from src.JHG_inspector.old_data_layer.game_file_loaders import GameFileLoader
-from tests.test_data_layer.data_layer_testing_utilities import *
+from tests.test_old_data_layer.data_layer_testing_utilities import *
 
 FILE_PATH = Path(__file__).resolve().parent
 

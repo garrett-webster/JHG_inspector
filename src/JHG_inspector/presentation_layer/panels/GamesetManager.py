@@ -3,8 +3,8 @@ from pathlib import Path
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSizePolicy, QDialog
 
-from src.JHG_inspector.old_data_layer.Game import Game
-from src.JHG_inspector.old_data_layer.Gameset import Gameset
+from src.JHG_inspector.data_layer.Game import Game
+from src.JHG_inspector.data_layer.Gameset import Gameset
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.components.GamesetElement import GamesetElement
 from src.JHG_inspector.presentation_layer.dialogs.NewGamesetDialog import NewGamesetDialog
