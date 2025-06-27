@@ -1,4 +1,4 @@
-from src.JHG_inspector.old_data_layer.game_file_loaders.GameFileLoader import GameFileLoader, load_data
+from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader import GameFileLoader, load_data
 
 
 class GameFileLoader_JsonV1(GameFileLoader):
@@ -116,10 +116,7 @@ class GameFileLoader_JsonV1(GameFileLoader):
     def _load_chatParticipants_data(self, data, values, table_name):
         game_id = self.game.id
         for chat_name, chat_info in data["chatInfo"].items():
-            chat_id = self.game.cursor.execute(
-                "SELECT id FROM chatInfo WHERE inGameId = ? AND gameId = ?",
-                (chat_name, game_id)
-            ).fetchone()[0]
+            chat_id = self.database_manager.DAOs["chatInfo"].select_id(["inGameId", "gameId"], [chat_name, game_id])
 
             if chat_name == "global":
                 for player_id in self.game.id_to_name.keys():
@@ -133,10 +130,7 @@ class GameFileLoader_JsonV1(GameFileLoader):
     def _load_messages_data(self, data, values, table_name):
         game_id = self.game.id
         for chat_name, chat_info in data["chatInfo"].items():
-            chat_id = self.game.cursor.execute(
-                "SELECT id FROM chatInfo WHERE inGameId = ? AND gameId = ?",
-                (chat_name, game_id)
-            ).fetchone()[0]
+            chat_id = self.database_manager.DAOs["chatInfo"].select_id(["inGameId", "gameId"], [chat_name, game_id])
 
             for in_game_id, message in chat_info["messages"].items():
                 if "from" not in message: message["from"] = None

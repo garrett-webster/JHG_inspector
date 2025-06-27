@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 from src.JHG_inspector.data_layer.DatabaseManager import DatabaseManager
-from src.JHG_inspector.old_data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
+from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
 
 FILE_PATH = Path(__file__).resolve().parent
 
@@ -10,6 +10,7 @@ class Game:
     """Holds the data for a single game."""
     def __init__(self, database_manager: DatabaseManager, base_path=FILE_PATH):
         self.id = None
+        self.database_manager = database_manager
         self.connection = database_manager.connection
         self.id_to_name = {}
         self.name_to_id = {}
@@ -22,7 +23,7 @@ class Game:
            Determines the version of the JSON file and returns a GameFileLoader object of the correct type.
            """
 
-        return GameFileLoader_JsonV1(self)
+        return GameFileLoader_JsonV1(self.database_manager, self)
 
     def load_from_database(self, game_id: int):
         """Find the game record based on the games id and load the data from the database"""

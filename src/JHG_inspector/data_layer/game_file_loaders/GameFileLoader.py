@@ -61,7 +61,7 @@ class GameFileLoader:
         self.game = game
         self.database_manager = database_manager
         self.connection = database_manager.connection
-        with open(Path(__file__).parent.parent / "DB_commands" / "schema.json", "r") as f:
+        with open(Path(__file__).parent.parent / "schema.json", "r") as f:
             self.schema = json.load(f)
 
         # Collect all the functions annotated with @load_data and sort them in order of declaration
