@@ -1,7 +1,17 @@
 import sqlite3
 from pathlib import Path
 
+from src.JHG_inspector.data_layer.DAOs.AdminsDao import AdminsDao
+from src.JHG_inspector.data_layer.DAOs.ChatInfoDao import ChatInfoDao
+from src.JHG_inspector.data_layer.DAOs.GroupsDao import GroupsDao
+from src.JHG_inspector.data_layer.DAOs.InfluencesDao import InfluencesDao
+from src.JHG_inspector.data_layer.DAOs.PlayersDao import PlayersDao
 from src.JHG_inspector.data_layer.DAOs.GamesDao import GamesDao
+from src.JHG_inspector.data_layer.DAOs.PlayersThatWillBeGovernmentDao import PlayersThatWillBeGovernmentDao
+from src.JHG_inspector.data_layer.DAOs.PopularitiesDao import PopularitiesDao
+from src.JHG_inspector.data_layer.DAOs.SearchTagsDao import SearchTagsDao
+from src.JHG_inspector.data_layer.DAOs.TransactionsDao import TransactionsDao
+from src.JHG_inspector.data_layer.DAOs.colorGroupsDao import ColorGroupsDao
 from src.JHG_inspector.data_layer.DB_init import initialize_DB
 from src.JHG_inspector.data_layer.GamesManager import GamesManager
 from src.JHG_inspector.data_layer.GamesetManager import GamesetManager
@@ -9,7 +19,17 @@ from src.JHG_inspector.data_layer.GamesetManager import GamesetManager
 FILE_PATH = Path(__file__).resolve().parent
 
 DAO_CLASSES = {
+    "searchTags": SearchTagsDao,
+    "players": PlayersDao,
     "games": GamesDao,
+    "admins": AdminsDao,
+    "playersThatWillBeGovernment": PlayersThatWillBeGovernmentDao,
+    "colorGroups": ColorGroupsDao,
+    "transactions": TransactionsDao,
+    "popularities": PopularitiesDao,
+    "groups": GroupsDao,
+    "influences": InfluencesDao,
+    "chatInfo": ChatInfoDao,
 }
 
 class DatabaseManager:
