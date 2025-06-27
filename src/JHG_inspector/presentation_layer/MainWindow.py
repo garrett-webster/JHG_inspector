@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QSplitter
 
+from src.JHG_inspector.logic_layer.DatabaseManager import DatabaseManager
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.panels.CentralContainer import CentralContainer
 from src.JHG_inspector.presentation_layer.panels.GamesetPanel import GamesetPanel
@@ -11,9 +12,9 @@ from src.JHG_inspector.presentation_layer.panels.GamesetPanel import GamesetPane
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, database_access):
+    def __init__(self, database: DatabaseManager):
         super().__init__()
-        self.database = database_access
+        self.database = database
         self.setWindowTitle('JHG Inspector')
         self.gamesets_panel = GamesetPanel(self.database)
 

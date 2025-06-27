@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-from src.JHG_inspector.data_layer.DatabaseManager import DatabaseManager
+from src.JHG_inspector.logic_layer.DatabaseManager import DatabaseManager
 from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
 
 FILE_PATH = Path(__file__).resolve().parent
