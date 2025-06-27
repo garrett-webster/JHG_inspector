@@ -86,6 +86,10 @@ class TableDoa(ABC):
     def select_all(self, select_columns, matching_columns, matching_vals):
         return self.select(select_columns, matching_columns, matching_vals).fetchall()
 
+    @abstractmethod
+    def select_id(self, matching_columns, matching_vals):
+        ...
+
     def __init_subclass__(cls, **kwargs):
         """Ensures that all subclasses follow the TablenameDao naming convention (which the prepare_sql_strings method
         relies on).

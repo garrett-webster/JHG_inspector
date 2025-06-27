@@ -1,7 +1,7 @@
 from src.JHG_inspector.data_layer.DAOs.TableDao import TableDoa
 
 
-class GamesDao(TableDoa):
+class ChatParticipantsDao(TableDoa):
     def __init__(self, connection):
         super().__init__(connection)
 
