@@ -11,7 +11,7 @@ from src.JHG_inspector.presentation_layer.dialogs.NewGamesetDialog import NewGam
 from src.JHG_inspector.presentation_layer.panels.Panel import Panel
 
 
-class GamesetManager(Panel):
+class GamesetPanel(Panel):
     def __init__(self, database):
         super().__init__()
         self.database = database

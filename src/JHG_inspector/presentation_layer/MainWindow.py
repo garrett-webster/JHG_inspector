@@ -6,14 +6,16 @@ from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QSplitter
 
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.panels.CentralContainer import CentralContainer
-from src.JHG_inspector.presentation_layer.panels.GamesetManager import GamesetManager
+from src.JHG_inspector.presentation_layer.panels.GamesetPanel import GamesetPanel
+
+
 
 class MainWindow(QMainWindow):
     def __init__(self, database_access):
         super().__init__()
         self.database = database_access
         self.setWindowTitle('JHG Inspector')
-        self.gameset_manager = GamesetManager(self.database)
+        self.gamesets_panel = GamesetPanel(self.database)
 
         self.setStatusBar(QStatusBar())
         self.add_menubar()
@@ -21,7 +23,7 @@ class MainWindow(QMainWindow):
         self.central_panel = CentralContainer(self)
 
         self.body_splitter = QSplitter(Qt.Orientation.Horizontal)
-        self.body_splitter.addWidget(self.gameset_manager)
+        self.body_splitter.addWidget(self.gamesets_panel)
         self.body_splitter.addWidget(self.central_panel)
         self.body_splitter.setStretchFactor(0, 0)
         self.body_splitter.setStretchFactor(1, 1)
@@ -48,7 +50,7 @@ class MainWindow(QMainWindow):
         # Gameset menu
         gamesets_menu = menubar.addMenu('Gamesets')
         add_menu_action(gamesets_menu, 'Show/Hide Gamesets', self.show_hide_gamesets, "Toggles the gameset sidebar")
-        add_menu_action(gamesets_menu, "New Gameset", self.gameset_manager.add_gameset, "Create a new gameset")
+        add_menu_action(gamesets_menu, "New Gameset", self.gamesets_panel.add_gameset, "Create a new gameset")
 
     # --- QAction functions --- #
     def show_games(self):
@@ -67,7 +69,7 @@ class MainWindow(QMainWindow):
             self.database.load_games_from_directory(Path(directory_path))
 
     def show_hide_gamesets(self):
-        if self.gameset_manager.isVisible():
-            self.gameset_manager.hide()
+        if self.gamesets_panel.isVisible():
+            self.gamesets_panel.hide()
         else:
-            self.gameset_manager.show()
+            self.gamesets_panel.show()
