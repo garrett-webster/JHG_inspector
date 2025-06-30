@@ -40,7 +40,7 @@ def game(temp_folder, game_set):
     def _create_game(path=None):
         # Use default if no data given
         if path is None:
-            game = Game(game_set().connection, base_path=temp_folder)
+            game = Game(game_set().connection)
         else:
             with open(path, "r") as f:
                 game_data = json.load(f)
@@ -49,7 +49,7 @@ def game(temp_folder, game_set):
             with open(json_path, "w") as f:
                 json.dump(game_data, f)
 
-            game = Game(game_set().connection, base_path=temp_folder)
+            game = Game(game_set().connection)
             game.load_from_file(json_path)
         return game
     return _create_game

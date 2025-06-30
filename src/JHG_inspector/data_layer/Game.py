@@ -8,7 +8,7 @@ FILE_PATH = Path(__file__).resolve().parent
 
 class Game:
     """Holds the data for a single game."""
-    def __init__(self, database_manager: DatabaseManager, base_path=FILE_PATH):
+    def __init__(self, database_manager: DatabaseManager):
         self.id = None
         self.database_manager = database_manager
         self.connection = database_manager.connection
