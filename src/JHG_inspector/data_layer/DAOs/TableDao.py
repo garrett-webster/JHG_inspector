@@ -74,17 +74,24 @@ class TableDoa(ABC):
                """
 
         select_columns_string = ", ".join(select_columns)
-        matching_columns_string = " AND ".join([column + " = ?" for column in matching_columns])
 
         cursor = self.connection.cursor()
-        return cursor.execute(f"SELECT {select_columns_string} FROM {self.cls.table_name} WHERE {matching_columns_string}",
+        if matching_columns:
+            matching_columns_string = " AND ".join([column + " = ?" for column in matching_columns])
+            return cursor.execute(f"SELECT {select_columns_string} FROM {self.cls.table_name} WHERE {matching_columns_string}",
                        matching_vals)
+        else:
+            return cursor.execute(
+                f"SELECT {select_columns_string} FROM {self.cls.table_name}", matching_vals)
 
     def select_one(self, select_columns, matching_columns, matching_vals):
         return self.select(select_columns, matching_columns, matching_vals).fetchone()
 
-    def select_all(self, select_columns, matching_columns, matching_vals):
+    def select_all(self, select_columns: list[str], matching_columns: list[str], matching_vals: list):
         return self.select(select_columns, matching_columns, matching_vals).fetchall()
+
+    def select_all(self, select_columns: list[str]):
+        return self.select(select_columns, [], []).fetchall()
 
     @abstractmethod
     def select_id(self, matching_columns, matching_vals):
