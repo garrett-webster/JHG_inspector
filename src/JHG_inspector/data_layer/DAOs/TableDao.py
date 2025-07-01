@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from sqlite3 import Connection
 
-from src.JHG_inspector.data_layer.DB_init import TableData
+from src.JHG_inspector.data_layer.TableData import TableData
 
 class TableDoa(ABC):
     with open(Path(__file__).parent.parent / "schema.json", "r") as f:

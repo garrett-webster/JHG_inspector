@@ -47,6 +47,14 @@ DAO_CLASSES = {
 }
 
 class DatabaseManager:
+    """DatabaseManager is the single point through which the logic layer and presentation layers interact with the
+       database, through the database access objects (DAOs) that the DatabaseManager holds.
+
+       The DatabaseManager holds the connection to the database that is used by the entire program. Additionally, it
+       stores references to the GamesManager and GamesetManagers, which are used to send specific commands to the DAOs
+       that the DatabaseManager object holds.
+       """
+
     def __init__(self, database_path = FILE_PATH.parent / "data_bases" / f"JHGInspector.db"):
         self.connection = self.connect(database_path)
         self.DAOs = {name: DAO(self.connection) for name, DAO in DAO_CLASSES.items()}
