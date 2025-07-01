@@ -12,6 +12,7 @@ from src.JHG_inspector.presentation_layer.panels.Panel import Panel
 
 
 class GamesetPanel(Panel):
+    """A side panel that shows all the gamesets and their games, and allows editing those gamesets."""
     def __init__(self, database):
         super().__init__()
         self.database = database
@@ -33,7 +34,7 @@ class GamesetPanel(Panel):
         wrapper_layout.addWidget(scroll_area)
         wrapper_layout.setContentsMargins(0, 0, 0, 0)
 
-        for gameset in database.gamesets.values():
+        for gameset in database.gamesets.all.values():
             self.add_gameset_section(gameset.name, gameset)
 
     def add_gameset(self):
@@ -41,16 +42,16 @@ class GamesetPanel(Panel):
         if dialog.exec() == QDialog.DialogCode.Accepted:
 
             name = dialog.name
-            new_gameset = self.database.create_gameset(name)
+            new_gameset = self.database.gamesets.create_gameset(name)
 
             if dialog.directory_path:
                 path = Path(dialog.directory_path)
-                self.database.load_games_from_directory(path, gameset=new_gameset)
+                self.database.games.load_games_from_directory(path, gameset=new_gameset)
 
             self.add_gameset_section(name, new_gameset)
 
     def remove_gameset(self, gameset: Gameset):
-        self.database.delete_gameset(gameset)
+        self.database.gamesets.delete_gameset(gameset)
         self.gameset_elements[gameset.id].deleteLater()
         del self.gameset_elements[gameset.id]
 
@@ -60,10 +61,10 @@ class GamesetPanel(Panel):
         self.gameset_elements[gameset.id] = section
         self.layout.addWidget(section)
 
-    def add_game_via_dialog(self, gameset):
+    def add_game_via_dialog(self, gameset: Gameset):
         games_list = self.gameset_elements[gameset.id].content
 
-        dialog = GamesDialog(self.database.games, gameset, parent=self.window())
+        dialog = GamesDialog(self.database.games.all, gameset, parent=self.window())
         dialog.setWindowFlag(Qt.WindowType.Tool)  # <-- Tool windows don’t drag the parent
         dialog.setWindowModality(Qt.WindowModality.ApplicationModal)
         if dialog.exec() == 1:

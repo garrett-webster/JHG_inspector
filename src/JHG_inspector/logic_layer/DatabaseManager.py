@@ -1,9 +1,12 @@
 import sqlite3
 from pathlib import Path
 
+from src.JHG_inspector.data_layer.DAOs.Gameset_gamesDao import Gameset_gamesDao
 from src.JHG_inspector.data_layer.DAOs.AdminsDao import AdminsDao
 from src.JHG_inspector.data_layer.DAOs.ChatInfoDao import ChatInfoDao
 from src.JHG_inspector.data_layer.DAOs.ChatParticipantsDao import ChatParticipantsDao
+from src.JHG_inspector.data_layer.DAOs.GamesGameset_gamesDao import GamesGameset_gamesDao
+from src.JHG_inspector.data_layer.DAOs.GamesetsDao import GamesetsDao
 from src.JHG_inspector.data_layer.DAOs.GroupsDao import GroupsDao
 from src.JHG_inspector.data_layer.DAOs.InfluencesDao import InfluencesDao
 from src.JHG_inspector.data_layer.DAOs.MessagesDao import MessagesDao
@@ -15,8 +18,8 @@ from src.JHG_inspector.data_layer.DAOs.SearchTagsDao import SearchTagsDao
 from src.JHG_inspector.data_layer.DAOs.TransactionsDao import TransactionsDao
 from src.JHG_inspector.data_layer.DAOs.ColorGroupsDao import ColorGroupsDao
 from src.JHG_inspector.data_layer.DB_init import initialize_DB
-from src.JHG_inspector.data_layer.GamesManager import GamesManager
-from src.JHG_inspector.data_layer.GamesetManager import GamesetManager
+from src.JHG_inspector.logic_layer.GamesetManager import GamesetManager
+from src.JHG_inspector.logic_layer.GamesManager import GamesManager
 
 FILE_PATH = Path(__file__).resolve().parent
 
@@ -34,15 +37,19 @@ DAO_CLASSES = {
     "chatInfo": ChatInfoDao,
     "chatParticipants": ChatParticipantsDao,
     "messages": MessagesDao,
+
+    "gamesets": GamesetsDao,
+    "GamesGameset_gamesDao": GamesGameset_gamesDao,
+    "gameset_games": Gameset_gamesDao
 }
 
 class DatabaseManager:
-    def __init__(self, base_path=FILE_PATH):
-        self.connection = self.connect(base_path)
+    def __init__(self, database_path = FILE_PATH.parent / "data_bases" / f"JHGInspector.db"):
+        self.connection = self.connect(database_path)
         self.DAOs = {name: DAO(self.connection) for name, DAO in DAO_CLASSES.items()}
 
-        self.gameset = GamesetManager(self.connection)
-        self.games = GamesManager(self.connection)
+        self.games = GamesManager(self)
+        self.gamesets = GamesetManager(self)
 
     def __enter__(self, base_path=FILE_PATH):
         return self
@@ -59,12 +66,11 @@ class DatabaseManager:
             self.connection = None
 
     # TODO: Set this up to be able to connect to a different data base, closing the previous connection if one exists
-    def connect(self, base_path):
-        # Connect to the database
-        db_path = base_path.parent / "data_bases" / f"JHGInspector.db"
-        db_path.parent.mkdir(parents=True, exist_ok=True)
+    def connect(self, database_path):
+        """Connect to the database file found at the path passed in database_path"""
+        database_path.parent.mkdir(parents=True, exist_ok=True)
 
-        connection = sqlite3.connect(str(db_path))
+        connection = sqlite3.connect(str(database_path))
         connection.execute("PRAGMA foreign_keys = ON")
 
         initialize_DB(connection)

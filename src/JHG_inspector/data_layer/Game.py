@@ -1,14 +1,13 @@
 import re
 from pathlib import Path
 
-from src.JHG_inspector.logic_layer.DatabaseManager import DatabaseManager
 from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
 
 FILE_PATH = Path(__file__).resolve().parent
 
 class Game:
     """Holds the data for a single game."""
-    def __init__(self, database_manager: DatabaseManager):
+    def __init__(self, database_manager: "DatabaseManager"):
         self.id = None
         self.database_manager = database_manager
         self.connection = database_manager.connection
@@ -35,6 +34,7 @@ class Game:
         self.id = game_id
         self.set_id_to_name_dicts()
 
+    # TODO: Cache game loader objects (based on JSON version) so you're not creating a new one for each file.
     def load_from_file(self, game_path: Path):
         """Loads a game from a file into the database and the Game object.
 

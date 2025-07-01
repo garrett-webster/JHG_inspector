@@ -37,7 +37,7 @@ class TableDoa(ABC):
         table_data = TableData(TableDoa.schema[cls.table_name])
         columns = table_data.non_excluded_columns
 
-        if ('gameId', 'INTEGER') in table_data.columns:
+        if ('gameId', 'INTEGER') in table_data.columns and not cls.table_name == "gameset_games":
             cls.column_names_string = ", ".join(["gameId"] + [col[0] for col in columns])
             cls.placeholder_string = ", ".join(["?"] * (len(columns) + 1))
         else:
@@ -51,6 +51,8 @@ class TableDoa(ABC):
         If the name does not end in 'Dao' or the prefix is not a table found in the schema, then an error is raised.
         """
 
+        excluded_table_names = ["view", "gamesGameset_games"]
+
         super().__init_subclass__(**kwargs)
 
         # Enforce naming convention
@@ -58,7 +60,7 @@ class TableDoa(ABC):
             raise TypeError(f"Class name '{cls.__name__}' must end with 'Dao'")
 
         table_name = cls.__name__[0].lower() + cls.__name__[1:-3]
-        if table_name not in TableDoa.schema:
+        if table_name not in TableDoa.schema and not table_name in excluded_table_names: # The 'and not' excludes the ViewDao base class and views
             raise ValueError(f"Table name '{table_name}' not found in schema for class '{cls.__name__}'")
 
 
@@ -77,6 +79,15 @@ class TableDoa(ABC):
             f"INSERT INTO {self.cls.table_name} ({self.cls.column_names_string}) VALUES ({self.cls.placeholder_string})",
             values
         )
+
+    def insert_one(self, value: tuple):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            f"INSERT INTO {self.cls.table_name} ({self.cls.column_names_string}) VALUES ({self.cls.placeholder_string})",
+            value
+        )
+        self.connection.commit()
+        return cursor.lastrowid
 
     def select(self, select_columns: list[str], matching_columns: list[str], matching_vals: list):
         """Performs a select operation on the database.
@@ -107,11 +118,12 @@ class TableDoa(ABC):
     def select_one(self, select_columns: list[str], matching_columns: list[str], matching_vals: list):
         return self.select(select_columns, matching_columns, matching_vals).fetchone()
 
-    def select_all(self, select_columns: list[str], matching_columns: list[str], matching_vals: list):
+    def select_all(self, select_columns: list[str], matching_columns: list[str] = [], matching_vals: list = []):
         return self.select(select_columns, matching_columns, matching_vals).fetchall()
 
-    def select_all(self, select_columns: list[str]):
-        return self.select(select_columns, [], []).fetchall()
+    def delete_one(self, matching_columns: list[str], matching_vals: list):
+        matching_columns_string = " AND ".join([column + " = ?" for column in matching_columns])
+        self.connection.execute(f"DELETE FROM {self.cls.table_name} WHERE {matching_columns_string}", matching_vals)
 
     @abstractmethod
     def select_id(self, matching_columns, matching_vals):

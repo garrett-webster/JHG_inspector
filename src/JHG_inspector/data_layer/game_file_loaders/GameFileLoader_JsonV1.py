@@ -64,8 +64,7 @@ class GameFileLoader_JsonV1(GameFileLoader):
     def _load_playersThatWillBeGovernment_data(self, data, values, table_name):
         if data["gameParams"]["governmentParams"]["playersThatWillBeGovernment"] is not None:
             for name in data["gameParams"]["governmentParams"]["playersThatWillBeGovernment"]:
-                self.game.cursor.execute("SELECT id FROM players WHERE name = ? AND gameId = ?", (name, self.game.id))
-                player_id = self.game.cursor.fetchone()
+                player_id = self.database_manager.DAOs["players"].select_one(["id"], ["name", "gameId"], [name, self.game.id])
                 values.append((self.game.id, player_id[0]))
 
         self.game.set_id_to_name_dicts()

@@ -2,8 +2,6 @@ import json
 import re
 from pathlib import Path, PosixPath
 
-from src.JHG_inspector.logic_layer.DatabaseManager import DatabaseManager
-
 NUM_LOAD_FUNCTIONS = 0
 
 
@@ -50,7 +48,7 @@ class GameFileLoader:
        id_to_name dictionaries)
        """
 
-    def __init__(self, database_manager: DatabaseManager, game: "Game"):
+    def __init__(self, database_manager: "DatabaseManager", game: "Game"):
         """
         Parameters
         ----------

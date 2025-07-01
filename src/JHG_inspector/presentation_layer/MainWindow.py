@@ -10,7 +10,6 @@ from src.JHG_inspector.presentation_layer.panels.CentralContainer import Central
 from src.JHG_inspector.presentation_layer.panels.GamesetPanel import GamesetPanel
 
 
-
 class MainWindow(QMainWindow):
     def __init__(self, database: DatabaseManager):
         super().__init__()
@@ -23,19 +22,37 @@ class MainWindow(QMainWindow):
 
         self.central_panel = CentralContainer(self)
 
+        # Adds the gameset panel to the left and designates the rest as the main area for panels
         self.body_splitter = QSplitter(Qt.Orientation.Horizontal)
         self.body_splitter.addWidget(self.gamesets_panel)
         self.body_splitter.addWidget(self.central_panel)
+
+        # Tells the splitter to keep the gameset panel the same size when the window is resized
         self.body_splitter.setStretchFactor(0, 0)
         self.body_splitter.setStretchFactor(1, 1)
         self.body_splitter.setCollapsible(0, False)
 
         self.setCentralWidget(self.body_splitter)
 
-
     def add_menubar(self):
+        """Adds the menubar to the top and attaches the relevant function."""
         menubar = self.menuBar()
+
         def add_menu_action(menu, title, function, tooltip: str = ""):
+            """Adds a single action to a menu in the menubar.
+
+            Parameters
+            ----------
+            menu : QMenu
+                The menu to add the action to.
+            title : str
+                The title of the action to be displayed in the menu.
+            function : function
+                The function to be called when the menu item is clicked.
+            tooltip: str
+                The message to be displayed in the status bar at the bottom of the GUI when a menu item is hovered over
+            """
+
             new_action = QAction(title, self)
             new_action.triggered.connect(function)
             new_action.setStatusTip(tooltip)
@@ -45,31 +62,38 @@ class MainWindow(QMainWindow):
         # Game menu
         games_menu = menubar.addMenu('Games')
         add_menu_action(games_menu, 'Show Games', self.show_games, "Show all loaded games in a new window")
-        add_menu_action(games_menu, 'Load Game From File', self.load_game_file, "Load a new game to the database from a JHG gamelog")
-        add_menu_action(games_menu, "Load Games From Folder", self.load_games_from_directory, "Load all game logs from a folder to the database")
+        add_menu_action(games_menu, 'Load Game From File', self.load_game_file,
+                        "Load a new game to the database from a JHG gamelog")
+        add_menu_action(games_menu, "Load Games From Folder", self.load_games_from_directory,
+                        "Load all game logs from a folder to the database")
 
         # Gameset menu
         gamesets_menu = menubar.addMenu('Gamesets')
-        add_menu_action(gamesets_menu, 'Show/Hide Gamesets', self.show_hide_gamesets, "Toggles the gameset sidebar")
+        add_menu_action(gamesets_menu, 'Show/Hide Gamesets', self.toggle_gamesets_panel, "Toggles the gameset sidebar")
         add_menu_action(gamesets_menu, "New Gameset", self.gamesets_panel.add_gameset, "Create a new gameset")
 
     # --- QAction functions --- #
     def show_games(self):
+        """Opens a modal that displays all loaded games"""
         games_dialog = GamesDialog(self.database.games)
         games_dialog.exec()
 
     def load_game_file(self):
+        """Opens a modal to select a path to a game log file. If one is chosen, loads that game into the database"""
         dialog = QFileDialog()
         if dialog.exec() == 1:
-            self.database.load_game_from_file(Path(dialog.selectedFiles()[0]))
+            self.database.games.load_game_from_file(Path(dialog.selectedFiles()[0]))
 
     def load_games_from_directory(self):
+        """Opens a modal to select a path to a directory. If one is chosen, loads all the game log files in that
+           directory into the database"""
         directory_path = QFileDialog.getExistingDirectory(options=QFileDialog.Option.ShowDirsOnly)
 
         if directory_path:
-            self.database.load_games_from_directory(Path(directory_path))
+            self.database.games.load_games_from_directory(Path(directory_path))
 
-    def show_hide_gamesets(self):
+    def toggle_gamesets_panel(self):
+        """Toggles the visibility of the gamesets panel"""
         if self.gamesets_panel.isVisible():
             self.gamesets_panel.hide()
         else:

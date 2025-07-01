@@ -12,7 +12,7 @@ class TestGameInitialization:
 
     def test_init_invalid_path(self, game_set, temp_folder):
         with pytest.raises(FileNotFoundError):
-            Game(game_set().connection, temp_folder).load_from_file(Path("test_set1/jhg_AAAA.json"))
+            Game(game_set().connection).load_from_file(Path("test_set1/jhg_AAAA.json"))
 
     def test_set_id_to_name_dicts(self, game):
         test_game1 = game(FILE_PATH.parent / "test_set1/jhg_GDHP.json")
