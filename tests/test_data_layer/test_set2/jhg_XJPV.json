@@ -1,0 +1,441 @@
+{
+  "status": "finished",
+  "lobby": {
+    "code": "XJPV",
+    "numPlayers": 3,
+    "numObservers": 0,
+    "creatorName": null,
+    "admins": [],
+    "playerNames": [],
+    "gameStarted": true
+  },
+  "gameParams": {
+    "lengthOfRound": 150000000,
+    "gameEndCriteria": {
+      "low": 10,
+      "high": 30,
+      "runtimeType": "time"
+    },
+    "popularityFunctionParams": {
+      "alpha": 0.2,
+      "beta": 0.5,
+      "cGive": 1.3,
+      "cKeep": 0.95,
+      "cSteal": 1.6,
+      "povertyLine": 0,
+      "shouldUseNewUpdate": true
+    },
+    "governmentParams": {
+      "initialPopularity": 60,
+      "initialPopularityType": "ratio",
+      "taxesFirst": true,
+      "playersThatWillBeGovernment": null,
+      "sendVotesImmediately": true
+    },
+    "popularityRandomizationParams": {
+      "rawlsPopularity": false,
+      "randomPopularities": false,
+      "randomPopHigh": 200,
+      "randomPopLow": 50
+    },
+    "nameSet": "radio",
+    "chatType": "direct",
+    "messageType": "freeForm",
+    "colorGroups": [],
+    "labels": {
+      "enabled": false,
+      "labelPools": []
+    },
+    "customParams": {},
+    "show": {
+      "roundLength": true,
+      "gameLength": true,
+      "chatType": true,
+      "messageType": true,
+      "nameSet": true,
+      "initialSetup": true,
+      "grouping": true,
+      "labels": true,
+      "advancedParams": true,
+      "government": true,
+      "popularityRandomization": true,
+      "visibilities": true,
+      "colorGrouping": true,
+      "pregame": true,
+      "agents": true
+    },
+    "advancedGameSetup": null,
+    "preGame": null,
+    "allowEdit": {
+      "roundLength": true,
+      "gameLength": true,
+      "chatType": true,
+      "messageType": true,
+      "nameSet": true,
+      "initialSetup": true,
+      "grouping": true,
+      "labels": true,
+      "advancedParams": true,
+      "government": true,
+      "popularityRandomization": true,
+      "visibilities": true,
+      "colorGrouping": true,
+      "pregame": true,
+      "agents": true
+    }
+  },
+  "creatorId": "debd9df0-09ae-1473-b18d-55f1dcea4df4",
+  "endCondition": {
+    "duration": 1749224923799000,
+    "runtimeType": "time"
+  },
+  "players": [
+    {
+      "name": "Simith",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Yankee",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "West",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Tango",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "Watermelon",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Mike",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    }
+  ],
+  "observers": [],
+  "transactions": {
+    "round_1": {
+      "Mike": {
+        "Mike": 0,
+        "Tango": 3,
+        "Yankee": 3
+      },
+      "Tango": {
+        "Mike": 3,
+        "Tango": 0,
+        "Yankee": 3
+      },
+      "Yankee": {
+        "Mike": 0,
+        "Tango": -6,
+        "Yankee": 0
+      }
+    },
+    "round_2": {
+      "Mike": {
+        "Mike": 6,
+        "Tango": 0,
+        "Yankee": 0
+      },
+      "Tango": {
+        "Mike": 0,
+        "Tango": 0,
+        "Yankee": -6
+      },
+      "Yankee": {
+        "Mike": 0,
+        "Tango": -6,
+        "Yankee": 0
+      }
+    }
+  },
+  "voteData": null,
+  "playerRoundInfo": {
+    "round_1": {
+      "Mike": {
+        "numTokens": 6,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Tango": {
+        "numTokens": 6,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Yankee": {
+        "numTokens": 6,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    },
+    "round_2": {
+      "Mike": {
+        "numTokens": 6,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Tango": {
+        "numTokens": 6,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Yankee": {
+        "numTokens": 6,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    },
+    "round_3": {
+      "Mike": {
+        "numTokens": 6,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Tango": {
+        "numTokens": 6,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Yankee": {
+        "numTokens": 6,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    }
+  },
+  "influences": {
+    "round_1": {
+      "Mike": {
+        "Mike": 0,
+        "Tango": 0,
+        "Yankee": 0,
+        "__intrinsic__": 100
+      },
+      "Tango": {
+        "Mike": 0,
+        "Tango": 0,
+        "Yankee": 0,
+        "__intrinsic__": 100
+      },
+      "Yankee": {
+        "Mike": 0,
+        "Tango": 0,
+        "Yankee": 0,
+        "__intrinsic__": 100
+      }
+    },
+    "round_2": {
+      "Mike": {
+        "Mike": 0,
+        "Tango": 13,
+        "Yankee": 0,
+        "__intrinsic__": 80
+      },
+      "Tango": {
+        "Mike": 13,
+        "Tango": 0,
+        "Yankee": -32,
+        "__intrinsic__": 80
+      },
+      "Yankee": {
+        "Mike": 13,
+        "Tango": 13,
+        "Yankee": 32,
+        "__intrinsic__": 80
+      }
+    },
+    "round_3": {
+      "Mike": {
+        "Mike": 17.669999999999998,
+        "Tango": 8.458904109589042,
+        "Yankee": 0,
+        "__intrinsic__": 64.00000000000001
+      },
+      "Tango": {
+        "Mike": 10.168493150684935,
+        "Tango": 19.520000000000003,
+        "Yankee": -75.10794520547947,
+        "__intrinsic__": 64.00000000000001
+      },
+      "Yankee": {
+        "Mike": 10.168493150684935,
+        "Tango": -11.06109589041096,
+        "Yankee": 75.10794520547947,
+        "__intrinsic__": 64.00000000000001
+      }
+    }
+  },
+  "popularities": {
+    "round_1": {
+      "Mike": 100,
+      "Tango": 100,
+      "Yankee": 100
+    },
+    "round_2": {
+      "Mike": 93,
+      "Tango": 61,
+      "Yankee": 138
+    },
+    "round_3": {
+      "Mike": 90.12890410958906,
+      "Tango": 18.58054794520548,
+      "Yankee": 138.21534246575345
+    }
+  },
+  "groups": {
+    "round_1": {
+      "Everyone": {
+        "gameNames": [
+          "Yankee",
+          "Tango",
+          "Mike"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    },
+    "round_2": {
+      "Everyone": {
+        "gameNames": [
+          "Yankee",
+          "Tango",
+          "Mike"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    },
+    "round_3": {
+      "Everyone": {
+        "gameNames": [
+          "Yankee",
+          "Tango",
+          "Mike"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    }
+  },
+  "startDateTime": "2025-06-06T15:34:43.640004Z",
+  "chatInfo": {
+    "-OS4sOQs0a34MI3Pb8U4": {
+      "conversationId": "-OS4sOQs0a34MI3Pb8U4",
+      "name": "RAH",
+      "messages": {
+        "-OS4sQ20LRln-2_0LASt": {
+          "from": "Yankee",
+          "body": "Hi, Mike",
+          "time": "2025-06-06T15:35:08.227247Z",
+          "targets": null,
+          "runtimeType": "identified"
+        },
+        "-OS4sSCopRs_Htr3CYGh": {
+          "from": "Mike",
+          "body": "Hi, Yank",
+          "time": "2025-06-06T15:35:17.110586Z",
+          "targets": null,
+          "runtimeType": "identified"
+        },
+        "-OS4sUhXW3zeuE4gvHEc": {
+          "body": "Round 2",
+          "time": "2025-06-06T15:35:27.332050Z",
+          "targets": null,
+          "runtimeType": "gameNotification"
+        }
+      },
+      "participants": [
+        "Yankee",
+        "Mike"
+      ]
+    },
+    "-OS4sOsEKJIlWUQBmx8A": {
+      "conversationId": "-OS4sOsEKJIlWUQBmx8A",
+      "name": "With Mike",
+      "messages": {
+        "-OS4sUhcj2P8TMjlGkck": {
+          "body": "Round 2",
+          "time": "2025-06-06T15:35:27.338517Z",
+          "targets": null,
+          "runtimeType": "gameNotification"
+        }
+      },
+      "participants": [
+        "Mike",
+        "Tango"
+      ]
+    },
+    "global": {
+      "conversationId": "global",
+      "name": "Global Chat",
+      "messages": {
+        "-OS4sM9wxGTEq2Y2SKNz": {
+          "from": "Yankee",
+          "body": "Hey guys",
+          "time": "2025-06-06T15:34:52.349720Z",
+          "targets": null,
+          "runtimeType": "identified"
+        },
+        "-OS4sNJMDVohmr20BKzs": {
+          "from": "Tango",
+          "body": "sending 3 to both",
+          "time": "2025-06-06T15:34:57.049240Z",
+          "targets": null,
+          "runtimeType": "identified"
+        },
+        "-OS4sRXDccbttAQ_Mw3-": {
+          "from": "Yankee",
+          "body": "No",
+          "time": "2025-06-06T15:35:14.320444Z",
+          "targets": null,
+          "runtimeType": "identified"
+        },
+        "-OS4sUhQ8NUCCToD81Qd": {
+          "body": "Round 2",
+          "time": "2025-06-06T15:35:27.324972Z",
+          "targets": null,
+          "runtimeType": "gameNotification"
+        },
+        "-OS4s_d-tzktuvpGOf9X": {
+          "from": "Tango",
+          "body": "Alright, we have to tank yankee",
+          "time": "2025-06-06T15:35:51.618578Z",
+          "targets": null,
+          "runtimeType": "identified"
+        }
+      },
+      "participants": []
+    }
+  },
+  "governmentRoundInfo": {
+    "governmentPlayerNames": null,
+    "round": 0,
+    "playerVoteBallots": null,
+    "customRoundInfo": {}
+  },
+  "colorGroups": []
+}

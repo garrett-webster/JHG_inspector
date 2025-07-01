@@ -1,0 +1,563 @@
+{
+  "status": "finished",
+  "lobby": {
+    "code": "GDSR",
+    "numPlayers": 4,
+    "numObservers": 0,
+    "creatorName": null,
+    "admins": [],
+    "playerNames": [],
+    "gameStarted": true
+  },
+  "gameParams": {
+    "lengthOfRound": 150000000,
+    "gameEndCriteria": {
+      "low": 10,
+      "high": 30,
+      "runtimeType": "time"
+    },
+    "popularityFunctionParams": {
+      "alpha": 0.2,
+      "beta": 0.5,
+      "cGive": 1.3,
+      "cKeep": 0.95,
+      "cSteal": 1.6,
+      "povertyLine": 0,
+      "shouldUseNewUpdate": true
+    },
+    "governmentParams": {
+      "initialPopularity": 60,
+      "initialPopularityType": "ratio",
+      "taxesFirst": true,
+      "playersThatWillBeGovernment": null,
+      "sendVotesImmediately": true
+    },
+    "popularityRandomizationParams": {
+      "rawlsPopularity": false,
+      "randomPopularities": false,
+      "randomPopHigh": 200,
+      "randomPopLow": 50
+    },
+    "nameSet": "radio",
+    "chatType": "none",
+    "messageType": "freeForm",
+    "colorGroups": [],
+    "labels": {
+      "enabled": false,
+      "labelPools": []
+    },
+    "customParams": {},
+    "show": {
+      "roundLength": true,
+      "gameLength": true,
+      "chatType": true,
+      "messageType": true,
+      "nameSet": true,
+      "initialSetup": true,
+      "grouping": true,
+      "labels": true,
+      "advancedParams": true,
+      "government": true,
+      "popularityRandomization": true,
+      "visibilities": true,
+      "colorGrouping": true,
+      "pregame": true,
+      "agents": true
+    },
+    "advancedGameSetup": null,
+    "preGame": null,
+    "allowEdit": {
+      "roundLength": true,
+      "gameLength": true,
+      "chatType": true,
+      "messageType": true,
+      "nameSet": true,
+      "initialSetup": true,
+      "grouping": true,
+      "labels": true,
+      "advancedParams": true,
+      "government": true,
+      "popularityRandomization": true,
+      "visibilities": true,
+      "colorGrouping": true,
+      "pregame": true,
+      "agents": true
+    }
+  },
+  "creatorId": "98852500-356b-1468-bda7-f11d27b486f1",
+  "endCondition": {
+    "duration": 1748920487913000,
+    "runtimeType": "time"
+  },
+  "players": [
+    {
+      "name": "James Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Bravo",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "Jessica Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Oscar",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "John Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "X-ray",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "Jane Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Echo",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    }
+  ],
+  "observers": [],
+  "transactions": {
+    "round_1": {
+      "Bravo": {
+        "Bravo": 5,
+        "Echo": -1,
+        "Oscar": -1,
+        "X-ray": -1
+      },
+      "Echo": {
+        "Bravo": 1,
+        "Echo": 5,
+        "Oscar": 1,
+        "X-ray": 1
+      },
+      "Oscar": {
+        "Bravo": -2,
+        "Echo": -2,
+        "Oscar": 2,
+        "X-ray": -2
+      },
+      "X-ray": {
+        "Bravo": 2,
+        "Echo": 2,
+        "Oscar": 2,
+        "X-ray": 2
+      }
+    },
+    "round_2": {
+      "Bravo": {
+        "Bravo": 5,
+        "Echo": 1,
+        "Oscar": 1,
+        "X-ray": 1
+      },
+      "Echo": {
+        "Bravo": 2,
+        "Echo": 2,
+        "Oscar": 2,
+        "X-ray": 2
+      },
+      "Oscar": {
+        "Bravo": -1,
+        "Echo": -1,
+        "Oscar": 5,
+        "X-ray": -1
+      },
+      "X-ray": {
+        "Bravo": -2,
+        "Echo": -2,
+        "Oscar": -2,
+        "X-ray": 2
+      }
+    },
+    "round_3": {
+      "Bravo": {
+        "Bravo": 2,
+        "Echo": 2,
+        "Oscar": 2,
+        "X-ray": 2
+      },
+      "Echo": {
+        "Bravo": -2,
+        "Echo": 2,
+        "Oscar": -2,
+        "X-ray": -2
+      },
+      "Oscar": {
+        "Bravo": 1,
+        "Echo": 1,
+        "Oscar": 5,
+        "X-ray": 1
+      },
+      "X-ray": {
+        "Bravo": -1,
+        "Echo": -1,
+        "Oscar": -1,
+        "X-ray": 5
+      }
+    }
+  },
+  "voteData": null,
+  "playerRoundInfo": {
+    "round_1": {
+      "Bravo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Echo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Oscar": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "X-ray": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    },
+    "round_2": {
+      "Bravo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Echo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Oscar": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "X-ray": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    },
+    "round_3": {
+      "Bravo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Echo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Oscar": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "X-ray": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    },
+    "round_4": {
+      "Bravo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Echo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Oscar": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "X-ray": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    }
+  },
+  "influences": {
+    "round_1": {
+      "Bravo": {
+        "Bravo": 0,
+        "Echo": 0,
+        "Oscar": 0,
+        "X-ray": 0,
+        "__intrinsic__": 100
+      },
+      "Echo": {
+        "Bravo": 0,
+        "Echo": 0,
+        "Oscar": 0,
+        "X-ray": 0,
+        "__intrinsic__": 100
+      },
+      "Oscar": {
+        "Bravo": 0,
+        "Echo": 0,
+        "Oscar": 0,
+        "X-ray": 0,
+        "__intrinsic__": 100
+      },
+      "X-ray": {
+        "Bravo": 0,
+        "Echo": 0,
+        "Oscar": 0,
+        "X-ray": 0,
+        "__intrinsic__": 100
+      }
+    },
+    "round_2": {
+      "Bravo": {
+        "Bravo": 13.208333333333336,
+        "Echo": 3.25,
+        "Oscar": 0,
+        "X-ray": 6.5,
+        "__intrinsic__": 80
+      },
+      "Echo": {
+        "Bravo": 0,
+        "Echo": 11.875,
+        "Oscar": 0,
+        "X-ray": 6.5,
+        "__intrinsic__": 80
+      },
+      "Oscar": {
+        "Bravo": 0,
+        "Echo": 3.25,
+        "Oscar": 7.416666666666668,
+        "X-ray": 6.5,
+        "__intrinsic__": 80
+      },
+      "X-ray": {
+        "Bravo": -1.3333333333333337,
+        "Echo": 3.25,
+        "Oscar": -2.6666666666666674,
+        "X-ray": 4.75,
+        "__intrinsic__": 80
+      }
+    },
+    "round_3": {
+      "Bravo": {
+        "Bravo": 23.369883422161465,
+        "Echo": 9.031760620915033,
+        "Oscar": 0,
+        "X-ray": 4.883921568627452,
+        "__intrinsic__": 64.00000000000001
+      },
+      "Echo": {
+        "Bravo": 3.3461458333333343,
+        "Echo": 14.309413807189543,
+        "Oscar": -1.002813743976535,
+        "X-ray": 3.150068645937319,
+        "__intrinsic__": 64.00000000000001
+      },
+      "Oscar": {
+        "Bravo": 3.3461458333333343,
+        "Echo": 9.031760620915033,
+        "Oscar": 18.85598757944035,
+        "X-ray": 4.883921568627452,
+        "__intrinsic__": 64.00000000000001
+      },
+      "X-ray": {
+        "Bravo": 2.0668346470106513,
+        "Echo": 9.031760620915033,
+        "Oscar": -2.4840003605182766,
+        "X-ray": 9.29287253053327,
+        "__intrinsic__": 64.00000000000001
+      }
+    },
+    "round_4": {
+      "Bravo": {
+        "Bravo": 23.77908947731485,
+        "Echo": 5.556272153233606,
+        "Oscar": 3.253829007075276,
+        "X-ray": 3.3199078491867695,
+        "__intrinsic__": 51.20000000000001
+      },
+      "Echo": {
+        "Bravo": 9.293918029164665,
+        "Echo": 16.039818304243635,
+        "Oscar": 2.2465417547917736,
+        "X-ray": 2.2430829229676448,
+        "__intrinsic__": 51.20000000000001
+      },
+      "Oscar": {
+        "Bravo": 9.293918029164665,
+        "Echo": 6.817566687933123,
+        "Oscar": 27.77409293018228,
+        "X-ray": 3.9362919264672573,
+        "__intrinsic__": 51.20000000000001
+      },
+      "X-ray": {
+        "Bravo": 8.222752431962562,
+        "Echo": 6.817566687933123,
+        "Oscar": 1.1244557308394518,
+        "X-ray": 18.13009239775211,
+        "__intrinsic__": 51.20000000000001
+      }
+    }
+  },
+  "popularities": {
+    "round_1": {
+      "Bravo": 100,
+      "Echo": 100,
+      "Oscar": 100,
+      "X-ray": 100
+    },
+    "round_2": {
+      "Bravo": 102.95833333333334,
+      "Echo": 98.375,
+      "Oscar": 97.16666666666667,
+      "X-ray": 84
+    },
+    "round_3": {
+      "Bravo": 101.28556561170396,
+      "Echo": 83.80281454248367,
+      "Oscar": 100.11781560231618,
+      "X-ray": 81.9074674379407
+    },
+    "round_4": {
+      "Bravo": 87.10909848681052,
+      "Echo": 81.02336101116774,
+      "Oscar": 99.02186957374734,
+      "X-ray": 85.49486724848725
+    }
+  },
+  "groups": {
+    "round_1": {
+      "Everyone": {
+        "gameNames": [
+          "Bravo",
+          "Oscar",
+          "X-ray",
+          "Echo"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    },
+    "round_2": {
+      "Everyone": {
+        "gameNames": [
+          "Bravo",
+          "Oscar",
+          "X-ray",
+          "Echo"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    },
+    "round_3": {
+      "Everyone": {
+        "gameNames": [
+          "Bravo",
+          "Oscar",
+          "X-ray",
+          "Echo"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    },
+    "round_4": {
+      "Everyone": {
+        "gameNames": [
+          "Bravo",
+          "Oscar",
+          "X-ray",
+          "Echo"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    }
+  },
+  "startDateTime": "2025-06-03T02:53:47.692241Z",
+  "chatInfo": {
+    "global": {
+      "conversationId": "global",
+      "name": "Global Chat",
+      "messages": {
+        "-ORnhT45QsHn5uj-uthY": {
+          "body": "Round 2",
+          "time": "2025-06-03T02:54:07.177870Z",
+          "targets": null,
+          "runtimeType": "gameNotification"
+        },
+        "-ORnhm_SW9sLrJGFyh3U": {
+          "body": "Round 3",
+          "time": "2025-06-03T02:55:31.168218Z",
+          "targets": null,
+          "runtimeType": "gameNotification"
+        },
+        "-ORni2PmYgrc33TzWLkF": {
+          "body": "Round 4",
+          "time": "2025-06-03T02:56:40.117793Z",
+          "targets": null,
+          "runtimeType": "gameNotification"
+        }
+      },
+      "participants": []
+    }
+  },
+  "governmentRoundInfo": {
+    "governmentPlayerNames": null,
+    "round": 0,
+    "playerVoteBallots": null,
+    "customRoundInfo": {}
+  },
+  "colorGroups": []
+}
