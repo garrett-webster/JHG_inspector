@@ -6,6 +6,17 @@ PATH = Path(__file__).parent
 
 
 class TableData:
+    """Represents the structure of a table in the database, as defined in the schema.json.
+
+       Defines the following attributes:
+          columns: list[tuple[str, str]]
+            A list of tuples of strings containing the name and data type of a column in the table.
+          foreign_keys: list[dict]
+            A list of dictionaries defining which columns are the foreign keys of the table and which table and column
+            they reference.
+          primary_key: tuple[str, str]
+            Contains the name of the column that will be the primary key of the table and its type.
+       """
     def __init__(self, table):
         self.columns = []
         self.foreign_keys = []

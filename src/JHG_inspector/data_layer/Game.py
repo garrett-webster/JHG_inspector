@@ -15,7 +15,7 @@ class Game:
         self.name_to_id = {}
         self.code = None
 
-    # Determine the version of the json file and return the correct GameFileLoader for that version
+    # TODO: Implement the file version determining logic and load the appropriate GamefileLoader
     def create_game_file_loader(self):
         """Factory method for game file loaders.
 
@@ -25,7 +25,7 @@ class Game:
         return GameFileLoader_JsonV1(self.database_manager, self)
 
     def load_from_database(self, game_id: int):
-        """Find the game record based on the games id and load the data from the database"""
+        """Find the game record in the database based on the games id and load the data from the database"""
 
         cursor = self.connection.cursor()
         cursor.execute("SELECT code FROM games WHERE id = ?", (game_id,))
