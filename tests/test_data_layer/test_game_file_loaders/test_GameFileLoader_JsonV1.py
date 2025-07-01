@@ -7,7 +7,7 @@ TESTS_PATH = FILE_PATH.parent
 
 
 class TestGameFileLoader_JsonV1:
-    def test_load_data_to_database_games(self, game, temp_folder, cursor):
+    def test_load_data_to_database_games(self, game, cursor):
         test_game = game(TESTS_PATH / "test_set1/jhg_GDHP.json")
         cursor.execute("SELECT * FROM games")
         actual_game_data = cursor.fetchone()
@@ -45,7 +45,7 @@ class TestGameFileLoader_JsonV1:
 
         assert actual_search_tag_values == expected_search_tag_values
 
-    def test_load_playersThatWillBeGovernment_data(self, game, temp_folder, cursor):
+    def test_load_playersThatWillBeGovernment_data(self, game, cursor):
         test_game = game(TESTS_PATH / "test_set3/jhg_NMBT.json")
 
         cursor.execute("SELECT playerId FROM playersThatWillBeGovernment")
@@ -54,7 +54,7 @@ class TestGameFileLoader_JsonV1:
 
         assert actual_players == expected_players
 
-    def test_load_colorGroups_data(self, game, temp_folder, cursor):
+    def test_load_colorGroups_data(self, game, cursor):
         test_game = game(TESTS_PATH / "test_set3/jhg_DGMT.json")
 
         cursor.execute("SELECT * FROM colorGroups")
@@ -64,7 +64,7 @@ class TestGameFileLoader_JsonV1:
         assert expected_color_groups == actual_color_groups
 
     # Tests that the players table is correctly loaded into the database
-    def test_load_data_to_database_players(self, game, temp_folder, cursor):
+    def test_load_data_to_database_players(self, game, cursor):
         test_game = game(TESTS_PATH / "test_set1/jhg_GDHP.json")
 
         # Fetch all players data from the database
@@ -90,7 +90,7 @@ class TestGameFileLoader_JsonV1:
         # Use Counter for unordered comparison with duplicates support
         assert players_in_db == expected_players, f"Expected players {expected_players}, but found {players_in_db}"
 
-    def test_load_data_to_database_transactions(self, game, temp_folder, cursor):
+    def test_load_data_to_database_transactions(self, game, cursor):
         def extract_expected_transactions(json_data, name_to_id, game_id):
             results = set()
             for round_name, round_data in json_data["transactions"].items():
@@ -138,7 +138,7 @@ class TestGameFileLoader_JsonV1:
                 for ac in actual
             ), f"Expected popularity {ex} not found"
 
-    def test_load_data_to_database_influences(self, game, temp_folder, cursor):
+    def test_load_data_to_database_influences(self, game, cursor):
         def extract_expected_influences(json_data, name_to_id, game_id):
             results = set()
             for round_name, round_data in json_data["influences"].items():
