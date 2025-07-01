@@ -1,3 +1,4 @@
+import json
 import sqlite3
 from pathlib import Path
 
@@ -17,9 +18,11 @@ from src.JHG_inspector.data_layer.DAOs.PopularitiesDao import PopularitiesDao
 from src.JHG_inspector.data_layer.DAOs.SearchTagsDao import SearchTagsDao
 from src.JHG_inspector.data_layer.DAOs.TransactionsDao import TransactionsDao
 from src.JHG_inspector.data_layer.DAOs.ColorGroupsDao import ColorGroupsDao
-from src.JHG_inspector.data_layer.DB_init import initialize_DB
+from src.JHG_inspector.data_layer.TableData import TableData
 from src.JHG_inspector.logic_layer.GamesetManager import GamesetManager
 from src.JHG_inspector.logic_layer.GamesManager import GamesManager
+
+PATH = Path(__file__).parent
 
 FILE_PATH = Path(__file__).resolve().parent
 
@@ -73,6 +76,27 @@ class DatabaseManager:
         connection = sqlite3.connect(str(database_path))
         connection.execute("PRAGMA foreign_keys = ON")
 
-        initialize_DB(connection)
+        self.initialize_DB(connection)
 
         return connection
+
+    def initialize_DB(self, connection):
+        with open(f"{PATH.parent}/data_layer/schema.json", "r") as f:
+            schemas = json.load(f)
+
+        cursor = connection.cursor()
+
+        for table_name, table_def in schemas.items():
+            table_data = TableData(table_def)
+            column_lines = []
+
+            for col, col_type in table_data.columns:
+                column_lines.append(f"{col} {col_type}")
+
+            for fk in table_data.foreign_keys:
+                column_lines.append(
+                    f"FOREIGN KEY({fk['column']}) REFERENCES {fk['references']['table']}({fk['references']['column']})"
+                )
+
+            columns_sql = ", ".join(column_lines)
+            cursor.execute(f"CREATE TABLE IF NOT EXISTS {table_name} ({columns_sql})")

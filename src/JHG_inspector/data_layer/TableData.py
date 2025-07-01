@@ -30,24 +30,3 @@ class TableData:
 
         if self.primary_key:
             self.non_excluded_columns.remove(self.primary_key)
-
-def initialize_DB(connection):
-    with open(f"{PATH}/schema.json", "r") as f:
-        schemas = json.load(f)
-
-    cursor = connection.cursor()
-
-    for table_name, table_def in schemas.items():
-        table_data = TableData(table_def)
-        column_lines = []
-
-        for col, col_type in table_data.columns:
-            column_lines.append(f"{col} {col_type}")
-
-        for fk in table_data.foreign_keys:
-            column_lines.append(
-                f"FOREIGN KEY({fk['column']}) REFERENCES {fk['references']['table']}({fk['references']['column']})"
-            )
-
-        columns_sql = ", ".join(column_lines)
-        cursor.execute(f"CREATE TABLE IF NOT EXISTS {table_name} ({columns_sql})")
