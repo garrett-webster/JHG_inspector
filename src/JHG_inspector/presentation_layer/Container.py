@@ -55,6 +55,7 @@ class Container(QSplitter):
         if self.count() == 1:
             self.setOrientation(split_direction)
             self.addWidget(widget)
+            self.setCollapsible(1, False)
 
             if isinstance(widget, TabbedPanels):
                 widget.parent_container = self
@@ -65,6 +66,8 @@ class Container(QSplitter):
             nested_container = Container(orientation=split_direction)
             nested_container.addWidget(old_widget)
             nested_container.addWidget(widget)
+            nested_container.setCollapsible(0, False)
+            nested_container.setCollapsible(1, False)
 
             if isinstance(widget, TabbedPanels):
                 widget.parent_container = nested_container

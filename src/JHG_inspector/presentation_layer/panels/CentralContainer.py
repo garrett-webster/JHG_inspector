@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import QLabel, QWidget, QVBoxLayout, QPushButton
 
 from src.JHG_inspector.presentation_layer.Container import Container
 from src.JHG_inspector.presentation_layer.components.TabbedPanels import TabbedPanels
+from src.JHG_inspector.presentation_layer.panels.tool_views.OneColumnView import OneColumnView
 
 
 class CentralContainer(Container):
@@ -19,6 +20,7 @@ class CentralContainer(Container):
         self.addWidget(widget)
         widget.setParent(self)
         widget.parent_container = self
+        self.setCollapsible(0, False)
         self.setParent(parent)
         self.has_direct_child = True
 
@@ -32,7 +34,9 @@ class CentralContainer(Container):
         if self.count() == 0:
             self.has_direct_child = False
         if Container.num_containers == 1 and not self.has_direct_child:
-            widget = DefaultTab(self)
+            widget = OneColumnView(self)
+            widget.column.addWidget(QLabel('Oh hey der'))
+            widget.column.addWidget(QLabel('Oh hey der'))
             tabs = TabbedPanels(self.empty_check, self, widget)
             self.addWidget(tabs)
             self.has_direct_child = True
