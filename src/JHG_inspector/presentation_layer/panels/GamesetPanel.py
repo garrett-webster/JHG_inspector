@@ -77,6 +77,7 @@ class GamesetPanel(Panel):
         gameset.remove_game(game.id)
         games_list = self.gameset_elements[gameset.id].content
         games_list.remove_game_item(game)
+        self.database.gamesets.update_signal(gameset.id)
 
     def sizeHint(self):
         return QSize(150, 800)

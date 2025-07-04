@@ -5,15 +5,18 @@ from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QSplitter
 
 from src.JHG_inspector.logic_layer.DatabaseManager import DatabaseManager
+from src.JHG_inspector.logic_layer.ToolsManager import ToolsManager
+from src.JHG_inspector.presentation_layer.Container import Container
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.panels.CentralContainer import CentralContainer
 from src.JHG_inspector.presentation_layer.panels.GamesetPanel import GamesetPanel
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, database: DatabaseManager):
+    def __init__(self, database: DatabaseManager, tools_manager: ToolsManager):
         super().__init__()
         self.database = database
+        self.tools_manager = tools_manager
         self.setWindowTitle('JHG Inspector')
         self.gamesets_panel = GamesetPanel(self.database)
 
@@ -21,6 +24,8 @@ class MainWindow(QMainWindow):
         self.add_menubar()
 
         self.central_panel = CentralContainer(self)
+        # TODO: Pass self.selected_panel down the line to allow for setting the selected panel easier
+        self.selected_panel: Container = self.central_panel
 
         # Adds the gameset panel to the left and designates the rest as the main area for panels
         self.body_splitter = QSplitter(Qt.Orientation.Horizontal)

@@ -21,6 +21,7 @@ from src.JHG_inspector.data_layer.DAOs.ColorGroupsDao import ColorGroupsDao
 from src.JHG_inspector.data_layer.TableData import TableData
 from src.JHG_inspector.logic_layer.GamesetManager import GamesetManager
 from src.JHG_inspector.logic_layer.GamesManager import GamesManager
+from src.JHG_inspector.logic_layer.ToolsManager import ToolsManager
 
 PATH = Path(__file__).parent
 
@@ -55,12 +56,12 @@ class DatabaseManager:
        that the DatabaseManager object holds.
        """
 
-    def __init__(self, database_path = FILE_PATH.parent / "data_bases" / f"JHGInspector.db"):
+    def __init__(self, tools_manager: ToolsManager, database_path = FILE_PATH.parent / "data_bases" / f"JHGInspector.db"):
         self.connection = self.connect(database_path)
         self.DAOs = {name: DAO(self.connection) for name, DAO in DAO_CLASSES.items()}
 
         self.games = GamesManager(self)
-        self.gamesets = GamesetManager(self)
+        self.gamesets = GamesetManager(self, tools_manager)
 
     def __enter__(self, base_path=FILE_PATH):
         return self

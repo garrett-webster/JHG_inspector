@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import QLabel, QWidget, QVBoxLayout, QPushButton
 
 from src.JHG_inspector.presentation_layer.Container import Container
 from src.JHG_inspector.presentation_layer.components.TabbedPanels import TabbedPanels
-from src.JHG_inspector.presentation_layer.panels.tool_views.OneColumnView import OneColumnView
 
 
 class CentralContainer(Container):
@@ -34,9 +33,7 @@ class CentralContainer(Container):
         if self.count() == 0:
             self.has_direct_child = False
         if Container.num_containers == 1 and not self.has_direct_child:
-            widget = OneColumnView(self)
-            widget.column.addWidget(QLabel('Oh hey der'))
-            widget.column.addWidget(QLabel('Oh hey der'))
+            widget = DefaultTab(self)
             tabs = TabbedPanels(self.empty_check, self, widget)
             self.addWidget(tabs)
             self.has_direct_child = True
@@ -52,7 +49,7 @@ class DefaultTab(QWidget):
         ''' TODO: Once the ToolManager has been created, use a dialog to select the tool and pass that as the widget 
             Will also want to find a way to replace the DefaultTab with that widget instead of calling split and
             opening a new panel'''
-        open_button.clicked.connect(partial(parent.split, Qt.Orientation.Horizontal, 0))
+        open_button.clicked.connect(partial(parent.split, None, Qt.Orientation.Horizontal, 0))
         layout.addStretch()
         layout.addWidget(label, alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(open_button, alignment=Qt.AlignmentFlag.AlignCenter)

@@ -1,3 +1,4 @@
+from functools import partial
 from pathlib import Path
 from typing import Callable
 
@@ -9,7 +10,7 @@ def update_function(func):
         if args[0].update_signal is not None:
             self = args[0]
             func(*args, **kwargs)
-            self.update_signal(self.id)
+            self.update_signal()
         else:
             func(*args, **kwargs)
     return wrapper
@@ -20,7 +21,7 @@ class Gameset:
     def __init__(self, gameset_id, database: "DatabaseManager", update_signal: Callable):
         self.id = gameset_id
         self.database = database
-        self.update_signal = update_signal
+        self.update_signal = partial(update_signal, self.id)
 
         self.games = {}
 

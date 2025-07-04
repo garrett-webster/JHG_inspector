@@ -9,8 +9,9 @@ class GamesetManager:
        the Data Access Objects (DOAs) from the DatabaseManager to perform the database operations.
        """
 
-    def __init__(self, database: "DatabaseManager"):
+    def __init__(self, database: "DatabaseManager", tools_manager: "ToolsManager"):
         self.database = database
+        self.tools_manager = tools_manager
         self.gamesets = {}
 
         self.load_gamesets()
@@ -34,11 +35,15 @@ class GamesetManager:
             new_gameset.load_games()
             self.gamesets[new_gameset.id] = new_gameset
 
+            self.tools_manager.new_gameset(new_gameset)
+
     def create_gameset(self, name: str):
         """Creates a new gameset and adds it to the database."""
         new_gameset_id = self.database.DAOs["gamesets"].insert_one((name,))
         new_gameset = Gameset(new_gameset_id, self.database, self.update_signal)
         self.gamesets[new_gameset.id] = new_gameset
+
+        self.tools_manager.new_gameset(new_gameset)
         return new_gameset
 
     def delete_gameset(self, gameset: "Gameset"):
@@ -49,4 +54,5 @@ class GamesetManager:
 
     def update_signal(self, gameset_id: int):
         """Not implemented yet. Will be used to trigger updates in the tools once they are implemented"""
+        self.tools_manager.update_tools(gameset_id)
         pass

@@ -32,7 +32,7 @@ class Container(QSplitter):
         super().__init__()
         self.setOrientation(orientation)
 
-    def add_child(self, widget: QWidget, index: int, split_direction):
+    def add_child(self, widget: QWidget, split_direction: Qt.Orientation = Qt.Orientation.Horizontal, index: int = 1):
         """Adds a widget to a Container, nesting a new container if necessary.
 
            Adds a widget if there is only one item in the Container. Otherwise, creates a new Container, places the item
@@ -61,18 +61,22 @@ class Container(QSplitter):
                 widget.parent_container = self
         else:
             old_widget = self.widget(index)  # The widget at the position where the split is to occur
-            old_widget.setParent(None)
+
 
             nested_container = Container(orientation=split_direction)
-            nested_container.addWidget(old_widget)
-            nested_container.addWidget(widget)
+            if old_widget:
+                old_widget.setParent(nested_container)
+                nested_container.addWidget(old_widget)
+                nested_container.addWidget(widget)
+                nested_container.setCollapsible(1, False)
+            else:
+                nested_container.addWidget(widget)
+
+
             nested_container.setCollapsible(0, False)
-            nested_container.setCollapsible(1, False)
 
             if isinstance(widget, TabbedPanels):
                 widget.parent_container = nested_container
-            if isinstance(old_widget, TabbedPanels):
-                old_widget.parent_container = nested_container
 
             self.insertWidget(index, nested_container)
 
@@ -109,14 +113,13 @@ class Container(QSplitter):
 
         menu = QMenu(self)
         split_right = menu.addAction("Split Right")
-        split_right.triggered.connect(partial(self.split, Qt.Orientation.Horizontal, splitter_index=index))
+        split_right.triggered.connect(partial(self.split, split_direction = Qt.Orientation.Horizontal, splitter_index=index))
 
         split_down = menu.addAction("Split Down")
-        split_down.triggered.connect(partial(self.split, Qt.Orientation.Vertical, splitter_index=index))
+        split_down.triggered.connect(partial(self.split, split_direction = Qt.Orientation.Vertical, splitter_index=index))
 
         menu.exec(event.globalPos())
 
-    def split(self, split_direction: Qt.Orientation, splitter_index=None, widget: QWidget = None):
-        if not widget:
-            widget = TabbedPanels(self.empty_check)
-        self.add_child(widget, splitter_index, split_direction)
+    def split(self, widget: QWidget = None, split_direction: Qt.Orientation = Qt.Orientation.Horizontal, splitter_index=2):
+        tabs = TabbedPanels(self.empty_check, new_widget = widget)
+        self.add_child(tabs, split_direction, splitter_index)
