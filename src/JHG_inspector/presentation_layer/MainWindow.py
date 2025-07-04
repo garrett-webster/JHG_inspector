@@ -6,8 +6,10 @@ from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QSplitter
 
 from src.JHG_inspector.logic_layer.DatabaseManager import DatabaseManager
 from src.JHG_inspector.logic_layer.ToolsManager import ToolsManager
+from src.JHG_inspector.logic_layer.tools.GamesListTool import GamesListTool
 from src.JHG_inspector.presentation_layer.Container import Container
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
+from src.JHG_inspector.presentation_layer.dialogs.OpenToolDialog import OpenToolDialog
 from src.JHG_inspector.presentation_layer.panels.CentralContainer import CentralContainer
 from src.JHG_inspector.presentation_layer.panels.GamesetPanel import GamesetPanel
 
@@ -77,6 +79,10 @@ class MainWindow(QMainWindow):
         add_menu_action(gamesets_menu, 'Show/Hide Gamesets', self.toggle_gamesets_panel, "Toggles the gameset sidebar")
         add_menu_action(gamesets_menu, "New Gameset", self.gamesets_panel.add_gameset, "Create a new gameset")
 
+        # Tools menu
+        tools_menu = menubar.addMenu('Tools')
+        add_menu_action(tools_menu, 'Open Tool', self.open_tool, "Open a tool in a new panel")
+
     # --- QAction functions --- #
     def show_games(self):
         """Opens a modal that displays all loaded games"""
@@ -103,3 +109,11 @@ class MainWindow(QMainWindow):
             self.gamesets_panel.hide()
         else:
             self.gamesets_panel.show()
+
+    def open_tool(self):
+        """Opens a modal that lets you select a tool to open and a gameset to attach to it"""
+        dialog = OpenToolDialog(self, self.database.gamesets.all.values(), self.tools_manager.tools_types_list)
+        if dialog.exec():
+            tool = self.tools_manager.new_tool(self.selected_panel, dialog.tool, dialog.gameset)
+
+            self.selected_panel.split(tool.view)
