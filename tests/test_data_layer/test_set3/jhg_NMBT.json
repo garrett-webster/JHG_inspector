@@ -567,6 +567,17 @@
         "X-ray": 2,
         "Zulu": 1
       },
+      "Kilo": {
+        "Bravo": 0,
+        "Echo": 0,
+        "Foxtrot": 0,
+        "Kilo": 18,
+        "Oscar": 0,
+        "Papa": 0,
+        "Uniform": 0,
+        "X-ray": 0,
+        "Zulu": 0
+      },
       "Zulu": {
         "Bravo": 2,
         "Echo": 2,
