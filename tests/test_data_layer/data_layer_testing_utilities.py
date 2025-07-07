@@ -5,6 +5,8 @@ import pytest
 
 from src.JHG_inspector.data_layer.Game import Game
 from src.JHG_inspector.logic_layer.DatabaseManager import DatabaseManager
+from src.JHG_inspector.logic_layer.ToolsManager import ToolsManager
+
 
 @pytest.fixture
 def temp_folder(tmp_path):
@@ -15,7 +17,7 @@ def temp_folder(tmp_path):
 @pytest.fixture
 def database_manager(temp_folder):
     # Make sure JHGInspector creates a new DB at temp_folder
-    return DatabaseManager(temp_folder / "test.db")
+    return DatabaseManager(ToolsManager(), temp_folder / "test.db")
 
 @pytest.fixture
 def game_set(temp_folder, database_manager):

@@ -10,7 +10,6 @@ class Game:
     def __init__(self, database_manager: "DatabaseManager"):
         self.id = None
         self.database_manager = database_manager
-        self.connection = database_manager.connection
         self.id_to_name = {}
         self.name_to_id = {}
         self.code = None
@@ -27,9 +26,7 @@ class Game:
     def load_from_database(self, game_id: int):
         """Find the game record in the database based on the games id and load the data from the database"""
 
-        cursor = self.connection.cursor()
-        cursor.execute("SELECT code FROM games WHERE id = ?", (game_id,))
-        self.code = cursor.fetchone()[0]
+        self.code = self.database_manager.DAOs["games"].select_one(["code"], ["id"], [game_id])[0]
         print(f"Loading game {self.code} from the database...")
         self.id = game_id
         self.set_id_to_name_dicts()
@@ -44,12 +41,11 @@ class Game:
 
         self.code = re.match(r"jhg_(.+)\.json", game_path.name).group(1)
         print(f"Adding game {self.code} to the database...")
-        cursor = self.connection.cursor()
 
-        cursor.execute("SELECT id FROM games WHERE code = ?", (self.code,))
-        result = cursor.fetchone()
+        result = self.database_manager.DAOs["games"].select_one(["id"], ["code"], [self.code])
         if result is None:
             # Find the next id (which will be this game's id) and set self.id to it
+            cursor = self.database_manager.connection.cursor()
             cursor.execute("SELECT seq FROM sqlite_sequence WHERE name = 'games';")
             row = cursor.fetchone()
             self.id = (row[0] if row and row[0] is not None else 0) + 1
@@ -66,9 +62,7 @@ class Game:
            name_to_id takes a player name and returns the game id from the database.
            """
 
-        cursor = self.connection.cursor()
-        cursor.execute("SELECT id, gameName FROM players WHERE gameId = ?", (self.id,))
-        results = cursor.fetchall()
+        results = self.database_manager.DAOs["players"].select_all(["id", "gameName"], ["gameId"], [self.id])
 
         for result in results:
             self.id_to_name[result[0]] = result[1]
