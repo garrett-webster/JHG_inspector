@@ -1,7 +1,7 @@
 import re
 from abc import ABC, abstractmethod
 
-from src.JHG_inspector.data_layer.Gameset import Gameset
+from src.JHG_inspector.logic_layer.Gameset import Gameset
 from src.JHG_inspector.presentation_layer.panels.tool_views import View
 from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.Component import Component
 

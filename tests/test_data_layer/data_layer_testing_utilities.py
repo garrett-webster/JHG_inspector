@@ -3,7 +3,7 @@ import shutil
 
 import pytest
 
-from src.JHG_inspector.data_layer.Game import Game
+from src.JHG_inspector.logic_layer.Game import Game
 from src.JHG_inspector.logic_layer.DatabaseManager import DatabaseManager
 from src.JHG_inspector.logic_layer.ToolsManager import ToolsManager
 

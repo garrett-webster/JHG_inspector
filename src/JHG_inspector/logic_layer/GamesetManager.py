@@ -1,4 +1,4 @@
-from src.JHG_inspector.data_layer.Gameset import Gameset
+from src.JHG_inspector.logic_layer.Gameset import Gameset
 
 
 class GamesetManager:
@@ -30,7 +30,7 @@ class GamesetManager:
         gameset_ids = self.database.DAOs["gamesets"].select_all(["id"])
 
         for gameset_id in gameset_ids:
-            from src.JHG_inspector.data_layer.Gameset import Gameset
+            from src.JHG_inspector.logic_layer.Gameset import Gameset
             new_gameset = Gameset(gameset_id[0], self.database, self.update_signal)
             new_gameset.load_games()
             self.gamesets[new_gameset.id] = new_gameset

@@ -1,7 +1,7 @@
 from pathlib import PosixPath
 
-from src.JHG_inspector.data_layer.Game import Game
-from src.JHG_inspector.data_layer.Gameset import Gameset
+from src.JHG_inspector.logic_layer.Game import Game
+from src.JHG_inspector.logic_layer.Gameset import Gameset
 
 class GamesManager:
     """Used by the DatabaseManager to handle operations dealing with the games.

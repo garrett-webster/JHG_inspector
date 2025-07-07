@@ -1,4 +1,4 @@
-from src.JHG_inspector.data_layer.Gameset import Gameset
+from src.JHG_inspector.logic_layer.Gameset import Gameset
 
 
 class ToolsManager:

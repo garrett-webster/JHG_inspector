@@ -8,10 +8,10 @@ FILE_PATH = Path(__file__).resolve().parent
 class Game:
     """Holds the data for a single game."""
     def __init__(self, database_manager: "DatabaseManager"):
-        self.id = None
         self.database_manager = database_manager
         self.id_to_name = {}
         self.name_to_id = {}
+        self.id = None
         self.code = None
 
     # TODO: Implement the file version determining logic and load the appropriate GamefileLoader
