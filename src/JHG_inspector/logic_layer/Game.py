@@ -1,4 +1,5 @@
 import re
+from functools import cached_property
 from pathlib import Path
 
 from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
@@ -11,6 +12,7 @@ class Game:
         self.database_manager = database_manager
         self.id_to_name = {}
         self.name_to_id = {}
+        self.id_to_player_order = {}
         self.id = None
         self.code = None
 
@@ -64,6 +66,76 @@ class Game:
 
         results = self.database_manager.DAOs["players"].select_all(["id", "gameName"], ["gameId"], [self.id])
 
-        for result in results:
+        for i, result in enumerate(results):
             self.id_to_name[result[0]] = result[1]
             self.name_to_id[result[1]] = result[0]
+            self.id_to_player_order[result[0]] = i
+            
+    # !--- Data Methods ---! #
+    @cached_property
+    def popularities(self) -> list[list[int]]:
+        """Returns the popularitites by player by round.
+
+           Each sub list holds the popularities for one round, where the index is the round number zero indexed. The
+           items of each of those lists represents the popularity of the player whos id relates to the index position,
+           as stored in self.id_to_player_order.
+           """
+
+        results = self.database_manager.DAOs["popularities"].select_all(["*"], ["gameId"], [self.id])
+        ids = self.id_to_name.keys()
+        num_rounds = int(len(results)/len(ids))
+        popularities = [[0 for _ in range(len(ids))] for _ in range(num_rounds)]
+
+        for result in results:
+            round_num = result[1]
+            player_order_number = self.id_to_player_order[result[2]]
+            popularity = result[3]
+            popularities[round_num - 1][player_order_number] = popularity
+
+        return popularities
+
+    @cached_property
+    def influences(self) -> list[list[list[int]]]:
+        """Returns the influence on each player by each player by round.
+
+           Each sub list holds a matrix (2-dimensional list) where the rows represent the influence from player i on
+           each player j, such that the ijth entry of the matrix in the kth index of influences is player i's influence
+           on player j on round k.
+           """
+
+        results = self.database_manager.DAOs["influences"].select_all(["*"], ["gameId"], [self.id])
+        ids = self.id_to_name.keys()
+        num_rounds = int(len(results) / len(ids)**2)
+        influences = [[[0 for _ in range(len(ids))] for _ in range(len(ids))] for _ in range(num_rounds)]
+
+        for result in results:
+            round_num = result[1]
+            player_from_id = self.id_to_player_order[result[2]]
+            player_to_id = self.id_to_player_order[result[3]]
+            influence = result[4]
+            influences[round_num - 1][player_from_id][player_to_id] = influence
+
+        return influences
+
+    @cached_property
+    def transactions(self) -> list[list[list[int]]]:
+        """Returns the allocations from each player to each player by round.
+
+           Each sub list holds a matrix (2-dimensional list) where the rows represent the token allocation from player i
+           to each player j, such that the ijth entry of the matrix in the kth index of transaction is player i's token
+           allocation to player j on round k.
+           """
+
+        results = self.database_manager.DAOs["transactions"].select_all(["*"], ["gameId"], [self.id])
+        ids = self.id_to_name.keys()
+        num_rounds = int(len(results) / len(ids)**2)
+        transactions = [[[0 for _ in range(len(ids))] for _ in range(len(ids))] for _ in range(num_rounds)]
+
+        for result in results:
+            round_num = result[1]
+            player_from_id = self.id_to_player_order[result[2]]
+            player_to_id = self.id_to_player_order[result[3]]
+            transaction = result[4]
+            transactions[round_num - 1][player_from_id][player_to_id] = transaction
+
+        return transactions
