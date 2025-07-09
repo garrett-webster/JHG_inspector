@@ -13,12 +13,10 @@ QTabWidget::pane {
 QTabBar {
     background: #2a2a2a;
     color: #d2d2d2;
+    qproperty-drawBase: 0;
 }
 
 QTabBar::tab {
     background: transparent;
-}
-
-Panel {
-    color: #d2d2d2;
+    min-width: 70px;
 }
