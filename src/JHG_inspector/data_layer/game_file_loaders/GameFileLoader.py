@@ -48,7 +48,7 @@ class GameFileLoader:
        id_to_name dictionaries)
        """
 
-    def __init__(self, database_manager: "DatabaseManager", game: "Game"):
+    def __init__(self, database_manager: "DatabaseManager", game: "Game", game_log_path: PosixPath):
         """
         Parameters
         ----------
@@ -58,6 +58,7 @@ class GameFileLoader:
         self.game = game
         self.database_manager = database_manager
         self.connection = database_manager.connection
+        self.game_log_path = game_log_path
         with open(Path(__file__).parent.parent / "schema.json", "r") as f:
             self.schema = json.load(f)
 
@@ -71,7 +72,7 @@ class GameFileLoader:
         # Sort by load order
         self._load_functions.sort(key=lambda x: x[0])
 
-    def load_data_from_file(self, game_path: PosixPath):
+    def load_data_from_file(self):
         """Runs all the functions annotated with @load_data, passing in the data loaded from the passed game_path file.
 
         Parameters
@@ -80,12 +81,12 @@ class GameFileLoader:
             The path of the game file to load
         """
 
-        if not game_path.is_file():
+        if not self.game_log_path.is_file():
             raise FileNotFoundError
 
-        self.game.code = re.match(r"jhg_(.+)\.json", game_path.name).group(1)
+        self.game.code = re.match(r"jhg_(.+)\.json", self.game_log_path.name).group(1)
 
-        with open(game_path, "r") as game_file:
+        with open(self.game_log_path, "r") as game_file:
             data = json.load(game_file)
 
         for _, func in self._load_functions:
