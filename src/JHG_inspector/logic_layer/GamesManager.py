@@ -1,3 +1,4 @@
+import re
 from pathlib import PosixPath
 
 from src.JHG_inspector.logic_layer.Game import Game
@@ -45,14 +46,14 @@ class GamesManager:
 
         return new_game
 
-    #TODO: Make it so it only tries to load game log files. Other files being present will brick the program.
     def load_games_from_directory(self, folder_path, gameset: Gameset = None):
-        """Loads all game log files in a single directory"""
-        game_paths = [f for f in folder_path.iterdir() if f.is_file()]
+        """Loads all game log files in a single directory, ignoring any files that are not """
+        file_paths = [f for f in folder_path.iterdir() if f.is_file()]
         new_games = []
 
-        for game_path in game_paths:
-            new_games.append(self.load_game_from_file(game_path))
+        for file_path in file_paths:
+            if re.fullmatch(r"jhg_(.+)\.json", file_path.name):
+                new_games.append(self.load_game_from_file(file_path))
         self.database.connection.commit()
 
         if gameset:
