@@ -43,7 +43,7 @@ class Tool(ABC):
         """Calls the update method on each component.
 
            Iterates through the components and displays the current values of their ToolData objects."""
-        for component in self.components:
+        for component in self.view.components:
             component.update()
 
     @abstractmethod
