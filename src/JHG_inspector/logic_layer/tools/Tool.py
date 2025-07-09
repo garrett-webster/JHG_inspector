@@ -13,9 +13,11 @@ class Tool(ABC):
        Provides the basic functionality that a tool needs to be easily created.
        """
 
-    def __init__(self, name: str, gameset: Gameset):
+    def __init__(self, name: str, gameset: Gameset, view_parent):
         self.name = name
         self.gameset = gameset
+        self.games = self.gameset.games.values()
+        self.view_parent = view_parent
         self.components: list[Component] = []
 
         self.view = self.setup_view()

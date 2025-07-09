@@ -9,8 +9,7 @@ from src.JHG_inspector.presentation_layer.panels.tool_views.OneColumnView import
 
 class GamesListTool(Tool):
     def __init__(self, view_parent, gameset: "Gameset"):
-        self.view_parent = view_parent
-        super().__init__("Games List", gameset)
+        super().__init__("Games List", gameset, view_parent)
         self.num_games = ToolData()
 
         self.update()
