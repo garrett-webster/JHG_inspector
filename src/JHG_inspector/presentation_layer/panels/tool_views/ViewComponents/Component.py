@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget
 
-from src.JHG_inspector.logic_layer.ToolData import ToolData
+from src.JHG_inspector.logic_layer.tools.ToolDataClasses.ToolData import ToolData
 
 
 class Component(QWidget):

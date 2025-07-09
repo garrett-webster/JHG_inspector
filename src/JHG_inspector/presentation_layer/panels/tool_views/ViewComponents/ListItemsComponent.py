@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QVBoxLayout, QLabel
 
-from src.JHG_inspector.logic_layer.ToolData import ToolData
+from src.JHG_inspector.logic_layer.tools.ToolDataClasses.ToolData import ToolData
 from src.JHG_inspector.presentation_layer.panels.tool_views.View import View
 from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.Component import Component
 
