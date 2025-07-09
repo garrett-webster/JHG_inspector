@@ -12,6 +12,10 @@ if __name__ == "__main__":
     database = DatabaseManager(tools_manager)
     app = QApplication(sys.argv)
 
+    with open("src/JHG_inspector/presentation_layer/stylesheets/main.qss", "r") as f:
+        app.setStyleSheet(f.read())
+
+
     window = MainWindow(database, tools_manager)
     window.show()
     app.exec()
