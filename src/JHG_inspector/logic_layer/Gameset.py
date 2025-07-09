@@ -53,7 +53,7 @@ class Gameset:
            object.
            """
 
-        print(f"Removing game with id {game_id}...")
+        print(f"Removing game with id {game_id} from gameset {self.name}...")
 
         self.database.DAOs["gameset_games"].delete_one(["gamesetId", "gameId"], (self.id, game_id))
         self.database.connection.commit()

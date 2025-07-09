@@ -25,6 +25,5 @@ class ToolsManager:
 
     def update_tools(self, gameset_id: int):
         if gameset_id in self.gameset_to_tools:
-            print(gameset_id)
             for tool in self.gameset_to_tools[gameset_id]:
                 tool.update()
