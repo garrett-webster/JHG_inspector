@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QSplitter
 
 from src.JHG_inspector.logic_layer.DatabaseManager import DatabaseManager
 from src.JHG_inspector.logic_layer.ToolsManager import ToolsManager
-from src.JHG_inspector.logic_layer.tools.GamesListTool import GamesListTool
 from src.JHG_inspector.presentation_layer.Container import Container
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.dialogs.OpenToolDialog import OpenToolDialog
