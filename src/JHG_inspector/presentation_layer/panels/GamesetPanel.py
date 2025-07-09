@@ -26,12 +26,15 @@ class GamesetPanel(Panel):
 
         content_widget = QWidget()
         self.layout = QVBoxLayout(content_widget)
+        self.layout.setSpacing(0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         scroll_area.setWidget(content_widget)
 
         wrapper_layout = QVBoxLayout(self)
         wrapper_layout.addWidget(scroll_area)
+        wrapper_layout.setSpacing(0)
         wrapper_layout.setContentsMargins(0, 0, 0, 0)
 
         for gameset in database.gamesets.all.values():
