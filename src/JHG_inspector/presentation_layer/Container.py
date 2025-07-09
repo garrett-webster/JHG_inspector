@@ -121,5 +121,7 @@ class Container(QSplitter):
         menu.exec(event.globalPos())
 
     def split(self, widget: QWidget = None, split_direction: Qt.Orientation = Qt.Orientation.Horizontal, splitter_index=2):
+        if not widget:
+            widget = QLabel("New Widget")
         tabs = TabbedPanels(self.empty_check, new_widget = widget)
         self.add_child(tabs, split_direction, splitter_index)
