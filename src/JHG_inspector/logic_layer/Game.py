@@ -55,7 +55,7 @@ class Game:
             row = cursor.fetchone()
             self.id = (row[0] if row and row[0] is not None else 0) + 1
             file_loader = self.create_game_file_loader(game_path)(self.database_manager, self, game_path)
-            file_loader.load_data_from_file(game_path)
+            file_loader.load_data_from_file()
         else:
             self.id = result[0]
             print(f"Game {self.code} already exists")
