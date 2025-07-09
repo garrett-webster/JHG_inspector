@@ -92,7 +92,7 @@ class Game:
         """Returns the popularitites by player by round.
 
            Each sub list holds the popularities for one round, where the index is the round number zero indexed. The
-           items of each of those lists represents the popularity of the player whos id relates to the index position,
+           items of each of those lists represents the popularity of the player whose id relates to the index position,
            as stored in self.id_to_player_order.
            """
 
