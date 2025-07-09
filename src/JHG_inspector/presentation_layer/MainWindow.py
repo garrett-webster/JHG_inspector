@@ -37,6 +37,7 @@ class MainWindow(QMainWindow):
         self.body_splitter.setStretchFactor(0, 0)
         self.body_splitter.setStretchFactor(1, 1)
         self.body_splitter.setCollapsible(0, False)
+        self.body_splitter.setCollapsible(1, False)
         self.body_splitter.setHandleWidth(1)
 
         self.setCentralWidget(self.body_splitter)

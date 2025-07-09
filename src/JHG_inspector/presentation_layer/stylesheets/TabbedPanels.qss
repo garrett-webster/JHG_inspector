@@ -1,0 +1,24 @@
+QTabWidget {
+    color: #d2d2d2;
+}
+
+QTabWidget::pane {
+    background: #2a2a2a;
+    border: none;
+    border-top: 1px solid #393939;
+    color: #d2d2d2;
+}
+
+/* NOTE: The background color for the tab bar to the right of the open tabs is actually controled by Container in main.qss */
+QTabBar {
+    background: #2a2a2a;
+    color: #d2d2d2;
+}
+
+QTabBar::tab {
+    background: transparent;
+}
+
+Panel {
+    color: #d2d2d2;
+}

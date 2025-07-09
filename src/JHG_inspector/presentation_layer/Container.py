@@ -56,6 +56,7 @@ class Container(QSplitter):
             self.setOrientation(split_direction)
             self.addWidget(widget)
             self.setCollapsible(1, False)
+            self.setStretchFactor(self.indexOf(widget), 1)
 
             if isinstance(widget, TabbedPanels):
                 widget.parent_container = self
@@ -79,6 +80,7 @@ class Container(QSplitter):
                 widget.parent_container = nested_container
 
             self.insertWidget(index, nested_container)
+            self.setStretchFactor(self.indexOf(widget), 1)
 
     def empty_check(self):
         """A call back called by children Containers and TabbedPanels when they are cleared.

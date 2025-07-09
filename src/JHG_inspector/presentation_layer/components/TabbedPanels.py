@@ -28,6 +28,10 @@ class TabbedPanels(QTabWidget):
              TabbedPanels object is added.
         """
         super().__init__(parent)
+        with open("src/JHG_inspector/presentation_layer/stylesheets/TabbedPanels.qss", "r") as f:
+            self.setStyleSheet(f.read())
+
+
         TabbedPanels.num_tabs += 1
         self.deleted = False
         self.check_container_empty = check_container_empty
