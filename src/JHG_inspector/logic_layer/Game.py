@@ -3,6 +3,7 @@ import re
 from functools import cached_property
 from pathlib import Path, PosixPath
 
+from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader import GameFileLoader
 from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
 from src.JHG_inspector.data_layer.game_file_loaders.game_file_loader_versions import VERSION_TO_GAME_FILE_LOADER
 
@@ -10,6 +11,8 @@ FILE_PATH = Path(__file__).resolve().parent
 
 class Game:
     """Holds the data for a single game."""
+
+    game_file_loaders = {}
     def __init__(self, database_manager: "DatabaseManager"):
         self.database_manager = database_manager
         self.id_to_name = {}
@@ -18,15 +21,24 @@ class Game:
         self.id = None
         self.code = None
 
-    def create_game_file_loader(self, game_log_path: Path):
+    def get_game_file_loader(self, game_log_path: Path):
         """Factory method for game file loaders.
 
-           Determines the version of the game log file and returns a GameFileLoader object of the correct type.
+           Determines the version of the game log file and returns a GameFileLoader object of the correct type. If there
+           has already been a GameFileLoader object created for that file version, fetches it. If not, creates a new
+           instance and caches it.
            """
         with open(game_log_path, "r") as game_file:
             data = json.load(game_file)
             version = data["version"]
-            return VERSION_TO_GAME_FILE_LOADER[version]
+
+        if version in Game.game_file_loaders:
+            print("Using cached version of the game loader")
+            return Game.game_file_loaders[version]
+        else:
+            print("Using new version of the game loader")
+            Game.game_file_loaders[version] = VERSION_TO_GAME_FILE_LOADER[version]
+            return Game.game_file_loaders[version]
 
     def load_from_database(self, game_id: int):
         """Find the game record in the database based on the games id and load the data from the database"""
@@ -36,7 +48,6 @@ class Game:
         self.id = game_id
         self.set_id_to_name_dicts()
 
-    # TODO: Cache game loader objects (based on JSON version) so you're not creating a new one for each file.
     def load_from_file(self, game_path: Path):
         """Loads a game from a file into the database and the Game object.
 
@@ -54,8 +65,9 @@ class Game:
             cursor.execute("SELECT seq FROM sqlite_sequence WHERE name = 'games';")
             row = cursor.fetchone()
             self.id = (row[0] if row and row[0] is not None else 0) + 1
-            file_loader = self.create_game_file_loader(game_path)(self.database_manager, self, game_path)
-            file_loader.load_data_from_file()
+
+            file_loader = self.get_game_file_loader(game_path)(self.database_manager, self)
+            file_loader.load_data_from_file(game_path)
         else:
             self.id = result[0]
             print(f"Game {self.code} already exists")
