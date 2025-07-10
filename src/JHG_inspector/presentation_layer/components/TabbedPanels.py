@@ -64,6 +64,9 @@ class TabbedPanels(QTabWidget):
         if not isinstance(source_tabwidget, TabbedPanels):
             return
 
+        if source_tabwidget is self:
+            return
+
         panel = source_tabwidget.widget(index)
         label = source_tabwidget.tabText(index)
 
