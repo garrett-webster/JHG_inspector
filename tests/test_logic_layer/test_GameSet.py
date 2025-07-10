@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from tests.test_data_layer.data_layer_testing_utilities import *
+from tests.testing_utilities import *
 
 FILE_PATH = Path(__file__).resolve()
 
@@ -20,7 +20,7 @@ class TestGameSetInitialization:
         assert actual_tables == expected_tables
 
     def test_load_games_from_database(self, database_manager):
-        database_manager.games.load_games_from_directory(Path(FILE_PATH.parent / "test_set1"))
+        database_manager.games.load_games_from_directory(Path(FILE_PATH.parent.parent / "test_data" / "test_set1"))
         test_gameset = database_manager.gamesets.create_gameset("testing")
         for game_id in database_manager.games.all.keys():
             test_gameset.add_game(game_id)
@@ -36,8 +36,8 @@ class TestGameSetInitialization:
             assert game.id == loaded_games[i].id
 
     def test_add_game_from_database(self, game, game_set):
-        game(FILE_PATH.parent / "test_set2/jhg_GDSR.json")
-        test_gameset = game_set(FILE_PATH.parent / "test_set1")
+        game(FILE_PATH.parent.parent / "test_data" / "test_set2/jhg_GDSR.json")
+        test_gameset = game_set(FILE_PATH.parent.parent / "test_data" / "test_set1")
         test_gameset.add_game(1)
 
         expected_game_codes = ["GDSR", "MGNP", "GDHP", "PBSG"]

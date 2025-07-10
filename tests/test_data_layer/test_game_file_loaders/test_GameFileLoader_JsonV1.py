@@ -1,14 +1,14 @@
 from pathlib import Path
 
-from tests.test_data_layer.data_layer_testing_utilities import *
+from tests.testing_utilities import *
 
 FILE_PATH = Path(__file__).resolve().parent
-TESTS_PATH = FILE_PATH.parent
+TESTS_PATH = FILE_PATH.parent.parent
 
 
 class TestGameFileLoader_JsonV1:
     def test_load_data_to_database_games(self, game, cursor):
-        test_game = game(TESTS_PATH / "test_set1/jhg_GDHP.json")
+        test_game = game(TESTS_PATH / "test_data" / "test_set1/jhg_GDHP.json")
         cursor.execute("SELECT * FROM games")
         actual_game_data = cursor.fetchone()
 
@@ -19,7 +19,7 @@ class TestGameFileLoader_JsonV1:
         assert actual_game_data == expected_game_data
 
     def test_load_searchTags_data(self, game, cursor):
-        test_game = game(TESTS_PATH / "test_set1/jhg_GDHP.json")
+        test_game = game(TESTS_PATH / "test_data" / "test_set1/jhg_GDHP.json")
         expected_search_tags = [
             ("show_roundLength",), ("show_gameLength",), ("show_chatType",), ("show_messageType",), ("show_nameSet",),
             ("show_initialSetup",), ("show_grouping",), ("show_labels",), ("show_advancedParams",),
@@ -46,7 +46,7 @@ class TestGameFileLoader_JsonV1:
         assert actual_search_tag_values == expected_search_tag_values
 
     def test_load_playersThatWillBeGovernment_data(self, game, cursor):
-        test_game = game(TESTS_PATH / "test_set3/jhg_NMBT.json")
+        test_game = game(TESTS_PATH / "test_data" / "test_set3/jhg_NMBT.json")
 
         cursor.execute("SELECT playerId FROM playersThatWillBeGovernment")
         actual_players = cursor.fetchall()
@@ -55,7 +55,7 @@ class TestGameFileLoader_JsonV1:
         assert actual_players == expected_players
 
     def test_load_colorGroups_data(self, game, cursor):
-        test_game = game(TESTS_PATH / "test_set3/jhg_DGMT.json")
+        test_game = game(TESTS_PATH / "test_data" / "test_set3/jhg_DGMT.json")
 
         cursor.execute("SELECT * FROM colorGroups")
         actual_color_groups = cursor.fetchall()
@@ -65,7 +65,7 @@ class TestGameFileLoader_JsonV1:
 
     # Tests that the players table is correctly loaded into the database
     def test_load_data_to_database_players(self, game, cursor):
-        test_game = game(TESTS_PATH / "test_set1/jhg_GDHP.json")
+        test_game = game(TESTS_PATH / "test_data" / "test_set1/jhg_GDHP.json")
 
         # Fetch all players data from the database
         cursor.execute("""
@@ -102,8 +102,8 @@ class TestGameFileLoader_JsonV1:
                         results.add((game_id, round_num, sender_id, receiver_id, amount))
             return results
 
-        test_game = game(TESTS_PATH / "test_set2/jhg_GDSR.json")
-        with open(TESTS_PATH / "test_set2/jhg_GDSR.json") as f:
+        test_game = game(TESTS_PATH / "test_data" / "test_set2/jhg_GDSR.json")
+        with open(TESTS_PATH / "test_data" / "test_set2/jhg_GDSR.json") as f:
             data = json.load(f)
 
         expected_transactions = extract_expected_transactions(data, test_game.name_to_id, game_id=1)
@@ -122,8 +122,8 @@ class TestGameFileLoader_JsonV1:
                     results.add((game_id, round_num, name_to_id[name], score))
             return results
 
-        test_game = game(TESTS_PATH / "test_set2/jhg_GDSR.json")
-        with open(TESTS_PATH / "test_set2/jhg_GDSR.json") as f:
+        test_game = game(TESTS_PATH / "test_data" / "test_set2/jhg_GDSR.json")
+        with open(TESTS_PATH / "test_data" / "test_set2/jhg_GDSR.json") as f:
             json_data = json.load(f)
 
         expected = extract_expected_popularities(json_data, test_game.name_to_id, game_id=1)
@@ -151,8 +151,8 @@ class TestGameFileLoader_JsonV1:
                             results.add((game_id, round_num, sender_id, receiver_id, amount))
             return results
 
-        test_game = game(TESTS_PATH / "test_set2/jhg_GDSR.json")
-        with open(TESTS_PATH / "test_set2/jhg_GDSR.json") as f:
+        test_game = game(TESTS_PATH / "test_data" / "test_set2/jhg_GDSR.json")
+        with open(TESTS_PATH / "test_data" / "test_set2/jhg_GDSR.json") as f:
             data = json.load(f)
 
         expected_influences = extract_expected_influences(data, test_game.name_to_id, game_id=1)
@@ -163,7 +163,7 @@ class TestGameFileLoader_JsonV1:
         assert expected_influences.issubset(set(actual_influences))
 
     def test_load_chatInfo_data(self, game, cursor):
-        test_game = game(TESTS_PATH / "test_set2/jhg_XJPV.json")
+        test_game = game(TESTS_PATH / "test_data" / "test_set2/jhg_XJPV.json")
         cursor.execute("SELECT * FROM chatInfo")
         actual_chats = cursor.fetchall()
 
@@ -176,7 +176,7 @@ class TestGameFileLoader_JsonV1:
         assert actual_chats == expected_chats
 
     def test_load_chatParticipants_data(self, game, cursor):
-        test_game = game(TESTS_PATH / "test_set2/jhg_XJPV.json")
+        test_game = game(TESTS_PATH / "test_data" / "test_set2/jhg_XJPV.json")
         cursor.execute("SELECT id FROM chatInfo")
         chat_ids = cursor.fetchall()
 
@@ -192,7 +192,7 @@ class TestGameFileLoader_JsonV1:
             assert actual_participants == expected_participants[i]
 
     def test_load_messages_data(self, game, cursor):
-        test_game = game(TESTS_PATH / "test_set2/jhg_XJPV.json")
+        test_game = game(TESTS_PATH / "test_data" / "test_set2/jhg_XJPV.json")
         cursor.execute("SELECT * FROM messages")
         actual_messages = cursor.fetchall()
 
