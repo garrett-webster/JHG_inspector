@@ -114,3 +114,16 @@ class TestGameProperties:
         test_game = game(TEST_DATA_PATH / game_path)
 
         assert test_game.transactions == expected
+
+    @pytest.mark.parametrize("game_path,expected", [
+        ("test_set1/jhg_GDHP.json", ["none", "freeForm", None, 10, 30, "time", 0, 60, "ratio", False, 200, 50, True, False, 1747325756118000, "time"]),
+    ],)
+    def test_settings(self, game_path, expected, game):
+        test_game = game(TEST_DATA_PATH / game_path)
+        columns = ["chatType", "messageType", "advancedGameSetup", "gameEndLow", "gameEndHigh", "gameEndType",
+                   "povertyLine",
+                   "govInitialPopularity", "govInitialPopularityType", "govRandomPopularities", "govRandomPopHigh",
+                   "govRandomPopLow", "govSendVotesImmediately", "labelsEnabled", "duration", "runtimeType"]
+
+        for i, column in enumerate(columns):
+            assert test_game.settings[column] == expected[i]

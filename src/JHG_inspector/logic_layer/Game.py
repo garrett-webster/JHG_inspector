@@ -92,7 +92,7 @@ class Game:
         """Returns the popularitites by player by round.
 
            Each sub list holds the popularities for one round, where the index is the round number zero indexed. The
-           items of each of those lists represents the popularity of the player whose id relates to the index position,
+           items of each of those lists represent the popularity of the player whose id relates to the index position,
            as stored in self.id_to_player_order.
            """
 
@@ -114,7 +114,7 @@ class Game:
         """Returns the influence on each player by each player by round.
 
            Each sub list holds a matrix (2-dimensional list) where the rows represent the influence from player i on
-           each player j, such that the ijth entry of the matrix in the kth index of influences is player i's influence
+           each player j. Thus, the ijth entry of the matrix in the kth index of influences is player i's influence
            on player j on round k.
            """
 
@@ -137,7 +137,7 @@ class Game:
         """Returns the allocations from each player to each player by round.
 
            Each sub list holds a matrix (2-dimensional list) where the rows represent the token allocation from player i
-           to each player j, such that the ijth entry of the matrix in the kth index of transaction is player i's token
+           to each player j. Thus, the ijth entry of the matrix in the kth index of transaction is player i's token
            allocation to player j on round k.
            """
 
@@ -154,3 +154,19 @@ class Game:
             transactions[round_num - 1][player_from_id][player_to_id] = transaction
 
         return transactions
+
+    @cached_property
+    def settings(self):
+        settings = {}
+        columns = ["chatType", "messageType", "advancedGameSetup", "gameEndLow", "gameEndHigh", "gameEndType", "povertyLine",
+             "govInitialPopularity", "govInitialPopularityType", "govRandomPopularities", "govRandomPopHigh",
+             "govRandomPopLow", "govSendVotesImmediately", "labelsEnabled", "duration", "runtimeType"]
+
+        results = self.database_manager.DAOs["games"].select_one(
+            columns, ["id"], [self.id]
+        )
+
+        for i, column in enumerate(columns):
+            settings[column] = results[i]
+
+        return settings
