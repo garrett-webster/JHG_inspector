@@ -9,21 +9,25 @@ from src.JHG_inspector.logic_layer.Gameset import Gameset
 
 
 class GamesetElement(QWidget):
+    class ToggleBanner(QPushButton):
+        def __init__(self, title, gameset_element):
+            super().__init__(title)
+            self.setCheckable(True)
+            self.setChecked(False)
+            self.clicked.connect(gameset_element.toggle_content)
+
+            self.setProperty("class", "GamesetElementBanner")
+            self.style().unpolish(self)
+            self.style().polish(self)
+            self.setMinimumWidth(0)
+            self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+
     def __init__(self, title: str, gameset: Gameset, select_game, remove_game, remove_gameset):
         super().__init__()
         self.gameset = gameset
         self.remove_gameset = remove_gameset
 
-        self.toggle_button = QPushButton(title)
-        self.toggle_button.setCheckable(True)
-        self.toggle_button.setChecked(False)
-        self.toggle_button.clicked.connect(self.toggle_content)
-
-        self.toggle_button.setProperty("class", "GamesetElementBanner")
-        self.toggle_button.style().unpolish(self.toggle_button)
-        self.toggle_button.style().polish(self.toggle_button)
-        self.toggle_button.setMinimumWidth(0)
-        self.toggle_button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.toggle_banner = self.ToggleBanner(title, self)
 
         delete_button = QPushButton("Delete")
         delete_button.clicked.connect(self.delete)
@@ -35,12 +39,12 @@ class GamesetElement(QWidget):
         layout = QVBoxLayout()
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(self.toggle_button)
+        layout.addWidget(self.toggle_banner)
         layout.addWidget(self.content)
         self.setLayout(layout)
 
     def toggle_content(self):
-        is_expanded = self.toggle_button.isChecked()
+        is_expanded = self.toggle_banner.isChecked()
         self.content.setVisible(is_expanded)
 
     def get_smallest_width(self):
