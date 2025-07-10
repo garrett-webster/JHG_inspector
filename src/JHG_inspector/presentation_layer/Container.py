@@ -31,6 +31,7 @@ class Container(QSplitter):
         self.container_num = Container.num_containers
         super().__init__()
         self.setOrientation(orientation)
+        self.setHandleWidth(1)
 
     def add_child(self, widget: QWidget, split_direction: Qt.Orientation = Qt.Orientation.Horizontal, index: int = 1):
         """Adds a widget to a Container, nesting a new container if necessary.
