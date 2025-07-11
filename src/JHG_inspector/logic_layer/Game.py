@@ -146,7 +146,7 @@ class Game:
         return influences
 
     @cached_property
-    def transactions(self) -> list[list[list[int]]]:
+    def allocations(self) -> list[list[list[int]]]:
         """Returns the allocations from each player to each player by round.
 
            Each sub list holds a matrix (2-dimensional list) where the rows represent the token allocation from player i
@@ -157,16 +157,16 @@ class Game:
         results = self.database_manager.DAOs["transactions"].select_all(["*"], ["gameId"], [self.id])
         ids = self.id_to_name.keys()
         num_rounds = int(len(results) / len(ids)**2)
-        transactions = [[[0 for _ in range(len(ids))] for _ in range(len(ids))] for _ in range(num_rounds)]
+        allocations = [[[0 for _ in range(len(ids))] for _ in range(len(ids))] for _ in range(num_rounds)]
 
         for result in results:
             round_num = result[1]
             player_from_id = self.id_to_player_order[result[2]]
             player_to_id = self.id_to_player_order[result[3]]
-            transaction = result[4]
-            transactions[round_num - 1][player_from_id][player_to_id] = transaction
+            allocation = result[4]
+            allocations[round_num - 1][player_from_id][player_to_id] = allocation
 
-        return transactions
+        return allocations
 
     @cached_property
     def settings(self):
