@@ -23,6 +23,7 @@
     "code": "TEXT",
     "numPlayers": "INTEGER",
     "numObservers": "INTEGER",
+    "numRounds": "INTEGER",
     "status": "TEXT",
     "startDateTime": "TIMESTAMP",
     "lengthOfRound": "INTEGER",

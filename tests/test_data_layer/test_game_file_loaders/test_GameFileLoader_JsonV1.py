@@ -12,7 +12,7 @@ class TestGameFileLoader_JsonV1:
         cursor.execute("SELECT * FROM games")
         actual_game_data = cursor.fetchone()
 
-        expected_game_data = (1, "GDHP", 4, 0, "finished", "2025-05-15T16:04:55.960738Z", 150000000, "radio", "none",
+        expected_game_data = (1, "GDHP", 4, 0, 1, "finished", "2025-05-15T16:04:55.960738Z", 150000000, "radio", "none",
                               "freeForm", None, 10, 30, "time", 0.2, 0.5, 1.3, 0.95, 1.6, 0.0, 60, "ratio", 0, 200, 50,
                               1, 0, 1747325756118000, "time")
 

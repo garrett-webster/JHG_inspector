@@ -10,6 +10,7 @@ class GameFileLoader_JsonV1(GameFileLoader):
             data["lobby"]["code"],
             data["lobby"]["numPlayers"],
             data["lobby"]["numObservers"],
+            len(data["transactions"]),
             data["status"],
             data["startDateTime"],
             data["gameParams"]["lengthOfRound"],
