@@ -86,6 +86,20 @@ class Game:
             self.id_to_player_order[result[0]] = i
             
     # !--- Data Methods ---! #
+    def simple_dictionary_property(self, columns, table):
+        """Utility method that reduces code duplication in the data methods.
+
+           Takes a list of column names and a table and retrieves their values for the game, assigning them to a
+           dictionary."""
+        property_dict = {}
+
+        results = self.database_manager.DAOs["games"].select_one(columns, ["id"], [self.id])
+
+        for i, column in enumerate(columns):
+            property_dict[column] = results[i]
+
+        return property_dict
+
     @cached_property
     def popularities(self) -> list[list[int]]:
         """Returns the popularitites by player by round.
@@ -156,38 +170,20 @@ class Game:
 
     @cached_property
     def settings(self):
-        settings = {}
         columns = ["chatType", "messageType", "advancedGameSetup", "gameEndLow", "gameEndHigh", "gameEndType", "povertyLine",
              "govInitialPopularity", "govInitialPopularityType", "govRandomPopularities", "govRandomPopHigh",
              "govRandomPopLow", "govSendVotesImmediately", "labelsEnabled", "duration", "runtimeType"]
 
-        results = self.database_manager.DAOs["games"].select_one(columns, ["id"], [self.id])
-
-        for i, column in enumerate(columns):
-            settings[column] = results[i]
-
-        return settings
+        return self.simple_dictionary_property(columns, "games")
 
     @cached_property
     def parameters(self):
-        parameters = {}
         columns = ["alpha", "beta", "cGive", "cKeep", "cSteal", "lengthOfRound"]
 
-        results = self.database_manager.DAOs["games"].select_one(columns, ["id"], [self.id])
-
-        for i, column in enumerate(columns):
-            parameters[column] = results[i]
-
-        return parameters
+        return self.simple_dictionary_property(columns, "games")
 
     @cached_property
     def meta_data(self):
-        meta_data = {}
         columns = ["numPlayers", "numObservers", "status", "startDateTime"]
 
-        results = self.database_manager.DAOs["games"].select_one(columns, ["id"], [self.id])
-
-        for i, column in enumerate(columns):
-            meta_data[column] = results[i]
-
-        return meta_data
+        return self.simple_dictionary_property(columns, "games")
