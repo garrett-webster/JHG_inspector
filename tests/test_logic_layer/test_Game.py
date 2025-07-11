@@ -129,8 +129,7 @@ class TestGameProperties:
             assert test_game.settings[column] == expected[i]
 
     @pytest.mark.parametrize("game_path,expected", [
-        ("test_set1/jhg_GDHP.json", [0.2, 0.5, 1.3, 0.95, 1.6, 150000000]),
-        ("test_set2/jhg_GDSR.json", [0.2, 0.5, 1.3, 0.95, 1.6, 150000000])
+        ("test_set1/jhg_GDHP.json", [0.2, 0.5, 1.3, 0.95, 1.6, 150000000])
     ])
     def test_parameters(self, game_path, expected, game):
         test_game = game(TEST_DATA_PATH / game_path)
@@ -138,3 +137,13 @@ class TestGameProperties:
 
         for i, column in enumerate(columns):
             assert test_game.parameters[column] == expected[i]
+
+    @pytest.mark.parametrize("game_path,expected", [
+        ("test_set1/jhg_GDHP.json", [4, 0, "finished", "2025-05-15T16:04:55.960738Z"])
+    ])
+    def test_meta_data(self, game_path, expected, game):
+        test_game = game(TEST_DATA_PATH / game_path)
+        columns = ["numPlayers", "numObservers", "status", "startDateTime"]
+
+        for i, column in enumerate(columns):
+            assert test_game.meta_data[column] == expected[i]

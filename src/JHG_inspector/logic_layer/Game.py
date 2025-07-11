@@ -179,3 +179,15 @@ class Game:
             parameters[column] = results[i]
 
         return parameters
+
+    @cached_property
+    def meta_data(self):
+        meta_data = {}
+        columns = ["numPlayers", "numObservers", "status", "startDateTime"]
+
+        results = self.database_manager.DAOs["games"].select_one(columns, ["id"], [self.id])
+
+        for i, column in enumerate(columns):
+            meta_data[column] = results[i]
+
+        return meta_data
