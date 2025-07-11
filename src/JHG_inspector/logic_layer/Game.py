@@ -1,13 +1,31 @@
 import json
 import re
 from functools import cached_property
-from pathlib import Path, PosixPath
-
-from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader import GameFileLoader
-from src.JHG_inspector.data_layer.game_file_loaders.GameFileLoader_JsonV1 import GameFileLoader_JsonV1
+from pathlib import Path
 from src.JHG_inspector.data_layer.game_file_loaders.game_file_loader_versions import VERSION_TO_GAME_FILE_LOADER
 
 FILE_PATH = Path(__file__).resolve().parent
+
+
+def get_game_file_loader(game_log_path: Path):
+    """Factory method for game file loaders.
+
+       Determines the version of the game log file and returns a GameFileLoader object of the correct type. If there
+       has already been a GameFileLoader object created for that file version, fetch it. If not, create a new
+       instance and cache it.
+       """
+    with open(game_log_path, "r") as game_file:
+        data = json.load(game_file)
+        version = data["version"]
+
+    if version in Game.game_file_loaders:
+        print("Using cached version of the game loader")
+        return Game.game_file_loaders[version]
+    else:
+        print("Using new version of the game loader")
+        Game.game_file_loaders[version] = VERSION_TO_GAME_FILE_LOADER[version]
+        return Game.game_file_loaders[version]
+
 
 class Game:
     """Holds the data for a single game."""
@@ -21,25 +39,6 @@ class Game:
         self.id = None
         self.code = None
 
-    def get_game_file_loader(self, game_log_path: Path):
-        """Factory method for game file loaders.
-
-           Determines the version of the game log file and returns a GameFileLoader object of the correct type. If there
-           has already been a GameFileLoader object created for that file version, fetches it. If not, creates a new
-           instance and caches it.
-           """
-        with open(game_log_path, "r") as game_file:
-            data = json.load(game_file)
-            version = data["version"]
-
-        if version in Game.game_file_loaders:
-            print("Using cached version of the game loader")
-            return Game.game_file_loaders[version]
-        else:
-            print("Using new version of the game loader")
-            Game.game_file_loaders[version] = VERSION_TO_GAME_FILE_LOADER[version]
-            return Game.game_file_loaders[version]
-
     def load_from_database(self, game_id: int):
         """Find the game record in the database based on the games id and load the data from the database"""
 
@@ -51,7 +50,7 @@ class Game:
     def load_from_file(self, game_path: Path):
         """Loads a game from a file into the database and the Game object.
 
-           Checks whether a game with the same game code has been loaded into the database yet. If not, find the next
+           Checks whether a game with the same game code has been loaded into the database. If not, find the next
            id, create a GameFileLoader, and load the data from the file.
            """
 
@@ -66,7 +65,7 @@ class Game:
             row = cursor.fetchone()
             self.id = (row[0] if row and row[0] is not None else 0) + 1
 
-            file_loader = self.get_game_file_loader(game_path)(self.database_manager, self)
+            file_loader = get_game_file_loader(game_path)(self.database_manager, self)
             file_loader.load_data_from_file(game_path)
         else:
             self.id = result[0]
@@ -162,11 +161,21 @@ class Game:
              "govInitialPopularity", "govInitialPopularityType", "govRandomPopularities", "govRandomPopHigh",
              "govRandomPopLow", "govSendVotesImmediately", "labelsEnabled", "duration", "runtimeType"]
 
-        results = self.database_manager.DAOs["games"].select_one(
-            columns, ["id"], [self.id]
-        )
+        results = self.database_manager.DAOs["games"].select_one(columns, ["id"], [self.id])
 
         for i, column in enumerate(columns):
             settings[column] = results[i]
 
         return settings
+
+    @cached_property
+    def parameters(self):
+        parameters = {}
+        columns = ["alpha", "beta", "cGive", "cKeep", "cSteal"]
+
+        results = self.database_manager.DAOs["games"].select_one(columns, ["id"], [self.id])
+
+        for i, column in enumerate(columns):
+            parameters[column] = results[i]
+
+        return parameters

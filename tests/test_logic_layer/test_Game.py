@@ -127,3 +127,14 @@ class TestGameProperties:
 
         for i, column in enumerate(columns):
             assert test_game.settings[column] == expected[i]
+
+    @pytest.mark.parametrize("game_path,expected", [
+        ("test_set1/jhg_GDHP.json", [0.2, 0.5, 1.3, 0.95, 1.6]),
+        ("test_set2/jhg_GDSR.json", [0.2, 0.5, 1.3, 0.95, 1.6])
+    ])
+    def test_parameters(self, game_path, expected, game):
+        test_game = game(TEST_DATA_PATH / game_path)
+        columns = ["alpha", "beta", "cGive", "cKeep", "cSteal"]
+
+        for i, column in enumerate(columns):
+            assert test_game.parameters[column] == expected[i]
