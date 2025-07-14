@@ -160,3 +160,39 @@ class TestGameProperties:
         for i in range(test_game.num_rounds):
             assert test_game.rounds[i].popularities == expected_popularities[i]
             assert test_game.rounds[i].allocations == expected_allocations[i]
+
+    @pytest.mark.parametrize("game_path,expected_num_players,expected_popularities,expected_allocations,expected_names,expected_game_names", [
+        ("test_set1/jhg_GDHP.json", 4,
+         [[100, 101.625], [100, 101.625], [100, 101.625], [100, 101.625]],
+         [[[5, 1, 1, 1]], [[1, 5, 1, 1]], [[1, 1, 5, 1]], [[1, 1, 1, 5]]],
+         ["Jane Doe", "James Doe", "John Doe", "Jessica Doe"], ["Bravo", "Uniform", "X-ray", "Quebec"]
+         ),
+        (
+        "test_set2/jhg_GDSR.json",  # your real path
+        4,
+        [
+            [100, 102.95833333333334, 101.28556561170396, 87.10909848681052],
+            [100, 97.16666666666667, 100.11781560231618, 99.02186957374734],
+            [100.0, 84.0, 81.9074674379407, 85.49486724848725],
+            [100.0, 98.375, 83.80281454248367, 81.02336101116774]
+        ],
+        [
+            [[5, -1, -1, -1], [5, 1, 1, 1], [2, 2, 2, 2]],  # Bravo
+            [[-2, 2, -2, -2], [-1, 5, -1, -1], [1, 5, 1, 1]],  # Echo
+            [[2, 2, 2, 2], [-2, -2, 2, -2], [-1, -1, 5, -1]],  # Oscar
+            [[1, 1, 1, 5], [2, 2, 2, 2], [-2, -2, -2, 2]]  # X-ray
+        ],
+        ["James Doe", "Jessica Doe", "John Doe", "Jane Doe"],
+        ["Bravo", "Oscar", "X-ray", "Echo"]
+        )
+    ])
+    def test_players(self, game_path, expected_num_players, expected_popularities, expected_allocations, expected_names, expected_game_names, game):
+        test_game = game(TEST_DATA_PATH / game_path)
+
+        assert expected_num_players == len(test_game.players)
+        for i in range(test_game.num_players):
+            player = test_game.players[i]
+            assert player.name == expected_names[i]
+            assert player.gameName == expected_game_names[i]
+            assert player.round_popularity == expected_popularities[i]
+            assert player.round_allocations == expected_allocations[i]
