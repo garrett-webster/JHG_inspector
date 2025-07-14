@@ -3,6 +3,7 @@ import re
 from functools import cached_property
 from pathlib import Path
 from src.JHG_inspector.data_layer.game_file_loaders.game_file_loader_versions import VERSION_TO_GAME_FILE_LOADER
+from src.JHG_inspector.logic_layer.Player import Player
 from src.JHG_inspector.logic_layer.Round import Round
 
 FILE_PATH = Path(__file__).resolve().parent
@@ -107,6 +108,10 @@ class Game:
         return self.database_manager.DAOs["games"].select_one(["numRounds"], ["id"], [self.id])[0]
 
     @cached_property
+    def num_players(self):
+        return self.database_manager.DAOs["games"].select_one(["numPlayers"], ["id"], [self.id])[0]
+
+    @cached_property
     def popularities(self) -> list[list[int]]:
         """Returns the popularitites by player by round.
 
@@ -201,3 +206,13 @@ class Game:
             rounds.append(Round(self, i))
 
         return rounds
+
+    @cached_property
+    def players(self):
+        players = []
+        for player_id in self.name_to_id.values():
+            player_order_num = self.id_to_player_order[player_id]
+            players.append(Player(self, player_id, player_order_num))
+
+        return players
+
