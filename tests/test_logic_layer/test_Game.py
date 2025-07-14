@@ -161,15 +161,32 @@ class TestGameProperties:
             assert test_game.rounds[i].popularities == expected_popularities[i]
             assert test_game.rounds[i].allocations == expected_allocations[i]
 
-    @pytest.mark.parametrize("game_path,expected_num_players,expected_popularities,expected_allocations,expected_names,expected_game_names", [
+    @pytest.mark.parametrize("game_path,expected_num_players,expected_popularities,expected_allocations,expected_names,"
+                             "expected_game_names,expected_experiences,expected_permission_levels,expected_colors,"
+                             "expected_hues,expected_avatars,expected_icons", [
         ("test_set1/jhg_GDHP.json", 4,
-         [[100, 101.625], [100, 101.625], [100, 101.625], [100, 101.625]],
-         [[[5, 1, 1, 1]], [[1, 5, 1, 1]], [[1, 1, 5, 1]], [[1, 1, 1, 5]]],
-         ["Jane Doe", "James Doe", "John Doe", "Jessica Doe"], ["Bravo", "Uniform", "X-ray", "Quebec"]
+         [
+             [100, 101.625],
+             [100, 101.625],
+             [100, 101.625],
+             [100, 101.625]],
+         [
+             [[5, 1, 1, 1]],
+             [[1, 5, 1, 1]],
+             [[1, 1, 5, 1]],
+             [[1, 1, 1, 5]]
+         ],
+         ["Jane Doe", "James Doe", "John Doe", "Jessica Doe"],
+         ["Bravo", "Uniform", "X-ray", "Quebec"],
+         ["beginner", "beginner", "beginner", "beginner"],
+         ["regular", "regular", "regular", "regular"],
+         [None, None, None, None],
+         [None, None, None, None],
+         [None, None, None, None],
+         [None, None, None, None]
          ),
         (
-        "test_set2/jhg_GDSR.json",  # your real path
-        4,
+        "test_set2/jhg_GDSR.json", 4,
         [
             [100, 102.95833333333334, 101.28556561170396, 87.10909848681052],
             [100, 97.16666666666667, 100.11781560231618, 99.02186957374734],
@@ -183,10 +200,17 @@ class TestGameProperties:
             [[1, 1, 1, 5], [2, 2, 2, 2], [-2, -2, -2, 2]]  # X-ray
         ],
         ["James Doe", "Jessica Doe", "John Doe", "Jane Doe"],
-        ["Bravo", "Oscar", "X-ray", "Echo"]
+        ["Bravo", "Oscar", "X-ray", "Echo"],
+        ["beginner", "beginner", "beginner", "beginner"],
+        ["regular", "regular", "regular", "regular"],
+        [None, None, None, None],
+        [None, None, None, None],
+        [None, None, None, None],
+        [None, None, None, None]
         )
     ])
-    def test_players(self, game_path, expected_num_players, expected_popularities, expected_allocations, expected_names, expected_game_names, game):
+    def test_players(self, game_path, expected_num_players, expected_popularities, expected_allocations, expected_names,
+                     expected_game_names, expected_experiences, expected_permission_levels, expected_colors, expected_hues, expected_avatars, expected_icons, game):
         test_game = game(TEST_DATA_PATH / game_path)
 
         assert expected_num_players == len(test_game.players)
@@ -194,5 +218,11 @@ class TestGameProperties:
             player = test_game.players[i]
             assert player.name == expected_names[i]
             assert player.gameName == expected_game_names[i]
+            assert player.experience == expected_experiences[i]
+            assert player.permission_level == expected_permission_levels[i]
+            assert player.color == expected_colors[i]
+            assert player.hue == expected_hues[i]
+            assert player.avatar == expected_avatars[i]
+            assert player.icon == expected_icons[i]
             assert player.round_popularity == expected_popularities[i]
             assert player.round_allocations == expected_allocations[i]
