@@ -110,10 +110,10 @@ class TestGameProperties:
             [[2, 2, 2, 2], [1, 5, 1, 1], [-1, -1, 5, -1], [-2, -2, -2, 2]]
         ])
     ])
-    def test_transactions(self, game_path, expected, game):
+    def test_allocations(self, game_path, expected, game):
         test_game = game(TEST_DATA_PATH / game_path)
 
-        assert test_game.transactions == expected
+        assert test_game.allocations == expected
 
     @pytest.mark.parametrize("game_path,expected", [
         ("test_set1/jhg_GDHP.json", ["none", "freeForm", None, 10, 30, "time", 0, 60, "ratio", False, 200, 50, True, False, 1747325756118000, "time"]),
@@ -147,3 +147,16 @@ class TestGameProperties:
 
         for i, column in enumerate(columns):
             assert test_game.meta_data[column] == expected[i]
+
+    @pytest.mark.parametrize("game_path,expected_num_rounds,expected_popularities,expected_allocations", [
+        ("test_set1/jhg_GDHP.json", 1, [[100,100,100,100]], [[[5, 1, 1, 1], [1, 5, 1, 1], [1, 1, 5, 1], [1, 1, 1, 5]]]),
+        ("test_set2/jhg_GDSR.json", 3, [[100, 100, 100, 100],[102.95833333333334, 97.16666666666667, 84.0, 98.375],[101.28556561170396, 100.11781560231618, 81.9074674379407, 83.80281454248367]],
+         [[[5, -1, -1, -1], [-2, 2, -2, -2], [2, 2, 2, 2], [1, 1, 1, 5]],[[5, 1, 1, 1], [-1, 5, -1, -1], [-2, -2, 2, -2], [2, 2, 2, 2]],[[2, 2, 2, 2], [1, 5, 1, 1], [-1, -1, 5, -1], [-2, -2, -2, 2]]])
+    ])
+    def test_rounds(self, game_path, expected_num_rounds, expected_popularities, expected_allocations, game):
+        test_game = game(TEST_DATA_PATH / game_path)
+
+        assert expected_num_rounds == len(test_game.rounds)
+        for i in range(test_game.num_rounds):
+            assert test_game.rounds[i].popularities == expected_popularities[i]
+            assert test_game.rounds[i].allocations == expected_allocations[i]
