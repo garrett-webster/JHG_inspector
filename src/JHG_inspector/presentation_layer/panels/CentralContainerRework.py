@@ -12,7 +12,9 @@ class CentralContainer(Container):
         tab_widget = PanelTabWidget()
         super().__init__(tab_widget)
         tab_widget.parent_container = self
-        tab_widget.add_panel(DefaultPanel())
+        default_panel = Panel()
+        Panel.focused_panel = default_panel
+        tab_widget.add_panel(default_panel)
 
     def remove_item(self, item: Union["Container", "Panel"]):
         super().remove_item(item)

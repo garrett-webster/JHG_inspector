@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import Dict, ClassVar, Optional
 
 from PyQt6.QtCore import Qt, QPoint
 from PyQt6.QtGui import QAction
@@ -8,9 +8,12 @@ from src.JHG_inspector.presentation_layer.PanelTabWidget import PanelTabWidget
 
 
 class Panel(QWidget):
+    focused_panel: ClassVar[Optional["Panel"]] = None
     def __init__(self, parent=None, name: str = "Untitled"):
         super().__init__(parent)
         self.name = name
+
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.customContextMenuRequested.connect(self.open_context_menu)
@@ -62,3 +65,8 @@ class Panel(QWidget):
                 return parent
             parent = parent.parent()
         return None
+
+    def focusInEvent(self, event):
+        Panel.focused_panel = self
+        super().focusInEvent(event)
+        print(f"Focused on {self}")

@@ -11,6 +11,7 @@ from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.dialogs.OpenToolDialog import OpenToolDialog
 from src.JHG_inspector.presentation_layer.panels.CentralContainerRework import CentralContainer
 from src.JHG_inspector.presentation_layer.panels.GamesetPanel import GamesetPanel
+from src.JHG_inspector.presentation_layer.panels.Panel import Panel
 
 
 class MainWindow(QMainWindow):
@@ -115,6 +116,7 @@ class MainWindow(QMainWindow):
         """Opens a modal that lets you select a tool to open and a gameset to attach to it"""
         dialog = OpenToolDialog(self, self.database.gamesets.all.values(), self.tools_manager.tools_types_list)
         if dialog.exec():
-            tool = self.tools_manager.new_tool(self.selected_panel, dialog.tool, dialog.gameset)
+            focused_panel = Panel.focused_panel.get_parent_tabwidget()
+            tool = self.tools_manager.new_tool(focused_panel, dialog.tool, dialog.gameset)
 
-            self.selected_panel.split(tool.view)
+            focused_panel.add_panel(tool.view)

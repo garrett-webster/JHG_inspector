@@ -11,7 +11,7 @@ from src.JHG_inspector.presentation_layer.dialogs.NewGamesetDialog import NewGam
 from src.JHG_inspector.presentation_layer.panels.Panel import Panel
 
 
-class GamesetPanel(Panel):
+class GamesetPanel(QWidget):
     """A side panel that shows all the gamesets and their games, and allows editing those gamesets."""
     def __init__(self, database):
         super().__init__()
