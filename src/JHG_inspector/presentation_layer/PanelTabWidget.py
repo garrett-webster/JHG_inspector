@@ -1,6 +1,6 @@
 from typing import Union
 
-from PyQt6.QtCore import Qt, QPoint
+from PyQt6.QtCore import Qt, QPoint, QSize
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QTabWidget, QMenu
 
@@ -10,6 +10,9 @@ class PanelTabWidget(QTabWidget):
     num_panels = 0
     def __init__(self, parent_container: "Container" = None, panel: "Panel" = None):
         super().__init__()
+        with open("src/JHG_inspector/presentation_layer/stylesheets/TabbedPanels.qss", "r") as f:
+            self.setStyleSheet(f.read())
+
         self.setTabBar(DraggableTabBar())
         self.setTabsClosable(True)
         self.setMovable(True)
@@ -105,3 +108,6 @@ class PanelTabWidget(QTabWidget):
         target_widget.add_panel(panel)
 
         event.acceptProposedAction()
+
+    def sizeHint(self):
+        return QSize(600, 400)
