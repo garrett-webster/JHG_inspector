@@ -1,57 +1,39 @@
-from functools import partial
-from typing import override
+from typing import Union
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QLabel, QWidget, QVBoxLayout, QPushButton
+from PyQt6.QtWidgets import QLabel, QVBoxLayout
 
 from src.JHG_inspector.presentation_layer.Container import Container
-from src.JHG_inspector.presentation_layer.components.TabbedPanels import TabbedPanels
+from src.JHG_inspector.presentation_layer.PanelTabWidget import PanelTabWidget
+from src.JHG_inspector.presentation_layer.panels.Panel import Panel
 
 
 class CentralContainer(Container):
-    def __init__(self, parent=None):
-        """The root container for container structures.
+    def __init__(self):
+        tab_widget = PanelTabWidget()
+        super().__init__(tab_widget)
+        tab_widget.parent_container = self
+        default_panel = Panel()
+        Panel.focused_panel = default_panel
+        tab_widget.add_panel(default_panel)
 
-        If all TabbedPanels and other Containers are closed, a new DefaultTab will be added."""
+    def remove_item(self, item: Union["Container", "Panel"]):
+        super().remove_item(item)
 
+        # After base logic runs, check if self is now empty
+        if self.items[0] is None and self.items[1] is None:
+            new_tab_widget = PanelTabWidget(self, DefaultPanel())
+            self.items[0] = new_tab_widget
+            self.addWidget(new_tab_widget)
+            self.setCollapsible(0, False)
+
+class DefaultPanel(Panel):
+    num_panels = 0
+    def __init__(self):
         super().__init__()
-        widget = TabbedPanels(self.empty_check)
-        self.addWidget(widget)
-        widget.setParent(self)
-        widget.parent_container = self
-        self.setCollapsible(0, False)
-        self.setParent(parent)
-        self.has_direct_child = True
+        DefaultPanel.num_panels += 1
+        label = QLabel(str(DefaultPanel.num_panels))
 
-    @override
-    def empty_check(self):
-        """A call back called by children Containers and TabbedPanels when they are cleared.
-
-           Allows for Container's items to let the CentralContainer know when it should check if it is empty.
-           """
-
-        if self.count() == 0:
-            self.has_direct_child = False
-        if Container.num_containers == 1 and not self.has_direct_child:
-            widget = DefaultTab(self)
-            tabs = TabbedPanels(self.empty_check, self, widget)
-            self.addWidget(tabs)
-            self.has_direct_child = True
-
-
-class DefaultTab(QWidget):
-    """Displays when no other tabs are open in the GUI."""
-    def __init__(self, parent: CentralContainer = None):
-        super().__init__(parent)
         layout = QVBoxLayout()
-        label = QLabel("No tools open.")
-        open_button = QPushButton("Open New Tool")
-        ''' TODO: Once the ToolManager has been created, use a dialog to select the tool and pass that as the widget 
-            Will also want to find a way to replace the DefaultTab with that widget instead of calling split and
-            opening a new panel'''
-        open_button.clicked.connect(partial(parent.split, None, Qt.Orientation.Horizontal, 0))
-        layout.addStretch()
-        layout.addWidget(label, alignment=Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(open_button, alignment=Qt.AlignmentFlag.AlignCenter)
-        layout.addStretch()
+        layout.addWidget(label)
+
         self.setLayout(layout)

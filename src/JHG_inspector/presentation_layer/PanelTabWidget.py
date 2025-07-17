@@ -4,7 +4,7 @@ from PyQt6.QtCore import Qt, QPoint, QSize
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QTabWidget, QMenu, QApplication
 
-from src.JHG_inspector.presentation_layer.components.DraggableTabBar import DraggableTabBar
+from src.JHG_inspector.presentation_layer.components.ContainerTabBar import ContainerTabBar
 
 class PanelTabWidget(QTabWidget):
     """A collection of tabbed panels, where only one panel is visible at a time.
@@ -21,7 +21,7 @@ class PanelTabWidget(QTabWidget):
         with open("src/JHG_inspector/presentation_layer/stylesheets/TabbedPanels.qss", "r") as f:
             self.setStyleSheet(f.read())
 
-        self.setTabBar(DraggableTabBar())
+        self.setTabBar(ContainerTabBar())
         self.setTabsClosable(True)
         self.setMovable(True)
         self.setAcceptDrops(True)  # Enable drop events
@@ -40,7 +40,7 @@ class PanelTabWidget(QTabWidget):
         self.customContextMenuRequested.connect(self.open_context_menu)
 
     def open_context_menu(self, pos: QPoint):
-        from src.JHG_inspector.presentation_layer.panels.CentralContainerRework import DefaultPanel
+        from src.JHG_inspector.presentation_layer.panels.CentralContainer import DefaultPanel
         tab_index = self.tabBar().tabAt(pos)
         if tab_index == -1:
             return  # Clicked outside any tab
@@ -111,7 +111,7 @@ class PanelTabWidget(QTabWidget):
     def dropEvent(self, event):
         """Allows for panels to be dropped into the PanelTabWidget."""
         source_bar = event.source()
-        if not isinstance(source_bar, DraggableTabBar):
+        if not isinstance(source_bar, ContainerTabBar):
             return
 
         source_widget = source_bar.parentWidget()
