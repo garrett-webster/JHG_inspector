@@ -11,6 +11,7 @@ from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
 from src.JHG_inspector.presentation_layer.dialogs.OpenToolDialog import OpenToolDialog
 from src.JHG_inspector.presentation_layer.panels.CentralContainer import CentralContainer
 from src.JHG_inspector.presentation_layer.panels.GamesetPanel import GamesetPanel
+from src.JHG_inspector.presentation_layer.panels.Panel import Panel
 
 
 class MainWindow(QMainWindow):
@@ -24,7 +25,7 @@ class MainWindow(QMainWindow):
         self.setStatusBar(QStatusBar())
         self.add_menubar()
 
-        self.central_panel = CentralContainer(self)
+        self.central_panel = CentralContainer()
         # TODO: Pass self.selected_panel down the line to allow for setting the selected panel easier
         self.selected_panel: Container = self.central_panel
 
@@ -32,6 +33,7 @@ class MainWindow(QMainWindow):
         self.body_splitter = QSplitter(Qt.Orientation.Horizontal)
         self.body_splitter.addWidget(self.gamesets_panel)
         self.body_splitter.addWidget(self.central_panel)
+        self.body_splitter.central_panel = self.central_panel
 
         # Tells the splitter to keep the gameset panel the same size when the window is resized
         self.body_splitter.setStretchFactor(0, 0)
@@ -115,6 +117,7 @@ class MainWindow(QMainWindow):
         """Opens a modal that lets you select a tool to open and a gameset to attach to it"""
         dialog = OpenToolDialog(self, self.database.gamesets.all.values(), self.tools_manager.tools_types_list)
         if dialog.exec():
-            tool = self.tools_manager.new_tool(self.selected_panel, dialog.tool, dialog.gameset)
+            focused_panel = Panel.focused_panel.get_parent_tabwidget()
+            tool = self.tools_manager.new_tool(focused_panel, dialog.tool, dialog.gameset)
 
-            self.selected_panel.split(tool.view)
+            focused_panel.add_panel(tool.view)
