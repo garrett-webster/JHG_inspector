@@ -86,4 +86,16 @@ class Container(QSplitter):
         self.addWidget(new_item)
         self.items[index] = new_item
 
-        print("DEBUG")
+    def focus_first_panel(self):
+        if isinstance(self.items[0], PanelTabWidget):
+            self.items[0].widget(0).setFocus()
+            return True
+        elif isinstance(self.items[1], PanelTabWidget):
+            self.items[1].widget(0).setFocus()
+            return True
+        elif self.items[0].focus_first_panel():
+            return True
+        elif self.items[1].focus_first_panel():
+            return True
+        else:
+            return False

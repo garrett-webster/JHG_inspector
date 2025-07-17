@@ -2,7 +2,7 @@ from typing import Union
 
 from PyQt6.QtCore import Qt, QPoint, QSize
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QTabWidget, QMenu
+from PyQt6.QtWidgets import QTabWidget, QMenu, QApplication
 
 from src.JHG_inspector.presentation_layer.components.DraggableTabBar import DraggableTabBar
 
@@ -71,6 +71,8 @@ class PanelTabWidget(QTabWidget):
             new_tabs = PanelTabWidget(self.parent_container, panel)
             self.parent_container.add_item(new_tabs, split_direction, self)
 
+            panel.setFocus()
+
     def add_panel(self, panel: "Panel"):
         self.addTab(panel, panel.name)
 
@@ -86,6 +88,8 @@ class PanelTabWidget(QTabWidget):
 
         if self.count() == 0 and self.parent_container:
             self.parent_container.remove_item(self)
+            main_window = QApplication.instance().main_window
+            main_window.body_splitter.central_panel.focus_first_panel()
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasFormat("application/tab-index"):

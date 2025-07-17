@@ -33,6 +33,7 @@ class MainWindow(QMainWindow):
         self.body_splitter = QSplitter(Qt.Orientation.Horizontal)
         self.body_splitter.addWidget(self.gamesets_panel)
         self.body_splitter.addWidget(self.central_panel)
+        self.body_splitter.central_panel = self.central_panel
 
         # Tells the splitter to keep the gameset panel the same size when the window is resized
         self.body_splitter.setStretchFactor(0, 0)

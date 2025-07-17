@@ -17,5 +17,6 @@ if __name__ == "__main__":
 
 
     window = MainWindow(database, tools_manager)
+    app.main_window = window
     window.show()
     app.exec()
