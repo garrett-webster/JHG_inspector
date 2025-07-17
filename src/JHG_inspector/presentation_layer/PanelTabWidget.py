@@ -7,6 +7,14 @@ from PyQt6.QtWidgets import QTabWidget, QMenu, QApplication
 from src.JHG_inspector.presentation_layer.components.DraggableTabBar import DraggableTabBar
 
 class PanelTabWidget(QTabWidget):
+    """A collection of tabbed panels, where only one panel is visible at a time.
+
+       A PanelTabWidget serves as the intermediary between the purely structural Container Objects and the Panel objects
+       which contain the actual content to be displayed. Panels can be dragged from one PanelTabWidget to another. If a
+       PanelTabWidget is emptied (either by closing the last tab or by dragging it to a different PanelTabWidget), it
+       tells its parent container that it should be removed.
+       """
+
     num_panels = 0
     def __init__(self, parent_container: "Container" = None, panel: "Panel" = None):
         super().__init__()
@@ -64,6 +72,8 @@ class PanelTabWidget(QTabWidget):
         menu.exec(self.mapToGlobal(pos))
 
     def split(self, tab_index: int, split_direction: Qt.Orientation):
+        """Creates a new PanelTabWidget with the selected panel and adds it either to the right or below this
+           PanelTabWidget."""
         if self.count() > 1:
             panel = self.widget(tab_index)
             self.remove_panel(panel)
@@ -74,9 +84,12 @@ class PanelTabWidget(QTabWidget):
             panel.setFocus()
 
     def add_panel(self, panel: "Panel"):
+        """Creates a new tab out of the passed Panel object"""
         self.addTab(panel, panel.name)
 
     def remove_panel(self, panel_or_index: Union["Panel", int]):
+        """Removes the specified panel (passed as a panel or as a tab index). If by removing the panel the
+           PanelTabWidget is now empty, tells its parent container that it should be removed."""
         if isinstance(panel_or_index, int):
             panel = self.widget(panel_or_index)
         else:
@@ -96,6 +109,7 @@ class PanelTabWidget(QTabWidget):
             event.acceptProposedAction()
 
     def dropEvent(self, event):
+        """Allows for panels to be dropped into the PanelTabWidget."""
         source_bar = event.source()
         if not isinstance(source_bar, DraggableTabBar):
             return

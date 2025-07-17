@@ -8,6 +8,12 @@ from src.JHG_inspector.presentation_layer.PanelTabWidget import PanelTabWidget
 
 
 class Panel(QWidget):
+    """The widget that actually holds content to be displayed, primarily used as a super class.
+
+       Panels are displayed in PanelTabWidgets, and hold layouts used to display content. The most common use is as a
+       ToolView.
+       """
+
     focused_panel: ClassVar[Optional["Panel"]] = None
     def __init__(self, parent=None, name: str = "Untitled"):
         super().__init__(parent)
@@ -48,17 +54,20 @@ class Panel(QWidget):
         menu.exec(self.mapToGlobal(pos))
 
     def close_self(self):
+        """Close the tab that this panel is in."""
         tab_widget = self.get_parent_tabwidget()
         if tab_widget:
             tab_widget.remove_panel(self)
 
     def split_self(self, orientation: Qt.Orientation):
+        """Tells its parent that it should split, sending this Panel to a new PanelTabWidget."""
         tab_widget = self.get_parent_tabwidget()
         if tab_widget and tab_widget.parent_container:
             tab_index = tab_widget.indexOf(self)
             tab_widget.split(tab_index, orientation)
 
     def get_parent_tabwidget(self) -> "PanelTabWidget":
+        """Returns the PanelTabWidget that this panel is in."""
         parent = self.parent()
         while parent is not None:
             if isinstance(parent, PanelTabWidget):
