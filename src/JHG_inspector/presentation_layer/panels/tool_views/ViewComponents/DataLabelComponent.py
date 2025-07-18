@@ -1,3 +1,4 @@
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QHBoxLayout, QLabel
 
 from src.JHG_inspector.logic_layer.tools.ToolDataClasses.DataLabelToolData import DataLabelToolData
@@ -18,6 +19,8 @@ class DataLabelComponent(Component):
         self.data_label = QLabel()
         self.layout.addWidget(self.data_title)
         self.layout.addWidget(self.data_label)
+
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
 
         if data is not None:
             self.data_label.setText(data.to_str)
