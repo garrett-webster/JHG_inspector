@@ -78,4 +78,3 @@ class Panel(QWidget):
     def focusInEvent(self, event):
         Panel.focused_panel = self
         super().focusInEvent(event)
-        print(f"Focused on {self}")

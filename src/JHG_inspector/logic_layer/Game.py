@@ -21,10 +21,8 @@ def get_game_file_loader(game_log_path: Path):
         version = data["version"]
 
     if version in Game.game_file_loaders:
-        print("Using cached version of the game loader")
         return Game.game_file_loaders[version]
     else:
-        print("Using new version of the game loader")
         Game.game_file_loaders[version] = VERSION_TO_GAME_FILE_LOADER[version]
         return Game.game_file_loaders[version]
 
