@@ -119,6 +119,9 @@ class PanelTabWidget(QTabWidget):
         if not isinstance(source_widget, PanelTabWidget):
             return
 
+        if source_widget == self:
+            return
+
         index = int(event.mimeData().data("application/tab-index").data().decode("utf-8"))
         panel = source_widget.widget(index)
 
