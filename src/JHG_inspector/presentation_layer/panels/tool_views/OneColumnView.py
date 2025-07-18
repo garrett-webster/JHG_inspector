@@ -5,8 +5,8 @@ from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.Compo
 
 
 class OneColumnView(View):
-    def __init__(self, parent):
-        super().__init__()
+    def __init__(self, tool: "Tool"):
+        super().__init__(tool)
         self.column = Column(self)
 
 class Column(QVBoxLayout):

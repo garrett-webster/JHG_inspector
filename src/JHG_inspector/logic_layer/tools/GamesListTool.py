@@ -26,7 +26,7 @@ class GamesListTool(Tool):
             self.view.column.addWidget(QLabel(game_name))
 
     def setup_view(self):
-        view = OneColumnView(self.view_parent)
+        view = OneColumnView(self)
 
         return view
 

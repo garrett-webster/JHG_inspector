@@ -27,7 +27,7 @@ class AveragePopularityTool(Tool):
             self.data_label_data.data = None
 
     def setup_view(self):
-        view = OneColumnView(self.view_parent)
+        view = OneColumnView(self)
         self.data_label_data = DataLabelToolData("Average Popularity")
         self.average_popularity_component = DataLabelComponent(self.view_parent, self.data_label_data, view)
 
