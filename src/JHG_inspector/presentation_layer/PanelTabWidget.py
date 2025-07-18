@@ -128,6 +128,9 @@ class PanelTabWidget(QTabWidget):
         source_widget.remove_panel(panel)
         target_widget.add_panel(panel)
 
+        new_index = target_widget.indexOf(panel)
+        target_widget.setCurrentIndex(new_index)
+
         event.acceptProposedAction()
 
     def sizeHint(self):
