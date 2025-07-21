@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSizePolicy, QDialog
+from PyQt6.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSizePolicy, QDialog, QLabel, QFrame
 
 from src.JHG_inspector.logic_layer.Game import Game
 from src.JHG_inspector.logic_layer.Gameset import Gameset
@@ -15,10 +15,16 @@ class GamesetPanel(QWidget):
     """A side panel that shows all the gamesets and their games, and allows editing those gamesets."""
     def __init__(self, database):
         super().__init__()
+        with open("src/JHG_inspector/presentation_layer/stylesheets/GamesetPanel.qss", "r") as f:
+            self.setStyleSheet(f.read())
+
         self.database = database
         self.gameset_elements = {}
 
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+
+        header = QLabel("Gamesets")
+        header.setObjectName("headerLabel")
 
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
@@ -29,6 +35,13 @@ class GamesetPanel(QWidget):
         self.layout.setSpacing(0)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+        self.layout.addWidget(header)
+
+        line = QFrame()
+        line.setFrameShape(QFrame.Shape.HLine)
+        line.setFrameShadow(QFrame.Shadow.Sunken)
+        self.layout.addWidget(line)
 
         scroll_area.setWidget(content_widget)
 
