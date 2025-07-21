@@ -34,5 +34,3 @@ class AveragePopularityTool(Tool):
         view.column.add_component(self.average_popularity_component)
 
         return view
-
-
