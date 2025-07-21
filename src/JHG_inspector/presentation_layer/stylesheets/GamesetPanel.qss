@@ -1,5 +1,7 @@
-QLabel {
+#headerLabel {
     color: #d2d2d2;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 QPushButton[class~="GamesetElementBanner"] {
@@ -21,7 +23,6 @@ QPushButton[class~="GameListButton"] {
     margin: 0;
     text-align: left;
     color: #d2d2d2;
-    border: 1px red solid;
 }
 
 QPushButton[class~="GameListButton"]:hover {
