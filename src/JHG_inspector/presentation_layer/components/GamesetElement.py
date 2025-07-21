@@ -1,4 +1,8 @@
-from PyQt6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QSizePolicy, QMessageBox
+from functools import partial
+
+from PyQt6.QtCore import Qt, QPoint
+from PyQt6.QtGui import QAction
+from PyQt6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QSizePolicy, QMessageBox, QMenu
 
 from src.JHG_inspector.logic_layer.Gameset import Gameset
 from src.JHG_inspector.presentation_layer.components.GamesList import GamesList
@@ -22,6 +26,7 @@ class GamesetElement(QWidget):
         super().__init__()
         self.gameset = gameset
         self.remove_gameset = remove_gameset
+        self.select_game = select_game
 
         self.toggle_banner = self.ToggleBanner(title, self)
 
@@ -39,12 +44,24 @@ class GamesetElement(QWidget):
         layout.addWidget(self.content)
         self.setLayout(layout)
 
+        self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.open_context_menu)
+
+    def open_context_menu(self, pos: QPoint):
+        delete_action = QAction("Delete", self)
+        delete_action.triggered.connect(self.delete)
+
+        manage_games_action = QAction("Manage Games", self)
+        manage_games_action.triggered.connect(partial(self.select_game, self.gameset))
+
+        menu = QMenu(self)
+        menu.addAction(delete_action)
+        menu.addAction(manage_games_action)
+        menu.exec(self.mapToGlobal(pos))
+
     def toggle_content(self):
         is_expanded = self.toggle_banner.isChecked()
         self.content.setVisible(is_expanded)
-
-    def get_smallest_width(self):
-        return self.content.get_smallest_width()
 
     def delete(self):
         result = QMessageBox.question(

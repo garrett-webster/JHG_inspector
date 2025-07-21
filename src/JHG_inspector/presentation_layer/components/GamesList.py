@@ -14,14 +14,9 @@ class GamesList(QWidget):
         self.buttons = []
 
         self.layout = QVBoxLayout()
+        self.layout.setSpacing(0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
 
-        header = QHBoxLayout()
-        add_game_button = QPushButton("Add Game")
-        add_game_button.clicked.connect(partial(select_game, gameset))
-
-        header.addWidget(add_game_button)
-        header.addWidget(delete_button)
-        self.layout.addLayout(header)
 
         self.game_rows = {}
         for game in gameset.games.values():
@@ -30,12 +25,15 @@ class GamesList(QWidget):
         self.setLayout(self.layout)
 
     def add_game(self, game: Game):
-        self.game_rows[game.id] = QHBoxLayout() #(QLabel(game.code))
+        self.game_rows[game.id] = QHBoxLayout()
+        self.game_rows[game.id].setSpacing(0)
+        self.game_rows[game.id].setContentsMargins(0, 0, 0, 0)
+
         delete_button = QPushButton(game.code)
         delete_button.clicked.connect(partial(self.remove_game, self.gameset, game))
         delete_button.setSizePolicy(
-            QSizePolicy.Policy.Maximum,  # no stretching horizontally
-            QSizePolicy.Policy.Fixed  # no stretching vertically
+            QSizePolicy.Policy.Maximum,
+            QSizePolicy.Policy.Fixed
         )
 
         #Style the button
@@ -71,10 +69,3 @@ class GamesList(QWidget):
             self.layout.removeItem(row)
             row.deleteLater()
             del self.game_rows[game.id]
-
-    def get_smallest_width(self):
-        if not self.buttons:
-            return QSize(100, 800)  # fallback
-
-        min_width = min(btn.sizeHint().width() for btn in self.buttons)
-        return QSize(min_width, 800)
