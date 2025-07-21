@@ -23,6 +23,7 @@ QPushButton[class~="GameListButton"] {
     margin: 0;
     text-align: left;
     color: #d2d2d2;
+    border: none;
 }
 
 QPushButton[class~="GameListButton"]:hover {
