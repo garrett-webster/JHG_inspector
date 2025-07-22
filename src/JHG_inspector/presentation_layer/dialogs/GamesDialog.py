@@ -7,8 +7,8 @@ class GamesDialog(QDialog):
     """Used to display the loaded games.
 
        If a gameset is passed in, then it is being used to add games to a gameset. In that case, filters out the games
-       already added to that gameset and adds buttons to select that game. If not gameset is passed, simply display all
-       the loaded games.
+       already added to that gameset and adds buttons to select that game. If not gameset is passed, display all the
+       loaded games.
        """
 
     def __init__(self, games, gameset=None, parent=None):
