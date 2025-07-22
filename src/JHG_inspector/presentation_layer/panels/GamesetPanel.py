@@ -72,15 +72,15 @@ class GamesetPanel(QWidget):
         del self.gameset_elements[gameset.id]
 
     def add_gameset_section(self, title: str, gameset: Gameset):
-        section = GamesetElement(title, gameset, self.add_game_via_dialog, self.remove_game, self.remove_gameset)
+        section = GamesetElement(title, gameset, self.manage_games, self.remove_game, self.remove_gameset)
         section.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self.gameset_elements[gameset.id] = section
         self.layout.addWidget(section)
 
-    def add_game_via_dialog(self, gameset: Gameset):
+    def manage_games(self, gameset: Gameset):
         games_list = self.gameset_elements[gameset.id].content
 
-        dialog = GamesDialog(self.database.games.all, gameset, parent=self.window())
+        dialog = GamesDialog(self.database.games, gameset, parent=self.window())
         dialog.setWindowFlag(Qt.WindowType.Tool)  # <-- Tool windows don’t drag the parent
         dialog.setWindowModality(Qt.WindowModality.ApplicationModal)
         if dialog.exec() == 1:
