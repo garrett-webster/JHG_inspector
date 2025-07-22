@@ -50,22 +50,14 @@ class GamesList(QWidget):
         self.layout.addLayout(self.game_rows[game.id])
 
     def remove_game_item(self, game: Game):
-        result = QMessageBox.question(
-            self,
-            f"Remove {game.code} From Gameset",
-            "Are you sure you want to remove this game?",
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
-        )
+        row = self.game_rows[game.id]
+        while row.count():
+            item = row.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
 
-        if result == QMessageBox.StandardButton.Yes:
-            row = self.game_rows[game.id]
-            while row.count():
-                item = row.takeAt(0)
-                widget = item.widget()
-                if widget is not None:
-                    widget.setParent(None)
-                    widget.deleteLater()
-
-            self.layout.removeItem(row)
-            row.deleteLater()
-            del self.game_rows[game.id]
+        self.layout.removeItem(row)
+        row.deleteLater()
+        del self.game_rows[game.id]
