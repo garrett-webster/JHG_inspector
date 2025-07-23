@@ -30,9 +30,9 @@ class GameFileLoader_JsonV1(GameFileLoader):
             data["gameParams"]["governmentParams"]["initialPopularity"],
             data["gameParams"]["governmentParams"]["initialPopularityType"],
 
-            data["gameParams"]["popularityRandomizationParams"]["randomPopularities"],
-            data["gameParams"]["popularityRandomizationParams"]["randomPopHigh"],
-            data["gameParams"]["popularityRandomizationParams"]["randomPopLow"],
+            data["gameParams"]["popularityParams"]["randomPopularities"],
+            data["gameParams"]["popularityParams"]["randomPopHigh"],
+            data["gameParams"]["popularityParams"]["randomPopLow"],
 
             data["gameParams"]["governmentParams"]["sendVotesImmediately"],
             data["gameParams"]["labels"]["enabled"],
