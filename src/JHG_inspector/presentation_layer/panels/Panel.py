@@ -24,6 +24,8 @@ class Panel(QWidget):
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.customContextMenuRequested.connect(self.open_context_menu)
 
+        self.setStyleSheet("color: #d2d2d2")
+
     def open_context_menu(self, pos: QPoint, actions: Dict[str, QAction] = None):
         menu = QMenu(self)
 
