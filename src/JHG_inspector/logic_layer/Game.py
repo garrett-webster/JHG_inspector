@@ -214,3 +214,22 @@ class Game:
 
         return players
 
+    @cached_property
+    def admins(self):
+        results = self.database_manager.DAOs["admins"].select_all(["playerId"], ["gameId"], [self.id])
+        admins = []
+
+        for admin in results:
+            admins.append(self.players[self.id_to_player_order[admin[0]]])
+
+        return admins
+
+    @cached_property
+    def players_that_will_be_government(self):
+        results = self.database_manager.DAOs["playersThatWillBeGovernment"].select_all(["playerId"], ["gameId"], [self.id])
+        players_that_will_be_government = []
+
+        for player in results:
+            players_that_will_be_government.append(self.players[self.id_to_player_order[player[0]]])
+
+        return players_that_will_be_government

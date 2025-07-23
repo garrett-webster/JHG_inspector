@@ -1,0 +1,242 @@
+{
+  "version": "2.0.11",
+  "status": "started",
+  "lobby": {
+    "code": "TZRD",
+    "numPlayers": 4,
+    "numObservers": 0,
+    "creatorName": null,
+    "admins": [],
+    "playerNames": [],
+    "gameStarted": true
+  },
+  "gameParams": {
+    "lengthOfRound": 150000000,
+    "gameEndCriteria": {
+      "low": 10,
+      "high": 30,
+      "runtimeType": "time"
+    },
+    "popularityFunctionParams": {
+      "alpha": 0.2,
+      "beta": 0.5,
+      "cGive": 1.3,
+      "cKeep": 0.95,
+      "cSteal": 1.6,
+      "povertyLine": 0,
+      "shouldUseNewUpdate": true
+    },
+    "governmentParams": {
+      "initialPopularity": 2,
+      "initialPopularityType": "multiple",
+      "taxesFirst": true,
+      "playersThatWillBeGovernment": [
+        "John Doe",
+        "Jane Doe"
+      ],
+      "sendVotesImmediately": true
+    },
+    "popularityParams": {
+      "rawlsPopularity": false,
+      "randomPopularities": false,
+      "randomPopHigh": 200,
+      "randomPopLow": 50,
+      "usePopAsTokens": false
+    },
+    "nameSet": "radio",
+    "chatType": "none",
+    "messageType": "freeForm",
+    "colorGroups": [],
+    "labels": {
+      "enabled": false,
+      "labelPools": []
+    },
+    "customParams": {},
+    "show": {
+      "roundLength": true,
+      "gameLength": true,
+      "chatType": true,
+      "messageType": true,
+      "nameSet": true,
+      "initialSetup": true,
+      "grouping": true,
+      "labels": true,
+      "advancedParams": true,
+      "government": true,
+      "popularityRandomization": true,
+      "visibilities": true,
+      "colorGrouping": true,
+      "pregame": true,
+      "agents": true
+    },
+    "advancedGameSetup": null,
+    "preGame": null,
+    "allowEdit": {
+      "roundLength": true,
+      "gameLength": true,
+      "chatType": true,
+      "messageType": true,
+      "nameSet": true,
+      "initialSetup": true,
+      "grouping": true,
+      "labels": true,
+      "advancedParams": true,
+      "government": true,
+      "popularityRandomization": true,
+      "visibilities": true,
+      "colorGrouping": true,
+      "pregame": true,
+      "agents": true
+    }
+  },
+  "creatorId": "a6de2d00-680c-11f0-8141-71ba1a15a774",
+  "endCondition": {
+    "duration": 1753311287405000,
+    "runtimeType": "time"
+  },
+  "players": [
+    {
+      "name": "Jane Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Kilo",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "James Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Foxtrot",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "Jessica Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Romeo",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    },
+    {
+      "name": "John Doe",
+      "experience": "beginner",
+      "permissionLevel": "regular",
+      "gameName": "Whiskey",
+      "color": null,
+      "hue": null,
+      "avatar": null,
+      "icon": null
+    }
+  ],
+  "observers": [],
+  "transactions": null,
+  "voteData": null,
+  "playerRoundInfo": {
+    "round_1": {
+      "Foxtrot": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Kilo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Romeo": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      },
+      "Whiskey": {
+        "numTokens": 8,
+        "groupIds": [
+          "Everyone"
+        ]
+      }
+    }
+  },
+  "influences": {
+    "round_1": {
+      "Foxtrot": {
+        "Foxtrot": 0,
+        "Kilo": 0,
+        "Romeo": 0,
+        "Whiskey": 0,
+        "__intrinsic__": 100
+      },
+      "Kilo": {
+        "Foxtrot": 0,
+        "Kilo": 0,
+        "Romeo": 0,
+        "Whiskey": 0,
+        "__intrinsic__": 100
+      },
+      "Romeo": {
+        "Foxtrot": 0,
+        "Kilo": 0,
+        "Romeo": 0,
+        "Whiskey": 0,
+        "__intrinsic__": 100
+      },
+      "Whiskey": {
+        "Foxtrot": 0,
+        "Kilo": 0,
+        "Romeo": 0,
+        "Whiskey": 0,
+        "__intrinsic__": 100
+      }
+    }
+  },
+  "popularities": {
+    "round_1": {
+      "Foxtrot": 100,
+      "Kilo": 200,
+      "Romeo": 100,
+      "Whiskey": 200
+    }
+  },
+  "groups": {
+    "round_1": {
+      "Everyone": {
+        "gameNames": [
+          "Kilo",
+          "Foxtrot",
+          "Romeo",
+          "Whiskey"
+        ],
+        "influences": {},
+        "popularities": {},
+        "playerColors": {},
+        "playerLabels": {}
+      }
+    }
+  },
+  "startDateTime": "2025-07-23T22:28:47.199777Z",
+  "chatInfo": {
+    "global": {
+      "conversationId": "global",
+      "name": "Global Chat",
+      "messages": {},
+      "participants": []
+    }
+  },
+  "governmentRoundInfo": {
+    "governmentPlayerNames": null,
+    "round": 0,
+    "playerVoteBallots": null,
+    "customRoundInfo": {}
+  },
+  "colorGroups": []
+}

@@ -226,3 +226,16 @@ class TestGameProperties:
             assert player.icon == expected_icons[i]
             assert player.round_popularity == expected_popularities[i]
             assert player.round_allocations == expected_allocations[i]
+
+    @pytest.mark.parametrize("game_path, num_players, expected_players", [
+        ("test_set1/jhg_GDHP.json", 0, []),
+        ("test_set5/jhg_TZRD.json", 2, ["John Doe", "Jane Doe"])
+    ])
+    def test_players_that_will_be_government(self, game_path, num_players, expected_players, game):
+        """ TODO: This should be made more robust. Maybe by finding the player record based on the name and comparing that
+            with what is found in test_game """
+        test_game = game(TEST_DATA_PATH / game_path)
+
+        assert len(test_game.players_that_will_be_government) == num_players
+        for player in test_game.players_that_will_be_government:
+            assert player.name in expected_players
