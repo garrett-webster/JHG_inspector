@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSizePolicy, QDialog, QLabel, QFrame
+from PyQt6.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSizePolicy, QDialog, QLabel, QFrame, QMessageBox
 
 from src.JHG_inspector.logic_layer.Game import Game
 from src.JHG_inspector.logic_layer.Gameset import Gameset
@@ -83,11 +83,30 @@ class GamesetPanel(QWidget):
         dialog = GamesDialog(self.database.games, gameset, parent=self.window())
         dialog.setWindowFlag(Qt.WindowType.Tool)  # <-- Tool windows don’t drag the parent
         dialog.setWindowModality(Qt.WindowModality.ApplicationModal)
-        if dialog.exec() == 1:
-            game = dialog.selected
-            if game != gameset.games.get(game.id):
-                gameset.add_game(game.id) # Adds the game on the backend
-                games_list.add_game(game) # Adds the game on the frontend
+
+        dialog.exec()
+
+        if gameset.games != dialog.updated_games:
+            new_games = dialog.updated_games.items() - gameset.games.items()
+            games_to_remove = gameset.games.items() - dialog.updated_games.items()
+
+            for new_game in new_games:
+                gameset.add_game(new_game[1].id)  # Adds the game on the backend
+                games_list.add_game(new_game[1])  # Adds the game on the frontend
+
+            for game_to_remove in games_to_remove:
+                self.remove_game(gameset, game_to_remove[1])
+
+    def remove_game_with_confirmation(self, gameset: Gameset, game: Game):
+        result = QMessageBox.question(
+            self,
+            f"Remove {game.code} From Gameset",
+            "Are you sure you want to remove this game?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if result == QMessageBox.StandardButton.Yes:
+            self.remove_game(gameset, game)
 
     def remove_game(self, gameset: Gameset, game: Game):
         gameset.remove_game(game.id)
