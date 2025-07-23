@@ -1,0 +1,15 @@
+QPushButton {
+    border: none;
+    padding: 3px 10px;
+    background: #393939;
+    color: #d2d2d2;
+}
+
+QPushButton:hover {
+    /*background: #494949;*/
+    border: 1px solid gray;
+}
+
+QPushButton[selected='true'] {
+    background: #494949;
+}
