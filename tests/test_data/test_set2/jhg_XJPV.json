@@ -33,7 +33,7 @@
       "playersThatWillBeGovernment": null,
       "sendVotesImmediately": true
     },
-    "popularityRandomizationParams": {
+    "popularityParams": {
       "rawlsPopularity": false,
       "randomPopularities": false,
       "randomPopHigh": 200,
