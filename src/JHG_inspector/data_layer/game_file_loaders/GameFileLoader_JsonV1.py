@@ -6,11 +6,15 @@ class GameFileLoader_JsonV1(GameFileLoader):
 
     @load_data("games")
     def _load_games_data(self, data, values, table_name):
+        if data["transactions"]:
+            num_transactions = len(data["transactions"])
+        else:
+            num_transactions = 0
         values.append((
             data["lobby"]["code"],
             data["lobby"]["numPlayers"],
             data["lobby"]["numObservers"],
-            len(data["transactions"]),
+            num_transactions,
             data["status"],
             data["startDateTime"],
             data["gameParams"]["lengthOfRound"],
@@ -78,12 +82,13 @@ class GameFileLoader_JsonV1(GameFileLoader):
 
     @load_data("transactions")
     def _load_transactions_data(self, data, values, table_name):
-        for round_num, (round_name, round_transactions) in enumerate(data[table_name].items()):
-            for player_from, transactions in round_transactions.items():
-                player_from_id = self.game.name_to_id[player_from]
-                for player_to, allocation in transactions.items():
-                    player_to_id = self.game.name_to_id[player_to]
-                    values.append((self.game.id, round_num + 1, player_from_id, player_to_id, allocation))
+        if data[table_name]:
+            for round_num, (round_name, round_transactions) in enumerate(data[table_name].items()):
+                for player_from, transactions in round_transactions.items():
+                    player_from_id = self.game.name_to_id[player_from]
+                    for player_to, allocation in transactions.items():
+                        player_to_id = self.game.name_to_id[player_to]
+                        values.append((self.game.id, round_num + 1, player_from_id, player_to_id, allocation))
 
     @load_data("popularities")
     def _load_popularities_data(self, data, values, table_name):
