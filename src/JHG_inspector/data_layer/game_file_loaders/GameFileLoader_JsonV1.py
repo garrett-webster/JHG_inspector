@@ -141,3 +141,13 @@ class GameFileLoader_JsonV1(GameFileLoader):
                 if "from" not in message: message["from"] = None
                 values.append(
                     (chat_id, in_game_id, message["from"], message["body"], message["time"], message["runtimeType"]))
+
+    @load_data("playerRoundInfo")
+    def _load_playerRoundInfo_data(self, data, values, table_name):
+        for round_num, round_data in enumerate(data[table_name].values()):
+            for player, player_data in round_data.items():
+                num_tokens = player_data["numTokens"]
+                groupIds = player_data["groupIds"]
+                for groupId in groupIds:
+                    player_id = self.game.name_to_id[player]
+                    values.append((self.game.id, round_num + 1, player_id, groupId, num_tokens))

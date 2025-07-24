@@ -67,7 +67,7 @@ class TestGameFileLoader_JsonV1:
     def test_load_data_to_database_players(self, game, cursor):
         test_game = game(TESTS_PATH / "test_data" / "test_set1/jhg_GDHP.json")
 
-        # Fetch all players data from the database
+        # Fetch all player data from the database
         cursor.execute("""
             SELECT id, name, experience, permissionLevel, color, hue, avatar, icon
             FROM players
@@ -87,7 +87,7 @@ class TestGameFileLoader_JsonV1:
             f"Expected {len(expected_players)} players, found {len(players_in_db)}"
         )
 
-        # Use Counter for unordered comparison with duplicates support
+        # Use Counter for unordered comparison with duplicate support
         assert players_in_db == expected_players, f"Expected players {expected_players}, but found {players_in_db}"
 
     def test_load_data_to_database_transactions(self, game, cursor):
@@ -114,9 +114,9 @@ class TestGameFileLoader_JsonV1:
         assert expected_transactions.issubset(set(actual_transactions))
 
     def test_load_data_to_database_popularities(self, game, cursor):
-        def extract_expected_popularities(json_data, name_to_id, game_id):
+        def extract_expected_popularities(data, name_to_id, game_id):
             results = set()
-            for round_index, (round_name, round_data) in enumerate(json_data["popularities"].items()):
+            for round_index, (round_name, round_data) in enumerate(data["popularities"].items()):
                 round_num = round_index + 1
                 for name, score in round_data.items():
                     results.add((game_id, round_num, name_to_id[name], score))
@@ -124,9 +124,9 @@ class TestGameFileLoader_JsonV1:
 
         test_game = game(TESTS_PATH / "test_data" / "test_set2/jhg_GDSR.json")
         with open(TESTS_PATH / "test_data" / "test_set2/jhg_GDSR.json") as f:
-            json_data = json.load(f)
+            data = json.load(f)
 
-        expected = extract_expected_popularities(json_data, test_game.name_to_id, game_id=1)
+        expected = extract_expected_popularities(data, test_game.name_to_id, game_id=1)
 
         cursor.execute("SELECT * FROM popularities")
         actual = set(cursor.fetchall())
@@ -212,3 +212,22 @@ class TestGameFileLoader_JsonV1:
         ]
 
         assert actual_messages == expected_messages
+
+    def test_load_playerRoundInfo(self, game, cursor):
+        test_game = game(TESTS_PATH / "test_data" / "test_set2/jhg_XJPV.json")
+        cursor.execute("SELECT * FROM playerRoundInfo")
+        actual_player_data = cursor.fetchall()
+
+        expected_player_data = [
+            (1, 1, 3, "Everyone", 6),
+            (1, 1, 2, "Everyone", 6),
+            (1, 1, 1, "Everyone", 6),
+            (1, 2, 3, "Everyone", 6),
+            (1, 2, 2, "Everyone", 6),
+            (1, 2, 1, "Everyone", 6),
+            (1, 3, 3, "Everyone", 6),
+            (1, 3, 2, "Everyone", 6),
+            (1, 3, 1, "Everyone", 6),
+        ]
+
+        assert actual_player_data == expected_player_data

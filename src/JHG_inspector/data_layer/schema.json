@@ -209,15 +209,25 @@
     ]
   },
   "playerRoundInfo": {
-    "round_num": "INTEGER",
-    "player_id": "INTEGER",
+    "gameId": "INTEGER",
+    "roundNum": "INTEGER",
+    "playerId": "INTEGER",
     "groupId": "TEXT",
     "numTokens": "INTEGER",
     "FOREIGN_KEYS": [
       {
-        "column": "player_id",
+        "column": "playerId",
         "references": {
           "table": "players",
+          "column": "id"
+        }
+      }
+    ],
+    "FOREIGN_KEYS_EXCLUDE": [
+      {
+        "column": "gameId",
+        "references": {
+          "table": "games",
           "column": "id"
         }
       }
