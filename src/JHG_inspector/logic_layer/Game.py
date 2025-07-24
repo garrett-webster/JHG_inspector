@@ -235,7 +235,6 @@ class Game:
         ]
 
     @cached_property
-    @cached_property
     def players_that_will_be_government(self) -> list["Player"]:
         """Returns a list containing a Player object for each player that was designated to be a government
            in the game"""
