@@ -260,3 +260,12 @@ class Game:
 
         results = self.database_manager.DAOs["labelPools"].select_all(["label"], ["gameId"], [self.id])
         return [row[0] for row in results]
+
+    @cached_property
+    def customParams(self) -> dict[str, str]:
+        """Returns a dictionary of custom game parameters: {property: propertyValue}."""
+
+        results = self.database_manager.DAOs["customParams"].select_all(
+            ["property", "propertyValue"], ["gameId"], [self.id]
+        )
+        return {prop: value for prop, value in results}
