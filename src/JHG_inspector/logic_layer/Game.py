@@ -103,10 +103,12 @@ class Game:
 
     @cached_property
     def num_rounds(self) -> int:
+        """Returns the number of rounds that were played in the game"""
         return self.database_manager.DAOs["games"].select_one(["numRounds"], ["id"], [self.id])[0]
 
     @cached_property
-    def num_players(self):
+    def num_players(self) -> int:
+        """Returns the number of players that played in the game"""
         return self.database_manager.DAOs["games"].select_one(["numPlayers"], ["id"], [self.id])[0]
 
     @cached_property
@@ -178,7 +180,9 @@ class Game:
         return allocations
 
     @cached_property
-    def settings(self):
+    def settings(self) -> dict:
+        """Returns the settings for the game as a dictionary mapping the column name to the value."""
+
         columns = ["chatType", "messageType", "advancedGameSetup", "gameEndLow", "gameEndHigh", "gameEndType", "povertyLine",
              "govInitialPopularity", "govInitialPopularityType", "govRandomPopularities", "govRandomPopHigh",
              "govRandomPopLow", "govSendVotesImmediately", "labelsEnabled", "duration", "runtimeType"]
@@ -187,18 +191,24 @@ class Game:
 
     @cached_property
     def parameters(self):
+        """Returns the parameters for the game as a dictionary mapping the column name to the value."""
+
         columns = ["alpha", "beta", "cGive", "cKeep", "cSteal", "lengthOfRound"]
 
         return self.simple_dictionary_property(columns, "games")
 
     @cached_property
-    def meta_data(self):
+    def meta_data(self) -> dict:
+        """Returns the meta-data for the game as a dictionary mapping the column name to the value."""
+
         columns = ["numPlayers", "numObservers", "status", "startDateTime"]
 
         return self.simple_dictionary_property(columns, "games")
 
     @cached_property
-    def rounds(self):
+    def rounds(self) -> list["Round"]:
+        """Returns a list of Round objects, where each Round object represents a game round."""
+
         rounds = []
         for i in range(self.num_rounds):
             rounds.append(Round(self, i))
@@ -206,7 +216,9 @@ class Game:
         return rounds
 
     @cached_property
-    def players(self):
+    def players(self) -> list["Player"]:
+        """Returns a list containing a Player object for each player in the game"""
+
         players = []
         for player_id in self.name_to_id.values():
             player_order_num = self.id_to_player_order[player_id]
@@ -216,6 +228,7 @@ class Game:
 
     @cached_property
     def admins(self) -> list["Player"]:
+        """Returns a list containing a Player object for each player that was designated an admin in the game"""
         return [
             self.players[self.id_to_player_order[player_id]]
             for (player_id,) in self.database_manager.DAOs["admins"].select_all(["playerId"], ["gameId"], [self.id])
@@ -224,6 +237,9 @@ class Game:
     @cached_property
     @cached_property
     def players_that_will_be_government(self) -> list["Player"]:
+        """Returns a list containing a Player object for each player that was designated to be a government
+           in the game"""
+
         return [
             self.players[self.id_to_player_order[player_id]]
             for (player_id,) in
@@ -232,6 +248,8 @@ class Game:
 
     @cached_property
     def colorGroups(self) -> list[tuple[int, str]]:
+        """Returns a list of tuples where each tuple is a color group (percentOfPlayers, color)"""
+
         return self.database_manager.DAOs["colorGroups"].select_all(
             ["percentOfPlayers", "color"], ["gameId"], [self.id]
         )
@@ -239,5 +257,6 @@ class Game:
     @cached_property
     def labelPools(self) -> list[str]:
         """Returns the labels associated with this game from the labelPools table."""
+
         results = self.database_manager.DAOs["labelPools"].select_all(["label"], ["gameId"], [self.id])
         return [row[0] for row in results]
