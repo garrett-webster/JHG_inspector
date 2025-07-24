@@ -230,7 +230,14 @@ class Game:
             self.database_manager.DAOs["playersThatWillBeGovernment"].select_all(["playerId"], ["gameId"], [self.id])
         ]
 
-        for player in results:
-            players_that_will_be_government.append(self.players[self.id_to_player_order[player[0]]])
+    @cached_property
+    def colorGroups(self) -> list[tuple[int, str]]:
+        return self.database_manager.DAOs["colorGroups"].select_all(
+            ["percentOfPlayers", "color"], ["gameId"], [self.id]
+        )
 
-        return players_that_will_be_government
+    @cached_property
+    def labelPools(self) -> list[str]:
+        """Returns the labels associated with this game from the labelPools table."""
+        results = self.database_manager.DAOs["labelPools"].select_all(["label"], ["gameId"], [self.id])
+        return [row[0] for row in results]
