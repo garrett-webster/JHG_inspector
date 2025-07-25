@@ -81,18 +81,18 @@ class TestGameProperties:
              [0, 0, 0, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
-             [[13.208333333333336, 0, 6.5, 3.25],
-              [0, 7.416666666666668, 6.5, 3.25],
-              [-1.3333333333333337, -2.6666666666666674, 4.75, 3.25],
-              [0, 0, 6.5, 11.875]],
-             [[23.369883422161465, 0, 4.883921568627452, 9.031760620915033],
-              [3.3461458333333343, 18.85598757944035, 4.883921568627452, 9.031760620915033],
-              [2.0668346470106513, -2.4840003605182766, 9.29287253053327,9.031760620915033],
-              [3.3461458333333343,-1.002813743976535, 3.150068645937319,14.309413807189543]],
-             [[23.77908947731485, 3.253829007075276, 3.3199078491867695, 5.556272153233606],
-              [9.293918029164665, 27.77409293018228, 3.9362919264672573, 6.817566687933123],
-              [8.222752431962562, 1.1244557308394518, 18.13009239775211, 6.817566687933123],
-              [9.293918029164665, 2.2465417547917736, 2.2430829229676448, 16.039818304243635]]
+            [[13.208333333333336, 0, 6.5, 3.25],
+             [0, 7.416666666666668, 6.5, 3.25],
+             [-1.3333333333333337, -2.6666666666666674, 4.75, 3.25],
+             [0, 0, 6.5, 11.875]],
+            [[23.369883422161465, 0, 4.883921568627452, 9.031760620915033],
+             [3.3461458333333343, 18.85598757944035, 4.883921568627452, 9.031760620915033],
+             [2.0668346470106513, -2.4840003605182766, 9.29287253053327, 9.031760620915033],
+             [3.3461458333333343, -1.002813743976535, 3.150068645937319, 14.309413807189543]],
+            [[23.77908947731485, 3.253829007075276, 3.3199078491867695, 5.556272153233606],
+             [9.293918029164665, 27.77409293018228, 3.9362919264672573, 6.817566687933123],
+             [8.222752431962562, 1.1244557308394518, 18.13009239775211, 6.817566687933123],
+             [9.293918029164665, 2.2465417547917736, 2.2430829229676448, 16.039818304243635]]
         ])
     ])
     def test_influences(self, game_path, expected, game):
@@ -116,8 +116,10 @@ class TestGameProperties:
         assert test_game.allocations == expected
 
     @pytest.mark.parametrize("game_path,expected", [
-        ("test_set1/jhg_GDHP.json", ["none", "freeForm", None, 10, 30, "time", 0, 60, "ratio", False, 200, 50, True, False, 1747325756118000, "time"]),
-    ],)
+        ("test_set1/jhg_GDHP.json",
+         ["none", "freeForm", None, 10, 30, "time", 0, 60, "ratio", False, 200, 50, True, False, 1747325756118000,
+          "time"]),
+    ], )
     def test_settings(self, game_path, expected, game):
         test_game = game(TEST_DATA_PATH / game_path)
         columns = ["chatType", "messageType", "advancedGameSetup", "gameEndLow", "gameEndHigh", "gameEndType",
@@ -149,9 +151,13 @@ class TestGameProperties:
             assert test_game.meta_data[column] == expected[i]
 
     @pytest.mark.parametrize("game_path,expected_num_rounds,expected_popularities,expected_allocations", [
-        ("test_set1/jhg_GDHP.json", 1, [[100,100,100,100]], [[[5, 1, 1, 1], [1, 5, 1, 1], [1, 1, 5, 1], [1, 1, 1, 5]]]),
-        ("test_set2/jhg_GDSR.json", 3, [[100, 100, 100, 100],[102.95833333333334, 97.16666666666667, 84.0, 98.375],[101.28556561170396, 100.11781560231618, 81.9074674379407, 83.80281454248367]],
-         [[[5, -1, -1, -1], [-2, 2, -2, -2], [2, 2, 2, 2], [1, 1, 1, 5]],[[5, 1, 1, 1], [-1, 5, -1, -1], [-2, -2, 2, -2], [2, 2, 2, 2]],[[2, 2, 2, 2], [1, 5, 1, 1], [-1, -1, 5, -1], [-2, -2, -2, 2]]])
+        ("test_set1/jhg_GDHP.json", 1, [[100, 100, 100, 100]],
+         [[[5, 1, 1, 1], [1, 5, 1, 1], [1, 1, 5, 1], [1, 1, 1, 5]]]),
+        ("test_set2/jhg_GDSR.json", 3, [[100, 100, 100, 100], [102.95833333333334, 97.16666666666667, 84.0, 98.375],
+                                        [101.28556561170396, 100.11781560231618, 81.9074674379407, 83.80281454248367]],
+         [[[5, -1, -1, -1], [-2, 2, -2, -2], [2, 2, 2, 2], [1, 1, 1, 5]],
+          [[5, 1, 1, 1], [-1, 5, -1, -1], [-2, -2, 2, -2], [2, 2, 2, 2]],
+          [[2, 2, 2, 2], [1, 5, 1, 1], [-1, -1, 5, -1], [-2, -2, -2, 2]]])
     ])
     def test_rounds(self, game_path, expected_num_rounds, expected_popularities, expected_allocations, game):
         test_game = game(TEST_DATA_PATH / game_path)
@@ -164,53 +170,54 @@ class TestGameProperties:
     @pytest.mark.parametrize("game_path,expected_num_players,expected_popularities,expected_allocations,expected_names,"
                              "expected_game_names,expected_experiences,expected_permission_levels,expected_colors,"
                              "expected_hues,expected_avatars,expected_icons", [
-        ("test_set1/jhg_GDHP.json", 4,
-         [
-             [100, 101.625],
-             [100, 101.625],
-             [100, 101.625],
-             [100, 101.625]],
-         [
-             [[5, 1, 1, 1]],
-             [[1, 5, 1, 1]],
-             [[1, 1, 5, 1]],
-             [[1, 1, 1, 5]]
-         ],
-         ["Jane Doe", "James Doe", "John Doe", "Jessica Doe"],
-         ["Bravo", "Uniform", "X-ray", "Quebec"],
-         ["beginner", "beginner", "beginner", "beginner"],
-         ["regular", "regular", "regular", "regular"],
-         [None, None, None, None],
-         [None, None, None, None],
-         [None, None, None, None],
-         [None, None, None, None]
-         ),
-        (
-        "test_set2/jhg_GDSR.json", 4,
-        [
-            [100, 102.95833333333334, 101.28556561170396, 87.10909848681052],
-            [100, 97.16666666666667, 100.11781560231618, 99.02186957374734],
-            [100.0, 84.0, 81.9074674379407, 85.49486724848725],
-            [100.0, 98.375, 83.80281454248367, 81.02336101116774]
-        ],
-        [
-            [[5, -1, -1, -1], [5, 1, 1, 1], [2, 2, 2, 2]],  # Bravo
-            [[-2, 2, -2, -2], [-1, 5, -1, -1], [1, 5, 1, 1]],  # Echo
-            [[2, 2, 2, 2], [-2, -2, 2, -2], [-1, -1, 5, -1]],  # Oscar
-            [[1, 1, 1, 5], [2, 2, 2, 2], [-2, -2, -2, 2]]  # X-ray
-        ],
-        ["James Doe", "Jessica Doe", "John Doe", "Jane Doe"],
-        ["Bravo", "Oscar", "X-ray", "Echo"],
-        ["beginner", "beginner", "beginner", "beginner"],
-        ["regular", "regular", "regular", "regular"],
-        [None, None, None, None],
-        [None, None, None, None],
-        [None, None, None, None],
-        [None, None, None, None]
-        )
-    ])
+                                 ("test_set1/jhg_GDHP.json", 4,
+                                  [
+                                      [100, 101.625],
+                                      [100, 101.625],
+                                      [100, 101.625],
+                                      [100, 101.625]],
+                                  [
+                                      [[5, 1, 1, 1]],
+                                      [[1, 5, 1, 1]],
+                                      [[1, 1, 5, 1]],
+                                      [[1, 1, 1, 5]]
+                                  ],
+                                  ["Jane Doe", "James Doe", "John Doe", "Jessica Doe"],
+                                  ["Bravo", "Uniform", "X-ray", "Quebec"],
+                                  ["beginner", "beginner", "beginner", "beginner"],
+                                  ["regular", "regular", "regular", "regular"],
+                                  [None, None, None, None],
+                                  [None, None, None, None],
+                                  [None, None, None, None],
+                                  [None, None, None, None]
+                                  ),
+                                 (
+                                         "test_set2/jhg_GDSR.json", 4,
+                                         [
+                                             [100, 102.95833333333334, 101.28556561170396, 87.10909848681052],
+                                             [100, 97.16666666666667, 100.11781560231618, 99.02186957374734],
+                                             [100.0, 84.0, 81.9074674379407, 85.49486724848725],
+                                             [100.0, 98.375, 83.80281454248367, 81.02336101116774]
+                                         ],
+                                         [
+                                             [[5, -1, -1, -1], [5, 1, 1, 1], [2, 2, 2, 2]],  # Bravo
+                                             [[-2, 2, -2, -2], [-1, 5, -1, -1], [1, 5, 1, 1]],  # Echo
+                                             [[2, 2, 2, 2], [-2, -2, 2, -2], [-1, -1, 5, -1]],  # Oscar
+                                             [[1, 1, 1, 5], [2, 2, 2, 2], [-2, -2, -2, 2]]  # X-ray
+                                         ],
+                                         ["James Doe", "Jessica Doe", "John Doe", "Jane Doe"],
+                                         ["Bravo", "Oscar", "X-ray", "Echo"],
+                                         ["beginner", "beginner", "beginner", "beginner"],
+                                         ["regular", "regular", "regular", "regular"],
+                                         [None, None, None, None],
+                                         [None, None, None, None],
+                                         [None, None, None, None],
+                                         [None, None, None, None]
+                                 )
+                             ])
     def test_players(self, game_path, expected_num_players, expected_popularities, expected_allocations, expected_names,
-                     expected_game_names, expected_experiences, expected_permission_levels, expected_colors, expected_hues, expected_avatars, expected_icons, game):
+                     expected_game_names, expected_experiences, expected_permission_levels, expected_colors,
+                     expected_hues, expected_avatars, expected_icons, game):
         test_game = game(TEST_DATA_PATH / game_path)
 
         assert expected_num_players == len(test_game.players)

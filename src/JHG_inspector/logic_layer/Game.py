@@ -246,6 +246,7 @@ class Game:
             self.database_manager.DAOs["playersThatWillBeGovernment"].select_all(["playerId"], ["gameId"], [self.id])
         ]
 
+    # TODO: Write a test for this
     @cached_property
     def colorGroups(self) -> list[tuple[int, str]]:
         """Returns a list of tuples where each tuple is a color group (percentOfPlayers, color)"""
@@ -254,6 +255,7 @@ class Game:
             ["percentOfPlayers", "color"], ["gameId"], [self.id]
         )
 
+    # TODO: Write a test for this
     @cached_property
     def labelPools(self) -> list[str]:
         """Returns the labels associated with this game from the labelPools table."""
@@ -261,6 +263,7 @@ class Game:
         results = self.database_manager.DAOs["labelPools"].select_all(["label"], ["gameId"], [self.id])
         return [row[0] for row in results]
 
+    # TODO: Write a test for this
     @cached_property
     def customParams(self) -> dict[str, str]:
         """Returns a dictionary of custom game parameters: {property: propertyValue}."""
@@ -270,6 +273,7 @@ class Game:
         )
         return {prop: value for prop, value in results}
 
+    # TODO: Add governmentRoundInfo and customRoundInfo (need test data and to understand how those will work in the game log)
 
     @cached_property
     def groups(self):
