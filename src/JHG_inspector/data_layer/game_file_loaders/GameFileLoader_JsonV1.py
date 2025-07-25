@@ -97,11 +97,6 @@ class GameFileLoader_JsonV1(GameFileLoader):
                 player_id = self.game.name_to_id[player]
                 values.append((self.game.id, round_num + 1, player_id, popularity))
 
-    @load_data("groups")
-    def _load_groups_data(self, data, values, table_name):
-        for round_num, (round_name, round_data) in enumerate(data[table_name].items()):
-            values.append((self.game.id, round_num + 1, round_name))
-
     @load_data("influences")
     def _load_influences_data(self, data, values, table_name):
         for round_num, (round_name, round_transactions) in enumerate(data[table_name].items()):
@@ -147,6 +142,21 @@ class GameFileLoader_JsonV1(GameFileLoader):
         for round_num, groups in enumerate(data[table_name].values()):
             for group_name, group_members in groups.items():
                 values.append((self.game.id, round_num + 1, group_name))
+
+    @load_data("groups_players")
+    def _load_groups_players_data(self, data, values, table_name):
+        results = self.database_manager.DAOs["groups"].select_all(["id", "roundNum", "name"])
+        groups = {}
+        for (group_id, round_num, group_name) in results:
+            groups[f"{round_num}-{group_name}"] = group_id
+
+        for round_num, group_data in enumerate(data["groups"].values()):
+            for group_name, group_members in group_data.items():
+                group_id = groups[f"{round_num + 1}-{group_name}"]
+                player_ids = [self.game.name_to_id[name] for name in group_members["gameNames"]]
+                for player_id in player_ids:
+                    values.append((group_id, player_id))
+
     @load_data("playerRoundInfo")
     def _load_playerRoundInfo_data(self, data, values, table_name):
         for round_num, round_data in enumerate(data[table_name].values()):

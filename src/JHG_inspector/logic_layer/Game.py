@@ -1,5 +1,6 @@
 import json
 import re
+from collections import defaultdict
 from functools import cached_property
 from pathlib import Path
 from src.JHG_inspector.data_layer.game_file_loaders.game_file_loader_versions import VERSION_TO_GAME_FILE_LOADER
@@ -276,3 +277,22 @@ class Game:
         groups = {f"{round_num}-{round_name}": round_id for (round_id, round_num, round_name) in results}
 
         return groups
+
+    @cached_property
+    def playerRoundInfo(self) -> dict[int, dict[int, dict[str, int]]]:
+        """Maps round numbers → player IDs → {'groupId': ..., 'numTokens': ...}."""
+
+        results = self.database_manager.DAOs["playerRoundInfo"].select_all(
+            ["round_num", "player_id", "groupId", "numtokens"],
+            ["gameId"], [self.id]
+        )
+
+        round_info: dict[int, dict[int, dict[str, int]]] = defaultdict(dict)
+
+        for round_num, player_id, group_id, num_tokens in results:
+            round_info[round_num][player_id] = {
+                "groupId": group_id,
+                "numTokens": num_tokens
+            }
+
+        return dict(round_info)

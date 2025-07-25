@@ -257,3 +257,21 @@ class TestGameProperties:
 
         assert len(test_game.groups) == expected_num_groups
         assert test_game.groups == expected_groups
+
+
+    @pytest.mark.parametrize("game_path, expected_round_info", [
+        ("test_set1/jhg_GDHP.json", {
+            1: {1: {'groupId': 1, 'numTokens': 8},
+                2: {'groupId': 1, 'numTokens': 8},
+                3: {'groupId': 1, 'numTokens': 8},
+                4: {'groupId': 1, 'numTokens': 8}},
+            2: {1: {'groupId': 2, 'numTokens': 8},
+                2: {'groupId': 2, 'numTokens': 8},
+                3: {'groupId': 2, 'numTokens': 8},
+                4: {'groupId': 2, 'numTokens': 8}}
+        })
+    ])
+    def test_playerRoundInfo(self, game_path, expected_round_info, game):
+        test_game = game(TEST_DATA_PATH / game_path)
+
+        assert test_game.playerRoundInfo == expected_round_info
