@@ -239,3 +239,21 @@ class TestGameProperties:
         assert len(test_game.players_that_will_be_government) == num_players
         for player in test_game.players_that_will_be_government:
             assert player.name in expected_players
+
+    @pytest.mark.parametrize("game_path, expected_groups, expected_num_groups", [
+        ("test_set1/jhg_GDHP.json", {
+            "1-Everyone": 1,
+            "2-Everyone": 2,
+        }, 2),
+        ("test_set2/jhg_GDSR.json", {
+            "1-Everyone": 1,
+            "2-Everyone": 2,
+            "3-Everyone": 3,
+            "4-Everyone": 4,
+        }, 4)
+    ])
+    def test_groups(self, game_path, expected_groups, expected_num_groups, game):
+        test_game = game(TEST_DATA_PATH / game_path)
+
+        assert len(test_game.groups) == expected_num_groups
+        assert test_game.groups == expected_groups

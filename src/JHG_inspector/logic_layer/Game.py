@@ -268,3 +268,11 @@ class Game:
             ["property", "propertyValue"], ["gameId"], [self.id]
         )
         return {prop: value for prop, value in results}
+
+
+    @cached_property
+    def groups(self):
+        results = self.database_manager.DAOs["groups"].select_all(["id", "roundNum", "name"], ["gameId"], [self.id])
+        groups = {f"{round_num}-{round_name}": round_id for (round_id, round_num, round_name) in results}
+
+        return groups

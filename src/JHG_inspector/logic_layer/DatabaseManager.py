@@ -9,6 +9,7 @@ from src.JHG_inspector.data_layer.DAOs.ChatParticipantsDao import ChatParticipan
 from src.JHG_inspector.data_layer.DAOs.GamesGameset_gamesDao import GamesGameset_gamesDao
 from src.JHG_inspector.data_layer.DAOs.GamesetsDao import GamesetsDao
 from src.JHG_inspector.data_layer.DAOs.GroupsDao import GroupsDao
+from src.JHG_inspector.data_layer.DAOs.Groups_PlayersDao import Groups_playersDao
 from src.JHG_inspector.data_layer.DAOs.InfluencesDao import InfluencesDao
 from src.JHG_inspector.data_layer.DAOs.MessagesDao import MessagesDao
 from src.JHG_inspector.data_layer.DAOs.PlayerRoundInfoDao import PlayerRoundInfoDao
@@ -38,6 +39,7 @@ DAO_CLASSES = {
     "transactions": TransactionsDao,
     "popularities": PopularitiesDao,
     "groups": GroupsDao,
+    "groups_players": Groups_playersDao,
     "influences": InfluencesDao,
     "chatInfo": ChatInfoDao,
     "chatParticipants": ChatParticipantsDao,
