@@ -19,5 +19,5 @@ class ListItemsComponent(Component):
             self.layout.removeWidget(widgetToRemove)
             widgetToRemove.setParent(None)
 
-        for game in self.data.to_list():
+        for game in self.data.list():
             self.layout.addWidget(QLabel(game.name))

@@ -23,8 +23,8 @@ class DataLabelComponent(Component):
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
 
         if data is not None:
-            self.data_label.setText(data.to_str)
+            self.data_label.setText(data.str)
 
     def update(self):
         self.data_title.setText(f"{self.data.name}: ")
-        self.data_label.setText(self.data.to_str)
+        self.data_label.setText(self.data.str)

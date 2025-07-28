@@ -22,9 +22,9 @@ class AveragePopularityTool(Tool):
 
         if end_popularitites:
             non_truncated_average = statistics.fmean(end_popularitites)
-            self.data_label_data.data = math.trunc(non_truncated_average * 100) / 100 # Truncates to two decimal places
+            self.data_label_data.raw = math.trunc(non_truncated_average * 100) / 100 # Truncates to two decimal places
         else:
-            self.data_label_data.data = None
+            self.data_label_data.raw = None
 
     def setup_view(self):
         view = OneColumnView(self)
