@@ -219,15 +219,15 @@ class TestGameFileLoader_JsonV1:
         actual_player_data = cursor.fetchall()
 
         expected_player_data = [
-            (1, 1, 3, "Everyone", 6),
-            (1, 1, 2, "Everyone", 6),
-            (1, 1, 1, "Everyone", 6),
-            (1, 2, 3, "Everyone", 6),
-            (1, 2, 2, "Everyone", 6),
-            (1, 2, 1, "Everyone", 6),
-            (1, 3, 3, "Everyone", 6),
-            (1, 3, 2, "Everyone", 6),
-            (1, 3, 1, "Everyone", 6),
+            (1, 1, 3, 1, 6),
+            (1, 1, 2, 1, 6),
+            (1, 1, 1, 1, 6),
+            (1, 2, 3, 2, 6),
+            (1, 2, 2, 2, 6),
+            (1, 2, 1, 2, 6),
+            (1, 3, 3, 3, 6),
+            (1, 3, 2, 3, 6),
+            (1, 3, 1, 3, 6),
         ]
 
         assert actual_player_data == expected_player_data
