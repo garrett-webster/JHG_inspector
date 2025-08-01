@@ -2,6 +2,7 @@ from src.JHG_inspector.logic_layer.Gameset import Gameset
 
 from src.JHG_inspector.logic_layer.tools.GamesListTool import GamesListTool
 from src.JHG_inspector.logic_layer.tools.AveragePopularityTool import AveragePopularityTool
+from src.JHG_inspector.logic_layer.tools.AveragePopularityGraphTool import AveragePopularityGraphTool
 
 
 class ToolsManager:

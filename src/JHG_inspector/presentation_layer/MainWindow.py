@@ -26,7 +26,6 @@ class MainWindow(QMainWindow):
         self.add_menubar()
 
         self.central_panel = CentralContainer()
-        # TODO: Pass self.selected_panel down the line to allow for setting the selected panel easier
         self.selected_panel: Container = self.central_panel
 
         # Adds the gameset panel to the left and designates the rest as the main area for panels

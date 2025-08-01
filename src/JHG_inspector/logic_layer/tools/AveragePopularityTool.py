@@ -11,7 +11,6 @@ from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.DataL
 class AveragePopularityTool(Tool):
     def __init__(self, view_parent, gameset: "Gameset"):
         super().__init__("Average Popularity", gameset, view_parent)
-        self.average_popularity = ToolData()
         self.update()
 
     def _update_data(self):
