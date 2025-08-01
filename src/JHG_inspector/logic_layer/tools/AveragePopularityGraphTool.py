@@ -1,6 +1,6 @@
 from src.JHG_inspector.logic_layer.Gameset import Gameset
 from src.JHG_inspector.logic_layer.tools.Tool import Tool
-from src.JHG_inspector.logic_layer.tools.ToolDataClasses.ToolData import ToolData
+from src.JHG_inspector.logic_layer.tools.ToolDataClasses.GraphToolData import GraphToolData
 from src.JHG_inspector.presentation_layer.panels.tool_views.OneColumnView import OneColumnView
 from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.LinePlotGraph import LinePlotGraph
 
@@ -17,14 +17,11 @@ class AveragePopularityGraphTool(Tool):
             line_data = []
             for round in game.rounds:
                 line_data.append(sum(round.popularities) / len(round.popularities))
-            self.graph_data.raw.append(line_data)
-
-        print("DEBUG")
-
+            self.graph_data.add_line(game.code, line_data)
 
     def setup_view(self):
         view = OneColumnView(self)
-        self.graph_data = ToolData()
+        self.graph_data = GraphToolData()
         self.line_plot_component = LinePlotGraph(self.graph_data)
 
         view.column.add_component(self.line_plot_component)
