@@ -92,10 +92,11 @@ class GameFileLoader_JsonV1(GameFileLoader):
 
     @load_data("popularities")
     def _load_popularities_data(self, data, values, table_name):
-        for round_num, (round_name, round_data) in enumerate(data[table_name].items()):
+        for round_name, round_data in data[table_name].items():
+            round_num  = int(round_name.split("_")[1])
             for player, popularity in round_data.items():
                 player_id = self.game.name_to_id[player]
-                values.append((self.game.id, round_num + 1, player_id, popularity))
+                values.append((self.game.id, round_num, player_id, popularity))
 
     @load_data("influences")
     def _load_influences_data(self, data, values, table_name):
