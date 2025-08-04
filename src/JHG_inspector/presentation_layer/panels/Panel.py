@@ -15,9 +15,10 @@ class Panel(QWidget):
        """
 
     focused_panel: ClassVar[Optional["Panel"]] = None
-    def __init__(self, parent=None, name: str = "Untitled"):
+    def __init__(self, parent=None, name: str = "Untitled", tool: "Tool" = None):
         super().__init__(parent)
         self.name = name
+        self.tool = tool
 
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 

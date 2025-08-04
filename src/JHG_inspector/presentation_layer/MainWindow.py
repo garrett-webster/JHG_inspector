@@ -120,3 +120,7 @@ class MainWindow(QMainWindow):
             tool = self.tools_manager.new_tool(focused_panel, dialog.tool, dialog.gameset)
 
             focused_panel.add_panel(tool.view)
+            
+    def closeEvent(self, event):
+        self.central_panel.on_close()
+        super().closeEvent(event)

@@ -26,6 +26,10 @@ class CentralContainer(Container):
             self.addWidget(new_tab_widget)
             self.setCollapsible(0, False)
 
+    def on_close(self):
+        structure = super().on_close()
+        print(structure)
+
 class DefaultPanel(Panel):
     num_panels = 0
     def __init__(self):

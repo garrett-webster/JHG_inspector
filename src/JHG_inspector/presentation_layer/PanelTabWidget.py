@@ -133,5 +133,16 @@ class PanelTabWidget(QTabWidget):
 
         event.acceptProposedAction()
 
+    def on_close(self):
+        from src.JHG_inspector.presentation_layer.panels.tool_views.View import View
+        tools = []
+        for i in range(self.count()):
+            if isinstance(self.widget(i), View):
+                tools.append(self.widget(i).tool.name)
+            else:
+                tools.append(None)
+
+        return tuple(item for item in tools)
+
     def sizeHint(self):
         return QSize(600, 400)

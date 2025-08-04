@@ -99,3 +99,13 @@ class Container(QSplitter):
             return True
         else:
             return False
+
+    def on_close(self):
+        structure = [self.orientation().name, None, None]
+
+        structure[1] = self.items[0].on_close()
+
+        if self.items[1]:
+            structure[2] = self.items[1].on_close()
+
+        return structure
