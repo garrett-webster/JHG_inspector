@@ -7,6 +7,7 @@ class LinePlotGraph(PlotWidget):
         self.data = data
 
     def update(self):
+        self.clear()
         # Check that the data in the ToolData is properly a list of lists.
         if not isinstance(self.data.list, list) or not all(isinstance(item, list) for item in self.data.list):
             raise TypeError("Expected data.to_list() to return a list of lists")
