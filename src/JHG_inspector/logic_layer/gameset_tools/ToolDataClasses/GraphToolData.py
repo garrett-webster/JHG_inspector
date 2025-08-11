@@ -1,4 +1,4 @@
-from src.JHG_inspector.logic_layer.tools.ToolDataClasses.ToolData import ToolData
+from src.JHG_inspector.logic_layer.gameset_tools.ToolDataClasses.ToolData import ToolData
 
 DEFAULT_COLORS = [
     "#FF9191",

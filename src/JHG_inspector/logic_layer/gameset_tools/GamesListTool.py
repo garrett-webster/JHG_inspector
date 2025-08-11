@@ -2,8 +2,8 @@ from typing import override
 
 from PyQt6.QtWidgets import QLabel
 
-from src.JHG_inspector.logic_layer.tools.ToolDataClasses.ToolData import ToolData
-from src.JHG_inspector.logic_layer.tools.Tool import Tool
+from src.JHG_inspector.logic_layer.gameset_tools.ToolDataClasses.ToolData import ToolData
+from src.JHG_inspector.logic_layer.gameset_tools.Tool import Tool
 from src.JHG_inspector.presentation_layer.panels.tool_views.OneColumnView import OneColumnView
 
 

@@ -1,7 +1,7 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QHBoxLayout, QLabel
 
-from src.JHG_inspector.logic_layer.tools.ToolDataClasses.DataLabelToolData import DataLabelToolData
+from src.JHG_inspector.logic_layer.gameset_tools.ToolDataClasses.DataLabelToolData import DataLabelToolData
 from src.JHG_inspector.presentation_layer.panels.tool_views.View import View
 from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.Component import Component
 

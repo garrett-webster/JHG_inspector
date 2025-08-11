@@ -8,7 +8,7 @@ from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.Compo
 
 class Tool(ABC):
     tool_types_list = []
-    """Abstract class used as a base class to create tools.
+    """Abstract class used as a base class to create gameset_tools.
 
        Provides the basic functionality that a tool needs to be easily created.
        """

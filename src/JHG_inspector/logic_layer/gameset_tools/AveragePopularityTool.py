@@ -1,9 +1,9 @@
 import math
 import statistics
 
-from src.JHG_inspector.logic_layer.tools.ToolDataClasses.DataLabelToolData import DataLabelToolData
-from src.JHG_inspector.logic_layer.tools.ToolDataClasses.ToolData import ToolData
-from src.JHG_inspector.logic_layer.tools.Tool import Tool
+from src.JHG_inspector.logic_layer.gameset_tools.ToolDataClasses.DataLabelToolData import DataLabelToolData
+from src.JHG_inspector.logic_layer.gameset_tools.ToolDataClasses.ToolData import ToolData
+from src.JHG_inspector.logic_layer.gameset_tools.Tool import Tool
 from src.JHG_inspector.presentation_layer.panels.tool_views.OneColumnView import OneColumnView
 from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.DataLabelComponent import DataLabelComponent
 

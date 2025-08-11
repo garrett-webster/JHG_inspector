@@ -53,6 +53,6 @@ class GamesetManager:
         self.database.connection.commit()
 
     def update_signal(self, gameset_id: int):
-        """Not implemented yet. Will be used to trigger updates in the tools once they are implemented"""
+        """Not implemented yet. Will be used to trigger updates in the gameset_tools once they are implemented"""
         self.tools_manager.update_tools(gameset_id)
         pass

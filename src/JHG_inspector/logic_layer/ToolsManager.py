@@ -1,13 +1,13 @@
 from src.JHG_inspector.logic_layer.Gameset import Gameset
 
-from src.JHG_inspector.logic_layer.tools.GamesListTool import GamesListTool
-from src.JHG_inspector.logic_layer.tools.AveragePopularityTool import AveragePopularityTool
-from src.JHG_inspector.logic_layer.tools.AveragePopularityGraphTool import AveragePopularityGraphTool
+from src.JHG_inspector.logic_layer.gameset_tools.GamesListTool import GamesListTool
+from src.JHG_inspector.logic_layer.gameset_tools.AveragePopularityTool import AveragePopularityTool
+from src.JHG_inspector.logic_layer.gameset_tools.AveragePopularityGraphTool import AveragePopularityGraphTool
 
 
 class ToolsManager:
     def __init__(self):
-        from src.JHG_inspector.logic_layer.tools.Tool import Tool
+        from src.JHG_inspector.logic_layer.gameset_tools.Tool import Tool
 
         self.tools_types_list = Tool.tool_types_list
         self.gameset_to_tools = {}
