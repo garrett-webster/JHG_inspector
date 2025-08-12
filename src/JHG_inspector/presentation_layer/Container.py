@@ -4,7 +4,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QSplitter
 
 from src.JHG_inspector.presentation_layer.PanelTabWidget import PanelTabWidget
-from src.JHG_inspector.presentation_layer.panels.Panel import Panel
 
 
 class Container(QSplitter):
