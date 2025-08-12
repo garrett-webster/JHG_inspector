@@ -5,6 +5,7 @@ from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QSplitter
 
 from src.JHG_inspector.logic_layer.DatabaseManager import DatabaseManager
+from src.JHG_inspector.logic_layer.GameInspector import GameInspector
 from src.JHG_inspector.logic_layer.ToolsManager import ToolsManager
 from src.JHG_inspector.presentation_layer.Container import Container
 from src.JHG_inspector.presentation_layer.dialogs.GamesDialog import GamesDialog
@@ -70,6 +71,7 @@ class MainWindow(QMainWindow):
 
         # Game menu
         games_menu = menubar.addMenu('Games')
+        add_menu_action(games_menu, "Inspect Game", self.inspect_game, "Open a single game inspector panel.")
         add_menu_action(games_menu, 'Show Games', self.show_games, "Show all loaded games in a new window")
         add_menu_action(games_menu, 'Load Game From File', self.load_game_file,
                         "Load a new game to the database from a JHG gamelog")
@@ -86,6 +88,11 @@ class MainWindow(QMainWindow):
         add_menu_action(tools_menu, 'Open Tool', self.open_tool, "Open a tool in a new panel")
 
     # --- QAction functions --- #
+    def inspect_game(self):
+        focused_panel = Panel.focused_panel.get_parent_tabwidget()
+        game_inspector = GameInspector()
+        focused_panel.add_panel(game_inspector.panel)
+
     def show_games(self):
         """Opens a modal that displays all loaded games"""
         games_dialog = GamesDialog(self.database.games)

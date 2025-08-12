@@ -9,7 +9,7 @@ QTabWidget::pane {
     color: #d2d2d2;
 }
 
-/* NOTE: The background color for the tab bar to the right of the open tabs is actually controled by Container in main.qss */
+/* NOTE: The background color for the tab bar to the right of the open tabs is actually controlled by Container in main.qss */
 QTabBar {
     background: #2a2a2a;
     color: #d2d2d2;
@@ -19,4 +19,20 @@ QTabBar {
 QTabBar::tab {
     background: transparent;
     min-width: 70px;
+}
+
+QComboBox {
+    background: #393939;
+}
+
+QComboBox QAbstractItemView{
+    background: #393939;
+}
+
+QComboBox QListView::item:hover {
+    background-color: #494949;
+}
+
+QComboBox QListView::item:selected {
+    background-color: transparent;
 }
