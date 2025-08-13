@@ -71,7 +71,7 @@ class GameInspectorPanel(Panel):
 
     def update_game(self, index: int):
         self.selected_game = self.games[index]
-        print(self.selected_game.code)
+        self.view.currentWidget().update_game(self.selected_game)
 
     def update_scope(self, scope:str):
         scope = ScopesEnum(scope)
