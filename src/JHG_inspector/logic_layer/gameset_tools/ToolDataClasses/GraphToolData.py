@@ -41,3 +41,7 @@ class GraphToolData(ToolData):
             color = DEFAULT_COLORS[self.num_colors_used % len(DEFAULT_COLORS)]
             self.num_colors_used += 1
         self.lines.append({"line_name": line_name, "data": data, "color": color})
+
+    def clear_lines(self):
+        self.lines = []
+        self.num_colors_used = 0
