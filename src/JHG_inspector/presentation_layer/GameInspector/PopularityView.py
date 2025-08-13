@@ -3,7 +3,7 @@ from typing import Optional
 from PyQt6.QtWidgets import QLabel
 
 from src.JHG_inspector.logic_layer.Game import Game
-from src.JHG_inspector.presentation_layer.GameInspector.GameInspectorView import GameInspectorView
+from src.JHG_inspector.logic_layer.gameset_tools.ToolDataClasses.GraphToolData import GraphToolData
 from src.JHG_inspector.presentation_layer.GameInspector.GameInspectorView import GameInspectorView, update_view_function
 from src.JHG_inspector.presentation_layer.GameInspector.game_inspector_enums import ScopesEnum
 
