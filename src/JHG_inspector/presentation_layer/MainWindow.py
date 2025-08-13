@@ -90,7 +90,8 @@ class MainWindow(QMainWindow):
     # --- QAction functions --- #
     def inspect_game(self):
         focused_panel = Panel.focused_panel.get_parent_tabwidget()
-        game_inspector = GameInspector()
+
+        game_inspector = GameInspector([game for game in self.database.games.games.values()])
         focused_panel.add_panel(game_inspector.panel)
 
     def show_games(self):
