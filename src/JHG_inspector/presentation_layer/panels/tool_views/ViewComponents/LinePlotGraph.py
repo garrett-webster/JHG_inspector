@@ -6,6 +6,9 @@ class LinePlotGraph(PlotWidget):
         super().__init__()
         self.data = data
 
+        self.vb = self.getPlotItem().getViewBox()
+        self.getPlotItem().enableAutoRange(x=True, y=True)
+
     def update(self):
         self.clear()
         # Check that the data in the ToolData is properly a list of lists.
@@ -20,5 +23,23 @@ class LinePlotGraph(PlotWidget):
 
             if y_values:  # Check non-empty
                 label = TextItem(text=line["line_name"], color=line["color"])
-                label.setPos(x_values[-1], y_values[-1])
+                label.setPos(x_values[-1], y_values[-1])  # small offset
                 self.addItem(label)
+
+        """Add padding so that the player name labels aren't cut off."""
+        all_x = []
+        all_y = []
+        for line in self.data.lines:
+            all_x.extend(range(len(line["data"])))
+            all_y.extend(line["data"])
+
+        if all_x and all_y:
+            x_min, x_max = min(all_x), max(all_x)
+            y_min, y_max = min(all_y), max(all_y)
+
+            # Add small padding
+            x_pad = (x_max - x_min) * 0.1 or 1
+            y_pad = (y_max - y_min) * 0.1 or 1
+
+            self.vb.setXRange(x_min, x_max + x_pad)
+            self.vb.setYRange(y_min, y_max + y_pad)
