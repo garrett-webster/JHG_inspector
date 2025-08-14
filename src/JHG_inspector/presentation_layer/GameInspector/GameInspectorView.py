@@ -9,10 +9,11 @@ def update_view_function(func):
     return func
 
 class GameInspectorView(QWidget):
-    def __init__(self, game: "Game"):
+    def __init__(self, game: "Game", scope: ScopesEnum):
         super().__init__()
         self.layout = QVBoxLayout(self)
         self.game = game
+        self.scope = scope
 
         self._registry = [
             getattr(self, name)  # bound method
@@ -21,7 +22,8 @@ class GameInspectorView(QWidget):
         ]
 
     def update_scope(self, scope: ScopesEnum):
-        raise NotImplementedError("Subclasses must implement update_scope")
+        self.scope = scope
+        self.update_view()
 
     def update_game(self, game: Game):
         self.game = game

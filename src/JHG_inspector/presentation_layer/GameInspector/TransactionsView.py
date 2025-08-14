@@ -8,8 +8,8 @@ from src.JHG_inspector.presentation_layer.GameInspector.game_inspector_enums imp
 
 
 class TransactionsView(GameInspectorView):
-    def __init__(self, game: Optional[Game] = None):
-        super().__init__(game)
+    def __init__(self, scope: ScopesEnum, game: Optional[Game] = None):
+        super().__init__(game, scope)
         self.layout.addWidget(QLabel("Transactions"))
 
     def update_scope(self, scope: ScopesEnum):

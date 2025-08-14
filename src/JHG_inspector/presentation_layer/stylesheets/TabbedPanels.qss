@@ -36,3 +36,7 @@ QComboBox QListView::item:hover {
 QComboBox QListView::item:selected {
     background-color: transparent;
 }
+
+QFrame#divider_line {
+    background: #393939;
+}
