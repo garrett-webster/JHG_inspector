@@ -65,3 +65,6 @@ class GameInspectorView(QWidget):
     def update_round(self, index: int):
         self.selected_round = self.game.rounds[index]
         self.update_view()
+
+    def update_components(self):
+        raise NotImplementedError(f"update_components not implemented for {self.__class__.__name__}")
