@@ -6,23 +6,12 @@ from PyQt6.QtWidgets import QWidget, QGridLayout, QLabel, QHBoxLayout, QSizePoli
 from src.JHG_inspector.logic_layer.Game import Game
 from src.JHG_inspector.logic_layer.gameset_tools.ToolDataClasses.GraphToolData import GraphToolData
 from src.JHG_inspector.presentation_layer.GameInspector.GameInspectorView import GameInspectorView, update_view_function
+from src.JHG_inspector.presentation_layer.GameInspector.TableWidget import TableWidget
 from src.JHG_inspector.presentation_layer.GameInspector.game_inspector_enums import ScopesEnum
 from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.BarGraph import BarGraph
 from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.LinePlotGraph import LinePlotGraph
 
-class TableWidget(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.table_layout = QGridLayout(self)
-        self.setLayout(self.table_layout)
 
-    def clear(self):
-        while self.table_layout.count():
-            item = self.table_layout.takeAt(0)
-            widget = item.widget()
-            if widget is not None:
-                widget.setParent(None)
-                widget.deleteLater()
 
 class PopularityView(GameInspectorView):
     def __init__(self, scope: ScopesEnum, game: Optional[Game] = None, ):
