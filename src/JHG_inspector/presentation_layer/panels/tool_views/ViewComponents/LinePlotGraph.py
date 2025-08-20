@@ -15,21 +15,21 @@ class LinePlotGraph(PlotWidget):
         if not isinstance(self.data.list, list) or not all(isinstance(item, list) for item in self.data.list):
             raise TypeError("Expected data.to_list() to return a list of lists")
 
-        for line in self.data.lines:
+        for line in self.data.entries:
             x_values = list(range(len(line["data"])))
             y_values = line["data"]
 
             self.plot(x=x_values, y=y_values, pen=mkPen(color=line["color"], width = 2))
 
             if y_values:  # Check non-empty
-                label = TextItem(text=line["line_name"], color=line["color"])
+                label = TextItem(text=line["entry_name"], color=line["color"])
                 label.setPos(x_values[-1], y_values[-1])  # small offset
                 self.addItem(label)
 
         """Add padding so that the player name labels aren't cut off."""
         all_x = []
         all_y = []
-        for line in self.data.lines:
+        for line in self.data.entries:
             all_x.extend(range(len(line["data"])))
             all_y.extend(line["data"])
 

@@ -33,15 +33,15 @@ class GraphToolData(ToolData):
     def __init__(self, data=None):
         super().__init__(data)
 
-        self.lines: list[dict[str, list[int] | str]] = []
+        self.entries: list[dict[str, list[int] | str]] = []
         self.num_colors_used = 0
 
-    def add_line(self, line_name: str, data: list[int], color: str = None) -> None:
+    def add_entry(self, entry_name: str, data: list[int], color: str = None) -> None:
         if not color:
             color = DEFAULT_COLORS[self.num_colors_used % len(DEFAULT_COLORS)]
             self.num_colors_used += 1
-        self.lines.append({"line_name": line_name, "data": data, "color": color})
+        self.entries.append({"entry_name": entry_name, "data": data, "color": color})
 
-    def clear_lines(self):
-        self.lines = []
+    def clear_entries(self):
+        self.entries = []
         self.num_colors_used = 0

@@ -11,14 +11,14 @@ class AveragePopularityGraphTool(Tool):
         self.update()
 
     def _update_data(self):
-        self.graph_data.lines = []
+        self.graph_data.entries = []
         self.graph_data.num_colors_used = 0
         # Calculate the average popularity each round and construct a list of those average popularities for each game
         for game in self.games:
             line_data = []
             for round in game.rounds:
                 line_data.append(sum(round.popularities) / len(round.popularities))
-            self.graph_data.add_line(game.code, line_data)
+            self.graph_data.add_entry(game.code, line_data)
 
     def setup_view(self):
         view = OneColumnView(self)

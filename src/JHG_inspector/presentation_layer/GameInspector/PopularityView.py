@@ -53,16 +53,16 @@ class PopularityView(GameInspectorView):
         def overview_graph():
             for player in self.game.players:
                 popularity = player.round_popularity
-                self.graph_data.add_line(player.name, popularity)
-                self.graph.update()
-                self.graph.show()
-                self.player_selector.hide()
+                self.graph_data.add_entry(player.name, popularity)
+            self.line_graph.update()
 
         def player_graph():
             player = self.selected_player
             self.graph_data.add_line(player.name, player.round_popularity)
             self.graph.update()
             self.graph.show()
+            self.graph_data.add_entry(player.name, player.round_popularity)
+            self.line_graph.update()
             self.player_selector.show()
 
             clear_table(self.table)
@@ -77,6 +77,7 @@ class PopularityView(GameInspectorView):
             self.player_selector.hide()
 
         self.graph_data.clear_lines()
+        self.graph_data.clear_entries()
         scope_to_function = {
             ScopesEnum.Overview: overview_graph,
             ScopesEnum.Player: player_graph,
