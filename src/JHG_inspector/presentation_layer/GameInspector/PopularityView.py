@@ -28,14 +28,11 @@ class PopularityView(GameInspectorView):
         self.graph.setCurrentWidget(self.line_graph)
 
         self.table = TableWidget()
-        self.table.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
 
         self.table_graph_layout = QHBoxLayout()
         self.table_graph_layout.addWidget(self.table, alignment=Qt.AlignmentFlag.AlignTop)
         self.table_graph_layout.addWidget(self.graph)
 
-        self.layout.addWidget(self.player_selector, alignment=Qt.AlignmentFlag.AlignTop)
-        self.layout.addWidget(self.round_selector, alignment=Qt.AlignmentFlag.AlignTop)
         self.layout.addLayout(self.table_graph_layout)
 
         self.update_scope(scope)

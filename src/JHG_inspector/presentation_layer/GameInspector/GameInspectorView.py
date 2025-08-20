@@ -1,3 +1,4 @@
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QComboBox
 
 from src.JHG_inspector.logic_layer.Game import Game
@@ -36,6 +37,9 @@ class GameInspectorView(QWidget):
             for name, attr in self.__class__.__dict__.items()
             if callable(attr) and getattr(attr, "_is_registered", False)
         ]
+
+        self.layout.addWidget(self.player_selector, alignment=Qt.AlignmentFlag.AlignTop)
+        self.layout.addWidget(self.round_selector, alignment=Qt.AlignmentFlag.AlignTop)
 
     def update_scope(self, scope: ScopesEnum):
         self.scope = scope
