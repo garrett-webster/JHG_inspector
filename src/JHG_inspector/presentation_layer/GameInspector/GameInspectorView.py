@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QComboBox
 
 from src.JHG_inspector.logic_layer.Game import Game
 from src.JHG_inspector.logic_layer.Player import Player
+from src.JHG_inspector.logic_layer.Round import Round
 from src.JHG_inspector.presentation_layer.GameInspector.game_inspector_enums import ScopesEnum
 
 def update_view_function(func):
@@ -16,12 +17,19 @@ class GameInspectorView(QWidget):
         self.game = game
         self.scope = scope
         self.selected_player: Player = game.players[0]
+        self.selected_round: Round = game.rounds[0]
 
         self.player_selector = QComboBox()
         for player in self.game.players:
             self.player_selector.addItem(player.name)
         self.player_selector.currentIndexChanged.connect(self.update_player)
         self.player_selector.hide()
+
+        self.round_selector = QComboBox()
+        for round in self.game.rounds:
+            self.round_selector.addItem(f"Round {round.round_number + 1}")
+        self.round_selector.currentIndexChanged.connect(self.update_round)
+        self.round_selector.hide()
 
         self._registry = [
             getattr(self, name)  # bound method
@@ -48,4 +56,8 @@ class GameInspectorView(QWidget):
 
     def update_player(self, index: int):
         self.selected_player = self.game.players[index]
-        print(self.selected_player.name)
+        self.update_view()
+
+    def update_round(self, index: int):
+        self.selected_round = self.game.rounds[index]
+        self.update_view()
