@@ -99,6 +99,7 @@ class GameInspectorPanel(Panel):
     def update_view(self, view: str):
         self.selected_view = ViewEnum(view)
         self.view.setCurrentWidget(self.views[self.selected_view])
+        self.view.currentWidget().update_components()
 
     # TODO: Figure out if I even want this functionality
     def update_games(self, games: list["Game"]):

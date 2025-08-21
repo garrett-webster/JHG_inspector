@@ -6,10 +6,15 @@ from src.JHG_inspector.logic_layer.Player import Player
 from src.JHG_inspector.logic_layer.Round import Round
 from src.JHG_inspector.presentation_layer.GameInspector.game_inspector_enums import ScopesEnum
 
-def update_view_function(func):
-    """Registers functions to be run from the update_view function"""
-    func._is_registered = True
-    return func
+
+def hide_components(*components: QWidget):
+    for component in components:
+        component.hide()
+
+def show_components(*components: QWidget):
+    for component in components:
+        component.show()
+
 
 class GameInspectorView(QWidget):
     def __init__(self, game: "Game", scope: ScopesEnum):
@@ -32,18 +37,12 @@ class GameInspectorView(QWidget):
         self.round_selector.currentIndexChanged.connect(self.update_round)
         self.round_selector.hide()
 
-        self._registry = [
-            getattr(self, name)  # bound method
-            for name, attr in self.__class__.__dict__.items()
-            if callable(attr) and getattr(attr, "_is_registered", False)
-        ]
-
         self.layout.addWidget(self.player_selector, alignment=Qt.AlignmentFlag.AlignTop)
         self.layout.addWidget(self.round_selector, alignment=Qt.AlignmentFlag.AlignTop)
 
     def update_scope(self, scope: ScopesEnum):
         self.scope = scope
-        self.update_view()
+        self.update_components()
 
     def update_game(self, game: Game):
         self.game = game
@@ -52,19 +51,32 @@ class GameInspectorView(QWidget):
         for player in self.game.players:
             self.player_selector.addItem(player.name)
 
-        self.update_view()
-
-    def update_view(self):
-        for func in self._registry:
-            func()
+        self.update_components()
 
     def update_player(self, index: int):
         self.selected_player = self.game.players[index]
-        self.update_view()
+        self.update_components()
 
     def update_round(self, index: int):
         self.selected_round = self.game.rounds[index]
-        self.update_view()
+        self.update_components()
+
+    def update_overview_components(self):
+        raise NotImplementedError(f"update_overview_components not implemented for {self.__class__.__name__}")
+
+    def update_player_components(self):
+        raise NotImplementedError(f"update_player_components not implemented for {self.__class__.__name__}")
+
+    def update_round_components(self):
+        raise NotImplementedError(f"update_round_components not implemented for {self.__class__.__name__}")
 
     def update_components(self):
-        raise NotImplementedError(f"update_components not implemented for {self.__class__.__name__}")
+        scope_to_function = {
+            ScopesEnum.Overview: self.update_overview_components,
+            ScopesEnum.Player: self.update_player_components,
+            ScopesEnum.Round: self.update_round_components,
+        }
+
+        # Run function to update data associated with the currently selected scope
+        scope_to_function[self.scope]()
+
