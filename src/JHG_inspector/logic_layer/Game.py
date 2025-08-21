@@ -168,7 +168,22 @@ class Game:
 
         results = self.database_manager.DAOs["transactions"].select_all(["*"], ["gameId"], [self.id])
         ids = self.id_to_name.keys()
-        num_rounds = int(len(results) / len(ids)**2)
+
+        num_players = len(ids)
+        expected_per_round = num_players ** 2
+
+        # Count transactions per round
+        from collections import Counter
+        round_counts = Counter(row[1] for row in results)  # assuming row[1] is round_num
+
+        print("Expected per round:", expected_per_round)
+        for round_num in sorted(round_counts):
+            count = round_counts[round_num]
+            if count != expected_per_round:
+                print(f"⚠️ Round {round_num} has {count} transactions (expected {expected_per_round})")
+
+        round_nums = [row[1] for row in results]
+        num_rounds = max(round_nums) if round_nums else 0
         allocations = [[[0 for _ in range(len(ids))] for _ in range(len(ids))] for _ in range(num_rounds)]
 
         for result in results:
