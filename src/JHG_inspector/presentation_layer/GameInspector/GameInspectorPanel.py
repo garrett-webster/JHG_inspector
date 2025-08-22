@@ -12,7 +12,7 @@ from src.JHG_inspector.presentation_layer.panels.Panel import Panel
 DEFAULT_SCOPE: ScopesEnum = next(iter(ScopesEnum))
 
 class GameInspectorPanel(Panel):
-    def __init__(self, game_inspector: "GameInspector", games: list["Game"], parent=None):
+    def __init__(self, game_inspector: "GameInspector", parent=None):
         """Params:
              game_inspector:
                GameInspector instance being displayed
@@ -25,28 +25,19 @@ class GameInspectorPanel(Panel):
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         self.game_inspector = game_inspector
-        self.games = games
-
-        self.selected_game: Optional[Game] = games[0]
-        self.selected_scope: Optional[ScopesEnum] = None
-        self.selected_view: Optional[ViewEnum] = None
+        self.games = self.game_inspector.games
 
         # Set up the view, which changes what is shown based on the selected scope and view
         self.view = QStackedWidget()
-        self.views = {
-            ViewEnum.Popularity: PopularityView(DEFAULT_SCOPE, self.selected_game),
-            ViewEnum.Transactions: TransactionsView(DEFAULT_SCOPE, self.selected_game),
-        }
 
-        for view in self.views.values():
+        for view in self.game_inspector.views.values():
             self.view.addWidget(view)
 
         self.game_label = QLabel("Game:")
 
         # Dropdown box for selecting the game
-        # TODO: Change this to a button that brings up a modal or something
         game_selector = QComboBox()
-        for game in games:
+        for game in self.games:
             game_selector.addItem(game.code)
         game_selector.currentIndexChanged.connect(self.update_game)
 
@@ -87,18 +78,18 @@ class GameInspectorPanel(Panel):
         self.layout.addWidget(self.view)
 
     def update_game(self, index: int):
-        self.selected_game = self.games[index]
-        self.view.currentWidget().update_game(self.selected_game)
+        self.game_inspector.selected_game = self.games[index]
+        self.view.currentWidget().update_game(self.game_inspector.selected_game)
 
     def update_scope(self, scope:str):
         scope = ScopesEnum(scope)
-        self.selected_scope = scope
-        self.game_inspector.scope = scope
+        self.game_inspector.selected_scope = scope
+        self.game_inspector.selected_scope = scope
         self.view.currentWidget().update_scope(scope)
 
     def update_view(self, view: str):
-        self.selected_view = ViewEnum(view)
-        self.view.setCurrentWidget(self.views[self.selected_view])
+        self.game_inspector.selected_view = ViewEnum(view)
+        self.view.setCurrentWidget(self.game_inspector.views[self.game_inspector.selected_view])
         self.view.currentWidget().update_components()
 
     # TODO: Figure out if I even want this functionality
