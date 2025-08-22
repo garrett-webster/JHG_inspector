@@ -51,7 +51,6 @@ class BarGraph(PlotWidget):
             label_item.setZValue(10)  # ensure it’s on top
             self.addItem(label_item)
 
-        print(y_max * 1.1)
         # Set zoom limits: can't zoom out beyond current view, but can zoom in
         self.vb.setLimits(
             xMin=-0.5,
