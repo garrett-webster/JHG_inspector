@@ -2,8 +2,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QComboBox
 
 from src.JHG_inspector.logic_layer.Game import Game
-from src.JHG_inspector.logic_layer.Player import Player
-from src.JHG_inspector.logic_layer.Round import Round
 from src.JHG_inspector.presentation_layer.GameInspector.game_inspector_enums import ScopesEnum
 
 
@@ -17,48 +15,49 @@ def show_components(*components: QWidget):
 
 
 class GameInspectorView(QWidget):
-    def __init__(self, game: "Game", scope: ScopesEnum):
+    def __init__(self, game_inspector: "GameInspector"):
         super().__init__()
+        self._suppress_updates = False
+        self.game_inspector = game_inspector
         self.layout = QVBoxLayout(self)
-        self.game = game
-        self.scope = scope
-        self.selected_player: Player = game.players[0]
-        self.selected_round: Round = game.rounds[0]
 
         self.player_selector = QComboBox()
-        for player in self.game.players:
+        for player in self.game_inspector.selected_game.players:
             self.player_selector.addItem(player.name)
         self.player_selector.currentIndexChanged.connect(self.update_player)
         self.player_selector.hide()
 
         self.round_selector = QComboBox()
-        for round in self.game.rounds:
-            self.round_selector.addItem(f"Round {round.round_number + 1}")
-        self.round_selector.currentIndexChanged.connect(self.update_round)
         self.round_selector.hide()
+        self.populate_round_selector()
 
         self.layout.addWidget(self.player_selector, alignment=Qt.AlignmentFlag.AlignTop)
         self.layout.addWidget(self.round_selector, alignment=Qt.AlignmentFlag.AlignTop)
 
     def update_scope(self, scope: ScopesEnum):
-        self.scope = scope
+        self.game_inspector.selected_scope = scope
         self.update_components()
 
     def update_game(self, game: Game):
-        self.game = game
+        self._suppress_updates = True
+        try:
+            self.game_inspector.selected_game = game
 
-        self.player_selector.clear()
-        for player in self.game.players:
-            self.player_selector.addItem(player.name)
+            self.player_selector.clear()
+            for player in self.game_inspector.selected_game.players:
+                self.player_selector.addItem(player.name)
 
+            self.populate_round_selector()
+        finally:
+            self._suppress_updates = False
         self.update_components()
 
     def update_player(self, index: int):
-        self.selected_player = self.game.players[index]
+        self.game_inspector.selected_player = self.game_inspector.selected_game.players[index]
         self.update_components()
 
     def update_round(self, index: int):
-        self.selected_round = self.game.rounds[index]
+        self.game_inspector.selected_round = self.game_inspector.selected_game.rounds[index]
         self.update_components()
 
     def update_overview_components(self):
@@ -71,6 +70,9 @@ class GameInspectorView(QWidget):
         raise NotImplementedError(f"update_round_components not implemented for {self.__class__.__name__}")
 
     def update_components(self):
+        if self._suppress_updates:
+            return
+
         scope_to_function = {
             ScopesEnum.Overview: self.update_overview_components,
             ScopesEnum.Player: self.update_player_components,
@@ -78,5 +80,17 @@ class GameInspectorView(QWidget):
         }
 
         # Run function to update data associated with the currently selected scope
-        scope_to_function[self.scope]()
+        scope_to_function[self.game_inspector.selected_scope]()
 
+    def populate_round_selector(self):
+        self.round_selector.blockSignals(True)
+        try:
+            self.round_selector.clear()
+            for round in self.game_inspector.selected_game.rounds:
+                self.round_selector.addItem(f"Round {round.round_number + 1}")
+
+            if self.game_inspector.selected_round.round_number > (len(self.game_inspector.selected_game.rounds) - 1):
+                self.round_selector.setCurrentIndex(0)
+                self.game_inspector.selected_round = self.game_inspector.selected_game.rounds[0]
+        finally:
+            self.round_selector.blockSignals(False)

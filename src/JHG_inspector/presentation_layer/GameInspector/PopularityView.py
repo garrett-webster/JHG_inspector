@@ -3,22 +3,18 @@ from typing import Optional, override
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QHBoxLayout, QStackedWidget
 
-from src.JHG_inspector.logic_layer.Game import Game
 from src.JHG_inspector.logic_layer.gameset_tools.ToolDataClasses.GraphToolData import GraphToolData
 from src.JHG_inspector.presentation_layer.GameInspector.GameInspectorView import (GameInspectorView, show_components,
                                                                                   hide_components)
 from src.JHG_inspector.presentation_layer.GameInspector.TableWidget import TableWidget
-from src.JHG_inspector.presentation_layer.GameInspector.game_inspector_enums import ScopesEnum
 from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.BarGraph import BarGraph
 from src.JHG_inspector.presentation_layer.panels.tool_views.ViewComponents.LinePlotGraph import LinePlotGraph
 
 
 
 class PopularityView(GameInspectorView):
-    def __init__(self, scope: ScopesEnum, game: Optional[Game] = None, ):
-        super().__init__(game, scope)
-        self.game = game
-        self.scope = scope
+    def __init__(self, game_inspector: "GameInspector"):
+        super().__init__(game_inspector)
 
         self.graph_data = GraphToolData()
         self.line_graph = LinePlotGraph(self.graph_data)
@@ -36,14 +32,14 @@ class PopularityView(GameInspectorView):
 
         self.layout.addLayout(self.table_graph_layout)
 
-        self.update_scope(scope)
+        self.update_components()
 
     @override
     def update_overview_components(self):
         hide_components(self.table, self.player_selector, self.round_selector)
         self.graph_data.clear_entries()
         self.graph.setCurrentWidget(self.line_graph)
-        for player in self.game.players:
+        for player in self.game_inspector.selected_game.players:
             popularity = player.round_popularity
             self.graph_data.add_entry(player.name, popularity)
         self.line_graph.update()
@@ -53,7 +49,7 @@ class PopularityView(GameInspectorView):
         hide_components(self.table, self.round_selector)
         self.graph_data.clear_entries()
         self.graph.setCurrentWidget(self.line_graph)
-        player = self.selected_player
+        player = self.game_inspector.selected_player
         self.graph_data.add_entry(player.name, player.round_popularity)
         self.line_graph.update()
 
@@ -72,8 +68,8 @@ class PopularityView(GameInspectorView):
         self.graph_data.clear_entries()
         self.graph.setCurrentWidget(self.bar_graph)
 
-        for player in self.game.players:
+        for player in self.game_inspector.selected_game.players:
             self.graph_data.add_entry(player.name, player.round_popularity)
-        self.bar_graph.update(self.selected_round.round_number)
+        self.bar_graph.update(self.game_inspector.selected_round.round_number)
 
         show_components(self.round_selector)
