@@ -315,3 +315,19 @@ class Game:
             }
 
         return dict(round_info)
+
+    @cached_property
+    def get_allocations_sum_matrix(self) -> list[list[int]]:
+        """Returns a list of lists where each inner list contains the sum of the allocations across all rounds for
+        player i to player j.
+        """
+
+        allocations_matrix = [[0 for _ in range(self.num_players)] for _ in range(self.num_players)]
+
+        for player in self.players:
+            player_order = self.id_to_player_order[player.player_id]
+            for i in range(self.num_players):
+                for j in range(self.num_rounds):
+                    allocations_matrix[player_order][i] += self.allocations[j][player_order][i]
+
+        return allocations_matrix

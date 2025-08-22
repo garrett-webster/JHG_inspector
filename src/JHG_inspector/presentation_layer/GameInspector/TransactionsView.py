@@ -22,9 +22,7 @@ class TransactionsView(GameInspectorView):
 
     @override
     def update_overview_components(self):
-        # print(self.game_inspector.selected_game.get_allocations_sum_matrix)
-        pass
-
+        print(self.game_inspector.selected_game.get_allocations_sum_matrix)
 
     @override
     def update_player_components(self):
