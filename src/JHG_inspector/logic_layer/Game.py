@@ -38,6 +38,7 @@ class Game:
         self.name_to_id = {}
         self.num_rounds: int
         self.id_to_player_order = {}
+        self.player_order_to_id = {}
         self.id = None
         self.code = None
 
@@ -74,10 +75,11 @@ class Game:
             print(f"Game {self.code} already exists")
 
     def set_id_to_name_dicts(self):
-        """Create the id_to_name and name_to_id dictionaries.
+        """Create dictionaries for converting from one form of player identifier to another.
 
-           id_to_name takes a game id from the database and returns the name of the player.
-           name_to_id takes a player name and returns the game id from the database.
+           id_to_name and name_to_id take either a database game id or the name of the player and returns the other.
+           id_to_player_order and player_order_to_id take either the game object specific player order number or a
+           database game id and returns the other.
            """
 
         results = self.database_manager.DAOs["players"].select_all(["id", "gameName"], ["gameId"], [self.id])
@@ -86,6 +88,7 @@ class Game:
             self.id_to_name[result[0]] = result[1]
             self.name_to_id[result[1]] = result[0]
             self.id_to_player_order[result[0]] = i
+            self.player_order_to_id[i] = result[0]
             
     # !--- Data Methods ---! #
     def simple_dictionary_property(self, columns, table):
