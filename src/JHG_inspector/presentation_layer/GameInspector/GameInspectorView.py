@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QComboBox
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QComboBox, QSizePolicy
 
 from src.JHG_inspector.logic_layer.Game import Game
 from src.JHG_inspector.presentation_layer.GameInspector.game_inspector_enums import ScopesEnum
@@ -21,18 +21,31 @@ class GameInspectorView(QWidget):
         self.game_inspector = game_inspector
         self.layout = QVBoxLayout(self)
 
+        self.selector_container = QWidget()
+        self.selector_layout = QVBoxLayout(self.selector_container)
+        self.selector_layout.setContentsMargins(0, 0, 0, 0)
+        self.selector_layout.setSpacing(4)  # small gap between selectors
+
+        self.round_selector = QComboBox()
+        self.round_selector.hide()
+        self.populate_round_selector()
+
         self.player_selector = QComboBox()
         for player in self.game_inspector.selected_game.players:
             self.player_selector.addItem(player.name)
         self.player_selector.currentIndexChanged.connect(self.update_player)
         self.player_selector.hide()
 
-        self.round_selector = QComboBox()
-        self.round_selector.hide()
-        self.populate_round_selector()
+        self.secondary_player_selector = QComboBox()
+        self.secondary_player_selector.currentIndexChanged.connect(self.update_secondary_player)
+        self.populate_secondary_player_selector()
+        self.secondary_player_selector.hide()
 
-        self.layout.addWidget(self.player_selector, alignment=Qt.AlignmentFlag.AlignTop)
-        self.layout.addWidget(self.round_selector, alignment=Qt.AlignmentFlag.AlignTop)
+        self.selector_layout.addWidget(self.player_selector)
+        self.selector_layout.addWidget(self.secondary_player_selector)
+        self.selector_layout.addWidget(self.round_selector)
+
+        self.layout.addWidget(self.selector_container, alignment=Qt.AlignmentFlag.AlignTop)
 
     def update_scope(self, scope: ScopesEnum):
         self.game_inspector.selected_scope = scope
@@ -48,13 +61,18 @@ class GameInspectorView(QWidget):
                 self.player_selector.addItem(player.name)
 
             self.populate_round_selector()
+            self.populate_secondary_player_selector()
         finally:
             self._suppress_updates = False
         self.update_components()
 
     def update_player(self, index: int):
         self.game_inspector.selected_player = self.game_inspector.selected_game.players[index]
+        self.populate_secondary_player_selector()
         self.update_components()
+
+    def update_secondary_player(self, index: int):
+        self.game_inspector.secondary_selected_player = self.game_inspector.selected_game.players[index + 1]
 
     def update_round(self, index: int):
         self.game_inspector.selected_round = self.game_inspector.selected_game.rounds[index]
@@ -94,3 +112,23 @@ class GameInspectorView(QWidget):
                 self.game_inspector.selected_round = self.game_inspector.selected_game.rounds[0]
         finally:
             self.round_selector.blockSignals(False)
+
+    def populate_secondary_player_selector(self):
+        selector = self.secondary_player_selector
+        selector.clear()
+        selector.addItem("None")
+
+        index_to_set = None
+
+        for i, player in enumerate(self.game_inspector.selected_game.players):
+            if player != self.game_inspector.selected_player:
+                selector.addItem(player.name)
+                if player == self.game_inspector.secondary_selected_player:
+                    index_to_set = i + 1
+
+        # Set the correct index
+        if not index_to_set and not self.game_inspector.selected_game.players[0] == self.game_inspector.selected_player:
+            index_to_set = 0
+
+
+        selector.setCurrentIndex(index_to_set)

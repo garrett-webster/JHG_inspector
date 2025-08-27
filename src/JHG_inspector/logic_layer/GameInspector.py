@@ -20,6 +20,7 @@ class GameInspector:
 
         self.selected_round: Round = self.selected_game.rounds[0]
         self.selected_player: Player = self.selected_game.players[0]
+        self.secondary_selected_player: Player = self.selected_game.players[1]
         # TODO: Sort the games if a gameset has been passed, such that the panel only has access to the games in the
         #  current gameset
 

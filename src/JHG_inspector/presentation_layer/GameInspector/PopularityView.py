@@ -1,4 +1,4 @@
-from typing import Optional, override
+from typing import override
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QHBoxLayout, QStackedWidget

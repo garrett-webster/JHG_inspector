@@ -3,7 +3,8 @@ from typing import override
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel
 
-from src.JHG_inspector.presentation_layer.GameInspector.GameInspectorView import GameInspectorView
+from src.JHG_inspector.presentation_layer.GameInspector.GameInspectorView import GameInspectorView, hide_components, \
+    show_components
 from src.JHG_inspector.presentation_layer.GameInspector.TableWidget import TableWidget
 
 
@@ -40,7 +41,8 @@ class TransactionsView(GameInspectorView):
 
     @override
     def update_player_components(self):
-        print("AH")
+        hide_components(self.table)
+        show_components(self.player_selector, self.secondary_player_selector)
 
     @override
     def update_round_components(self):
